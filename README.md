@@ -50,6 +50,12 @@ Le script lit la clé dans `env.json` et respecte la limite de 8 requêtes par m
 
 `bonds_weekly.json` est calculé à partir du taux à 10 ans de FRED (DGS10) : chaque semaine, une obligation au pair achetée la semaine précédente est revalorisée au nouveau taux, coupon couru compris.
 
+Les chiffres historiques cités dans les chapitres (baisses, volatilités, résultats des simulations) se recalculent sur ces séries :
+
+```bash
+dart run tool/check_figures.dart
+```
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
