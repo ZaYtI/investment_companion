@@ -28,21 +28,27 @@ Le même argument s'ajoute à `flutter test` et `flutter build` si besoin. Dans 
 
 ## Séries de prix embarquées
 
-Les séries historiques utilisées par les chapitres sont dans `assets/data/series/` (prix bruts, sans dividendes, source Twelve Data). Elles sont générées par un script, jamais modifiées à la main :
+Les séries historiques utilisées par les chapitres sont dans `assets/data/series/` (prix bruts, sans dividendes). Elles sont générées par un script, jamais modifiées à la main :
 
 ```bash
 dart run tool/fetch_series.dart
 ```
 
-Le script lit la clé dans `env.json` et respecte la limite de 8 requêtes par minute (environ 40 secondes). Les dates sont figées par la constante `snapshotEnd` : relancé, il produit les mêmes fichiers. Pour rafraîchir les données, avancer cette date.
+Le script lit la clé dans `env.json` et respecte la limite de 8 requêtes par minute (environ 1 min 30). Pour régénérer une seule série : `dart run tool/fetch_series.dart spy_weekly`. Les dates sont figées par la constante `snapshotEnd` : relancé, il produit les mêmes fichiers. Pour rafraîchir les données, avancer cette date.
 
 | Fichier | Actif | Fréquence | Période | Chapitres |
 |---|---|---|---|---|
-| `spy_weekly.json` | ETF S&P 500 (SPY) | Hebdomadaire | 2007 → 2026-10 | 1, 2, 3 |
-| `gold_weekly.json` | Or (XAU/USD) | Hebdomadaire | 2018 → 2026-10 | 1, 2 |
+| `spy_weekly.json` | ETF S&P 500 (SPY) | Hebdomadaire | 1999 → 2026-10 | 1, 2, 3, 5 |
+| `qqq_weekly.json` | ETF Nasdaq-100 (QQQ) | Hebdomadaire | 1999-03 → 2026-10 | 5 |
+| `gold_weekly.json` | Or (XAU/USD) | Hebdomadaire | 1999 → 2026-10 | 1, 2, 5 |
+| `bonds_weekly.json` | Obligations d'État US 10 ans (indice, base 100) | Hebdomadaire | 1999 → 2026-10 | 5 |
 | `world_weekly.json` | ETF MSCI World (URTH) | Hebdomadaire | 2018 → 2026-10 | 1 |
 | `btc_weekly.json` | Bitcoin (BTC/USD) | Hebdomadaire | 2018 → 2026-10 | 2 |
-| `spy_monthly.json` | ETF S&P 500 (SPY) | Premier jour de bourse du mois | 2015 → 2026-10 | 4 |
+| `spy_monthly.json` | ETF S&P 500 (SPY) | Premier jour de bourse du mois | 2008 → 2026-10 | 4, 7 |
+| `spy_daily_2008.json` | ETF S&P 500 (SPY) | Quotidienne | 2008-09 → 2009-03 | Défi du jour |
+| `spy_daily_2020.json` | ETF S&P 500 (SPY) | Quotidienne | 2020-02-19 → 2021-03-12 | 6, défi du jour |
+
+`bonds_weekly.json` est calculé à partir du taux à 10 ans de FRED (DGS10) : chaque semaine, une obligation au pair achetée la semaine précédente est revalorisée au nouveau taux, coupon couru compris.
 
 ## Getting Started
 
