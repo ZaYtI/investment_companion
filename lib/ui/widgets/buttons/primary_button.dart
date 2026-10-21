@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../theme/app_colors.dart';
 
-class PrimaryButton extends StatelessWidget {
+class PrimaryButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isLoading;
@@ -20,41 +20,83 @@ class PrimaryButton extends StatelessWidget {
   static const fontSize = 17.0;
   static const loaderSize = 22.0;
   static const loaderStrokeWidth = 2.5;
+  static const pressDuration = Duration(milliseconds: 90);
 
-  bool get isEnabled => onPressed != null;
+  @override
+  State<PrimaryButton> createState() => _PrimaryButtonState();
+}
+
+class _PrimaryButtonState extends State<PrimaryButton> {
+  final _states = WidgetStatesController();
+  var _isPressed = false;
+
+  bool get _isEnabled => widget.onPressed != null;
+  bool get _isSunken => _isEnabled && (_isPressed || widget.isLoading);
+
+  @override
+  void initState() {
+    super.initState();
+    _states.addListener(_onStatesChanged);
+  }
+
+  @override
+  void dispose() {
+    _states
+      ..removeListener(_onStatesChanged)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onStatesChanged() {
+    final isPressed = _states.value.contains(WidgetState.pressed);
+    if (isPressed != _isPressed) setState(() => _isPressed = isPressed);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
+    final visibleEdge = _isSunken ? 0.0 : PrimaryButton.bottomEdgeHeight;
+    return AnimatedContainer(
+      duration: PrimaryButton.pressDuration,
+      curve: Curves.easeOut,
+      transform: Matrix4.translationValues(
+        0,
+        PrimaryButton.bottomEdgeHeight - visibleEdge,
+        0,
+      ),
       decoration: BoxDecoration(
-        borderRadius: borderRadius,
+        borderRadius: PrimaryButton.borderRadius,
         boxShadow: [
-          if (isEnabled)
-            const BoxShadow(
+          if (_isEnabled)
+            BoxShadow(
               color: AppColors.goldShadow,
-              offset: Offset(0, bottomEdgeHeight),
+              offset: Offset(0, visibleEdge),
             ),
         ],
       ),
       child: IgnorePointer(
-        ignoring: isLoading,
+        ignoring: widget.isLoading,
         child: FilledButton(
-          onPressed: onPressed,
+          onPressed: widget.onPressed,
+          statesController: _states,
           style: FilledButton.styleFrom(
-            minimumSize: const Size.fromHeight(height),
-            shape: const RoundedRectangleBorder(borderRadius: borderRadius),
-            textStyle: Theme.of(context).textTheme.labelLarge
-                ?.copyWith(fontSize: fontSize, fontWeight: FontWeight.w700),
+            minimumSize: const Size.fromHeight(PrimaryButton.height),
+            shape: const RoundedRectangleBorder(
+              borderRadius: PrimaryButton.borderRadius,
+            ),
+            textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
+              fontSize: PrimaryButton.fontSize,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-          child: isLoading
+          child: widget.isLoading
               ? const SizedBox.square(
-                  dimension: loaderSize,
+                  dimension: PrimaryButton.loaderSize,
                   child: CircularProgressIndicator(
                     color: AppColors.goldShadow,
-                    strokeWidth: loaderStrokeWidth,
+                    strokeWidth: PrimaryButton.loaderStrokeWidth,
                   ),
                 )
-              : Text(text),
+              : Text(widget.text),
         ),
       ),
     );
