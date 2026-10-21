@@ -2,7 +2,7 @@
   "id": "spy_monthly",
   "symbol": "SPY",
   "name": "ETF S&P 500",
-  "frequency": "monthly_first_day",
+  "frequency": "firstTradingDayOfMonth",
   "source": "Twelve Data",
   "adjusted": false,
   "currency": "USD",
