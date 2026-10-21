@@ -34,18 +34,14 @@ void main() {
     test('lève une erreur typée sur un quota dépassé', () {
       expect(
         () => parseTimeSeries(_fixture('twelvedata_error_429_quota.json')),
-        throwsA(
-          isA<TwelveDataException>().having((e) => e.code, 'code', 429),
-        ),
+        throwsA(isA<TwelveDataException>().having((e) => e.code, 'code', 429)),
       );
     });
 
     test('lève une erreur typée sur une période sans données', () {
       expect(
         () => parseTimeSeries(_fixture('twelvedata_error_400_no_data.json')),
-        throwsA(
-          isA<TwelveDataException>().having((e) => e.code, 'code', 400),
-        ),
+        throwsA(isA<TwelveDataException>().having((e) => e.code, 'code', 400)),
       );
     });
 
@@ -82,6 +78,8 @@ void main() {
         symbol: 'SPY',
         name: 'ETF S&P 500',
         frequency: 'weekly',
+        source: 'Twelve Data',
+        currency: 'USD',
         points: [SeriesPoint(DateTime(2013, 1, 7), 147.07)],
       ),
     ) as Map<String, dynamic>;
@@ -89,5 +87,66 @@ void main() {
     expect(json['points'], [
       {'date': '2013-01-07', 'close': 147.07},
     ]);
+  });
+
+  group('FRED', () {
+    test('ignore les jours sans valeur', () {
+      final points = parseFredCsv(
+        'observation_date,DGS10\n1999-01-04,4.69\n1999-01-05,\n1999-01-06,.\n',
+      );
+      expect(points.map((p) => p.date), [DateTime(1999, 1, 4)]);
+      expect(points.single.close, 4.69);
+    });
+
+    test('mondayOf renvoie le lundi de la semaine', () {
+      expect(mondayOf(DateTime(2020, 3, 12)), DateTime(2020, 3, 9));
+      expect(mondayOf(DateTime(2020, 3, 9)), DateTime(2020, 3, 9));
+      expect(mondayOf(DateTime(2020, 3, 15)), DateTime(2020, 3, 9));
+    });
+
+    test('lastPointPerWeek garde la dernière valeur de chaque semaine', () {
+      final weekly = lastPointPerWeek([
+        SeriesPoint(DateTime(2020, 3, 9), 1),
+        SeriesPoint(DateTime(2020, 3, 13), 2),
+        SeriesPoint(DateTime(2020, 3, 16), 3),
+      ]);
+      expect(weekly.map((p) => p.date), [
+        DateTime(2020, 3, 9),
+        DateTime(2020, 3, 16),
+      ]);
+      expect(weekly.map((p) => p.close), [2, 3]);
+    });
+  });
+
+  group('indice obligataire', () {
+    test('une obligation au pair vaut 1 quand le taux ne bouge pas', () {
+      expect(parBondPrice(coupon: 0.05, yield: 0.05), closeTo(1, 1e-9));
+    });
+
+    test('le prix baisse quand le taux monte', () {
+      expect(parBondPrice(coupon: 0.05, yield: 0.06), lessThan(1));
+      expect(parBondPrice(coupon: 0.05, yield: 0.04), greaterThan(1));
+    });
+
+    test('à taux constant, l\'indice gagne le coupon chaque semaine', () {
+      final index = bondTotalReturnIndex([
+        SeriesPoint(DateTime(2020, 1, 6), 5.2),
+        SeriesPoint(DateTime(2020, 1, 13), 5.2),
+      ]);
+      expect(index.first.close, bondIndexBase);
+      expect(index.last.close, closeTo(100.1, 0.0001));
+    });
+
+    test('une hausse de taux fait baisser l\'indice', () {
+      final index = bondTotalReturnIndex([
+        SeriesPoint(DateTime(2020, 1, 6), 4),
+        SeriesPoint(DateTime(2020, 1, 13), 5),
+      ]);
+      expect(index.last.close, lessThan(bondIndexBase));
+    });
+
+    test('une série vide donne un indice vide', () {
+      expect(bondTotalReturnIndex([]), isEmpty);
+    });
   });
 }
