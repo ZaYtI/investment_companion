@@ -2,6 +2,30 @@
 
 A new Flutter project.
 
+## Lancement
+
+L'application lit la clé de l'API Twelve Data à la compilation, depuis un fichier `env.json` qui n'est pas versionné.
+
+1. Copier le modèle puis renseigner la clé :
+
+   ```bash
+   cp env.example.json env.json
+   ```
+
+   ```json
+   {
+     "TWELVE_DATA_KEY": "votre_clé"
+   }
+   ```
+
+2. Lancer l'application en passant ce fichier :
+
+   ```bash
+   flutter run --dart-define-from-file=env.json
+   ```
+
+Le même argument s'ajoute à `flutter test` et `flutter build` si besoin. Dans Android Studio : *Run → Edit Configurations → Additional run args* : `--dart-define-from-file=env.json`. Sans ce fichier, la clé est vide (`Env.hasTwelveDataKey` vaut `false`).
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

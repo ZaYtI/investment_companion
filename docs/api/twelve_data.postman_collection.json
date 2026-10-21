@@ -1,0 +1,407 @@
+{
+  "info": {
+    "name": "Investment Companion · Twelve Data (IC-04)",
+    "description": "Tests de l'API Twelve Data pour l'issue #4.\n\nAvant de lancer : onglet Variables de la collection → mettre votre clé dans `apikey` (colonne Current value, qui n'est pas exportée ni partagée). Les résultats détaillés s'affichent dans la console Postman (View → Show Postman Console).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1 · SPY hebdomadaire 2013",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const body = pm.response.json();",
+              "pm.test('Pas d\\'erreur API', () => pm.expect(body.status, body.message).to.not.equal('error'));",
+              "pm.test('Des points sont renvoyés', () => pm.expect(body.values).to.be.an('array').that.is.not.empty);",
+              "if (body.values) {",
+              "  const first = body.values[0], last = body.values[body.values.length - 1];",
+              "  console.log(`${body.meta.symbol} · ${body.values.length} points · du ${first.datetime} au ${last.datetime}`);",
+              "  pm.test('Les prix arrivent en chaînes', () => pm.expect(first.close).to.be.a('string'));",
+              "  pm.test('Au moins 50 points', () => pm.expect(body.values.length).to.be.at.least(50));",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "Chapitres 2 et 3 : série hebdomadaire. Sans outputsize, l'API ne renvoie que 30 points. end_date est exclusive.",
+        "url": {
+          "raw": "{{baseUrl}}/time_series?symbol=SPY&interval=1week&start_date=2013-01-01&end_date=2014-01-01&outputsize=5000&order=asc&apikey={{apikey}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "time_series"
+          ],
+          "query": [
+            {
+              "key": "symbol",
+              "value": "SPY"
+            },
+            {
+              "key": "interval",
+              "value": "1week"
+            },
+            {
+              "key": "start_date",
+              "value": "2013-01-01"
+            },
+            {
+              "key": "end_date",
+              "value": "2014-01-01"
+            },
+            {
+              "key": "outputsize",
+              "value": "5000"
+            },
+            {
+              "key": "order",
+              "value": "asc"
+            },
+            {
+              "key": "apikey",
+              "value": "{{apikey}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "2 · SPY quotidien février-avril 2020",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const body = pm.response.json();",
+              "pm.test('Pas d\\'erreur API', () => pm.expect(body.status, body.message).to.not.equal('error'));",
+              "pm.test('Des points sont renvoyés', () => pm.expect(body.values).to.be.an('array').that.is.not.empty);",
+              "if (body.values) {",
+              "  const first = body.values[0], last = body.values[body.values.length - 1];",
+              "  console.log(`${body.meta.symbol} · ${body.values.length} points · du ${first.datetime} au ${last.datetime}`);",
+              "  pm.test('Les prix arrivent en chaînes', () => pm.expect(first.close).to.be.a('string'));",
+              "  pm.test('Au moins 45 points', () => pm.expect(body.values.length).to.be.at.least(45));",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "Chapitre 6 : séance par séance du sommet (19/02) au 30/04/2020. Repérer le 12 et le 16 mars.",
+        "url": {
+          "raw": "{{baseUrl}}/time_series?symbol=SPY&interval=1day&start_date=2020-02-19&end_date=2020-04-30&outputsize=5000&order=asc&apikey={{apikey}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "time_series"
+          ],
+          "query": [
+            {
+              "key": "symbol",
+              "value": "SPY"
+            },
+            {
+              "key": "interval",
+              "value": "1day"
+            },
+            {
+              "key": "start_date",
+              "value": "2020-02-19"
+            },
+            {
+              "key": "end_date",
+              "value": "2020-04-30"
+            },
+            {
+              "key": "outputsize",
+              "value": "5000"
+            },
+            {
+              "key": "order",
+              "value": "asc"
+            },
+            {
+              "key": "apikey",
+              "value": "{{apikey}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "3 · BTC/USD hebdomadaire depuis 2018",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const body = pm.response.json();",
+              "pm.test('Pas d\\'erreur API', () => pm.expect(body.status, body.message).to.not.equal('error'));",
+              "pm.test('Des points sont renvoyés', () => pm.expect(body.values).to.be.an('array').that.is.not.empty);",
+              "if (body.values) {",
+              "  const first = body.values[0], last = body.values[body.values.length - 1];",
+              "  console.log(`${body.meta.symbol} · ${body.values.length} points · du ${first.datetime} au ${last.datetime}`);",
+              "  pm.test('Les prix arrivent en chaînes', () => pm.expect(first.close).to.be.a('string'));",
+              "  pm.test('Au moins 40 points', () => pm.expect(body.values.length).to.be.at.least(40));",
+              "}",
+              "if (body.values) pm.test('Commence en 2018', () => pm.expect(body.values[0].datetime.startsWith('2018')).to.be.true);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "Chapitre 2 : l'historique BTC/USD de Twelve Data (Binance) commence le 28 août 2017. Le chapitre démarre donc en 2018 (départs 2018, 2019, 2020, 2022).",
+        "url": {
+          "raw": "{{baseUrl}}/time_series?symbol=BTC/USD&interval=1week&start_date=2018-01-01&end_date=2019-01-01&outputsize=5000&order=asc&apikey={{apikey}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "time_series"
+          ],
+          "query": [
+            {
+              "key": "symbol",
+              "value": "BTC/USD"
+            },
+            {
+              "key": "interval",
+              "value": "1week"
+            },
+            {
+              "key": "start_date",
+              "value": "2018-01-01"
+            },
+            {
+              "key": "end_date",
+              "value": "2019-01-01"
+            },
+            {
+              "key": "outputsize",
+              "value": "5000"
+            },
+            {
+              "key": "order",
+              "value": "asc"
+            },
+            {
+              "key": "apikey",
+              "value": "{{apikey}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "4 · SPY mensuel 2022 (DCA)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const body = pm.response.json();",
+              "pm.test('Pas d\\'erreur API', () => pm.expect(body.status, body.message).to.not.equal('error'));",
+              "pm.test('Des points sont renvoyés', () => pm.expect(body.values).to.be.an('array').that.is.not.empty);",
+              "if (body.values) {",
+              "  const first = body.values[0], last = body.values[body.values.length - 1];",
+              "  console.log(`${body.meta.symbol} · ${body.values.length} points · du ${first.datetime} au ${last.datetime}`);",
+              "  pm.test('Les prix arrivent en chaînes', () => pm.expect(first.close).to.be.a('string'));",
+              "  pm.test('Au moins 12 points', () => pm.expect(body.values.length).to.be.at.least(12));",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "Chapitre 4 : une valeur par mois. Comparer avec le premier jour de bourse de chaque mois d'une série quotidienne.",
+        "url": {
+          "raw": "{{baseUrl}}/time_series?symbol=SPY&interval=1month&start_date=2022-01-01&end_date=2023-01-01&outputsize=5000&order=asc&apikey={{apikey}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "time_series"
+          ],
+          "query": [
+            {
+              "key": "symbol",
+              "value": "SPY"
+            },
+            {
+              "key": "interval",
+              "value": "1month"
+            },
+            {
+              "key": "start_date",
+              "value": "2022-01-01"
+            },
+            {
+              "key": "end_date",
+              "value": "2023-01-01"
+            },
+            {
+              "key": "outputsize",
+              "value": "5000"
+            },
+            {
+              "key": "order",
+              "value": "asc"
+            },
+            {
+              "key": "apikey",
+              "value": "{{apikey}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "5 · Recherche de symboles",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const body = pm.response.json();",
+              "pm.test('Des résultats', () => pm.expect(body.data).to.be.an('array').that.is.not.empty);",
+              "if (body.data) console.log(body.data.slice(0, 5).map(d => `${d.symbol} · ${d.instrument_name} · ${d.exchange} · ${d.instrument_type}`).join('\\n'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "Explorer (#45) : recherche libre d'actifs. Pas de clé exigée pour cet endpoint, elle est passée quand même.",
+        "url": {
+          "raw": "{{baseUrl}}/symbol_search?symbol=apple&apikey={{apikey}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "symbol_search"
+          ],
+          "query": [
+            {
+              "key": "symbol",
+              "value": "apple"
+            },
+            {
+              "key": "apikey",
+              "value": "{{apikey}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "6 · Consommation des crédits",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const body = pm.response.json();",
+              "console.log(`Minute : ${body.current_usage}/${body.plan_limit} · Jour : ${body.daily_usage}/${body.plan_daily_limit}`);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "Crédits utilisés dans la minute et la journée (limites gratuites : 8/min, 800/jour).",
+        "url": {
+          "raw": "{{baseUrl}}/api_usage?apikey={{apikey}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api_usage"
+          ],
+          "query": [
+            {
+              "key": "apikey",
+              "value": "{{apikey}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "7 · Test du quota (à lancer 10 fois dans le Runner)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const body = pm.response.json();",
+              "console.log(`Itération ${pm.info.iteration + 1} · HTTP ${pm.response.code} · status=${body.status || 'ok'} · code=${body.code || '-'} · ${body.message || ''}`);",
+              "pm.test('Réponse reçue', () => pm.response.to.have.status(pm.response.code));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "Lancer avec le Collection Runner sur cette seule requête, 10 itérations, délai 0. Observer à partir de quelle itération l'erreur apparaît, avec quel code HTTP et quel message.",
+        "url": {
+          "raw": "{{baseUrl}}/time_series?symbol=SPY&interval=1day&outputsize=1&apikey={{apikey}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "time_series"
+          ],
+          "query": [
+            {
+              "key": "symbol",
+              "value": "SPY"
+            },
+            {
+              "key": "interval",
+              "value": "1day"
+            },
+            {
+              "key": "outputsize",
+              "value": "1"
+            },
+            {
+              "key": "apikey",
+              "value": "{{apikey}}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.twelvedata.com"
+    },
+    {
+      "key": "apikey",
+      "value": ""
+    }
+  ]
+}
