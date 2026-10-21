@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'ui/theme/app_theme.dart';
+
 class InvestmentCompanionApp extends StatelessWidget {
   const InvestmentCompanionApp({super.key});
 
@@ -7,10 +9,11 @@ class InvestmentCompanionApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: title,
       debugShowCheckedModeBanner: false,
-      home: Scaffold(body: Center(child: Text(title))),
+      theme: AppTheme.light,
+      home: const Scaffold(body: Center(child: Text(title))),
     );
   }
 }
