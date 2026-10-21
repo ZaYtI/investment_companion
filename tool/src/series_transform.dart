@@ -81,7 +81,7 @@ const weeksPerYear = 52;
 const bondIndexBase = 100.0;
 
 double parBondPrice({required double coupon, required double yield}) {
-  final periods = bondMaturityYears * couponsPerYear;
+  const periods = bondMaturityYears * couponsPerYear;
   final periodYield = yield / couponsPerYear;
   final periodCoupon = coupon / couponsPerYear;
   if (periodYield == 0) return 1 + periodCoupon * periods;
