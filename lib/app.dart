@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'ui/theme/app_theme.dart';
+import 'ui/widgets/buttons/primary_button.dart';
 
 class InvestmentCompanionApp extends StatelessWidget {
   const InvestmentCompanionApp({super.key});
@@ -13,7 +14,17 @@ class InvestmentCompanionApp extends StatelessWidget {
       title: title,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const Scaffold(body: Center(child: Text(title))),
+      home: Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 22),
+            child: PrimaryButton(
+              text: 'Terminer le niveau · +60 XP',
+              onPressed: () => debugPrint('Bouton appuyé'),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
