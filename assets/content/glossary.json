@@ -1,0 +1,25 @@
+{
+  "terms": [
+    { "id": "actif", "term": "Actif", "definition": "Ce qu'on peut acheter puis revendre, et dont le prix change.", "chapter": 1 },
+    { "id": "prix", "term": "Prix", "definition": "Ce que coûte une part d'un actif à un moment donné.", "chapter": 1 },
+    { "id": "part", "term": "Part", "definition": "Une fraction d'un actif, achetée au prix du jour.", "chapter": 1 },
+    { "id": "action", "term": "Action", "definition": "Une part d'une entreprise.", "chapter": 1 },
+    { "id": "etf", "term": "ETF", "definition": "Un panier d'actifs qu'on achète en une seule part.", "chapter": 1 },
+    { "id": "performance", "term": "Performance", "definition": "La variation du prix, en pourcentage du prix de départ.", "chapter": 1 },
+    { "id": "gain-latent", "term": "Gain latent", "definition": "Un gain sur le papier, qui n'est acquis qu'à la vente.", "chapter": 1 },
+    { "id": "risque", "term": "Risque", "definition": "L'écart possible entre ce qu'on attend et ce qui arrive.", "chapter": 2 },
+    { "id": "volatilite", "term": "Volatilité", "definition": "L'amplitude des variations de prix, à la hausse comme à la baisse.", "chapter": 2 },
+    { "id": "baisse-maximale", "term": "Baisse maximale", "definition": "La plus grande chute entre un sommet et le creux qui suit.", "chapter": 3 },
+    { "id": "obligation", "term": "Obligation", "definition": "Un prêt à un État ou à une entreprise, qui verse un intérêt.", "chapter": 3 },
+    { "id": "horizon", "term": "Horizon", "definition": "La durée pendant laquelle on peut laisser son argent investi.", "chapter": 3 },
+    { "id": "dca", "term": "DCA", "definition": "Investir la même somme à intervalles réguliers.", "chapter": 4 },
+    { "id": "prix-de-revient-moyen", "term": "Prix de revient moyen", "definition": "Le total versé divisé par le nombre de parts possédées.", "chapter": 4 },
+    { "id": "taux-directeur", "term": "Taux directeur", "definition": "Le taux fixé par la banque centrale, qui influence tous les autres.", "chapter": 4 },
+    { "id": "inflation", "term": "Inflation", "definition": "La hausse générale des prix, qui réduit ce qu'on peut acheter avec la même somme.", "chapter": 4 },
+    { "id": "diversification", "term": "Diversification", "definition": "Répartir son argent sur des actifs qui ne bougent pas tous ensemble.", "chapter": 5 },
+    { "id": "ponderation", "term": "Pondération", "definition": "La part de chaque actif dans le portefeuille, en pourcentage.", "chapter": 5 },
+    { "id": "aversion-a-la-perte", "term": "Aversion à la perte", "definition": "Le fait qu'une perte pèse plus qu'un gain de même taille.", "chapter": 6 },
+    { "id": "interets-composes", "term": "Intérêts composés", "definition": "Des gains qui rapportent à leur tour des gains.", "chapter": 7 },
+    { "id": "rendement", "term": "Rendement", "definition": "Ce qu'un placement rapporte, en pourcentage, sur une période.", "chapter": 7 }
+  ]
+}
