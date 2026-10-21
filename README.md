@@ -2,6 +2,23 @@
 
 A new Flutter project.
 
+## Architecture
+
+Application Android et iOS, organisée en couches. Une couche n'appelle que celle du dessous :
+
+```
+lib/
+  main.dart     point d'entrée
+  app.dart      MaterialApp, thème, navigation
+  ui/           écrans et widgets, aucun calcul
+  providers/    état de l'application (Riverpod)
+  services/     logique métier en Dart pur, sans import Flutter
+  data/         dépôts : API, base locale, fichiers embarqués
+  models/       classes de données
+```
+
+ui → providers → services → data
+
 ## Lancement
 
 L'application lit la clé de l'API Twelve Data à la compilation, depuis un fichier `env.json` qui n'est pas versionné.
