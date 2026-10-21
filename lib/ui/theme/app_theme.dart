@@ -72,6 +72,12 @@ abstract final class AppTheme {
           disabledForegroundColor: AppColors.textSecondary,
         ),
       ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.textSecondary,
+          textStyle: text.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+        ),
+      ),
       progressIndicatorTheme: const ProgressIndicatorThemeData(
         color: AppColors.mint,
         linearTrackColor: AppColors.border,

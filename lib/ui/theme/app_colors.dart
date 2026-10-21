@@ -4,6 +4,7 @@ abstract final class AppColors {
   static const background = Color(0xFFF4F7FB);
   static const surface = Color(0xFFFFFFFF);
   static const border = Color(0xFFE3E9F0);
+  static const dashedBorder = Color(0xFFC5D0DC);
   static const mapNight = Color(0xFF0E1B2C);
   static const mapNightLight = Color(0xFF1D3A52);
 
