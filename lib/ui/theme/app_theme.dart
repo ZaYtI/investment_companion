@@ -4,6 +4,9 @@ import 'app_colors.dart';
 import 'app_fonts.dart';
 
 abstract final class AppTheme {
+  static const eyebrowLetterSpacing = 1.2;
+  static const segmentRadius = 12.0;
+
   static const colorScheme = ColorScheme(
     brightness: Brightness.light,
     primary: AppColors.mintText,
@@ -53,12 +56,80 @@ abstract final class AppTheme {
         headlineMedium: _title(text.headlineMedium, FontWeight.w700),
         headlineSmall: _title(text.headlineSmall, FontWeight.w700),
         titleLarge: _title(text.titleLarge, FontWeight.w600),
+        labelMedium: text.labelMedium?.copyWith(
+          color: AppColors.goldText,
+          fontWeight: FontWeight.w700,
+          letterSpacing: eyebrowLetterSpacing,
+        ),
       ),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.textPrimary,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
+        titleTextStyle: _title(text.titleLarge, FontWeight.w700),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.surface,
+        selectedColor: AppColors.textPrimary,
+        side: const BorderSide(color: AppColors.border),
+        shape: const StadiumBorder(),
+        showCheckmark: false,
+        labelStyle: text.labelLarge?.copyWith(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w700,
+        ),
+        secondaryLabelStyle: text.labelLarge?.copyWith(
+          color: AppColors.surface,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? AppColors.textPrimary
+                : AppColors.border,
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? AppColors.surface
+                : AppColors.textSecondary,
+          ),
+          side: const WidgetStatePropertyAll(BorderSide.none),
+          textStyle: WidgetStatePropertyAll(
+            text.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+          ),
+          shape: const WidgetStatePropertyAll(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(segmentRadius)),
+            ),
+          ),
+        ),
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: AppColors.surface,
+        surfaceTintColor: Colors.transparent,
+        indicatorColor: Colors.transparent,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        iconTheme: WidgetStateProperty.resolveWith(
+          (states) => IconThemeData(
+            color: states.contains(WidgetState.selected)
+                ? AppColors.mintText
+                : AppColors.textSecondary,
+          ),
+        ),
+        labelTextStyle: WidgetStateProperty.resolveWith(
+          (states) => text.labelMedium?.copyWith(
+            color: states.contains(WidgetState.selected)
+                ? AppColors.mintText
+                : AppColors.textSecondary,
+            fontWeight: states.contains(WidgetState.selected)
+                ? FontWeight.w700
+                : FontWeight.w500,
+          ),
+        ),
       ),
       cardTheme: const CardThemeData(
         color: AppColors.surface,
