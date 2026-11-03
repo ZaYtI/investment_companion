@@ -1,0 +1,160 @@
+{
+  "id": "ch6",
+  "number": 6,
+  "title": "Gérer une crise",
+  "period": { "label": "12 mars 2020", "start": "2020-02-19", "end": "2020-03-23" },
+  "idea": "Une décision prise sous le choc se juge par rapport à un plan fixé à l'avance.",
+  "typicalMistake": "Vendre par peur au pire moment, ou croire qu'il n'y a qu'une bonne réponse quel que soit son plan.",
+  "series": ["spy_daily_2020"],
+  "levels": [
+    {
+      "id": "ch6.l1",
+      "type": "understand",
+      "title": "Comprendre",
+      "xp": 20,
+      "screens": [
+        {
+          "id": "ch6.l1.s1",
+          "kind": "hook",
+          "title": "Alerte",
+          "text": "La bourse chute de 9,6 % aujourd'hui. Quel est votre premier réflexe ?",
+          "options": ["Tout vendre", "Ne rien faire", "En profiter pour acheter"],
+          "pip": "Respirez. Personne ne vous demande de décider tout de suite.",
+          "terms": []
+        },
+        {
+          "id": "ch6.l1.s2",
+          "kind": "explanation",
+          "title": "La peur de perdre",
+          "text": "La variation est le changement de prix d'un jour à l'autre. Perdre fait plus mal que gagner ne fait plaisir. C'est l'aversion à la perte, qui pousse à vendre au pire moment.",
+          "pip": null,
+          "terms": ["variation", "aversion-a-la-perte"]
+        },
+        {
+          "id": "ch6.l1.s3",
+          "kind": "example",
+          "title": "Un exemple chiffré",
+          "text": "10 000 € perdent 9 % un jour, puis gagnent 5 % le lendemain.",
+          "steps": [
+            { "label": "Après −9 %", "value": "9 100 €" },
+            { "label": "Après +5 %", "value": "9 555 €" },
+            { "label": "Bilan", "value": "pas 10 000 € : les deux ne s'annulent pas" }
+          ],
+          "pip": null,
+          "terms": ["variation"]
+        },
+        {
+          "id": "ch6.l1.s4",
+          "kind": "quiz",
+          "title": "À vous de jouer",
+          "passingScore": 2,
+          "questions": [
+            {
+              "id": "ch6.l1.q1",
+              "question": "10 000 € perdent 9 %. Combien reste-t-il ?",
+              "choices": ["9 900 €", "9 100 €", "9 000 €"],
+              "answerIndex": 1,
+              "explanation": "9 % de 10 000 € font 900 €."
+            },
+            {
+              "id": "ch6.l1.q2",
+              "question": "Après −9 % puis +9 %, retrouve-t-on 10 000 € ?",
+              "choices": ["Oui", "Non, on a 9 919 €", "Non, on a 10 081 €"],
+              "answerIndex": 1,
+              "explanation": "La hausse de 9 % s'applique à 9 100 €, pas à 10 000 €."
+            },
+            {
+              "id": "ch6.l1.q3",
+              "question": "En pleine chute, quel réflexe fait le plus souvent perdre de l'argent aux débutants ?",
+              "choices": ["Ne rien faire", "Vendre par peur", "Relire son plan"],
+              "answerIndex": 1,
+              "explanation": "La perte est alors fixée, même si le prix remonte ensuite."
+            }
+          ],
+          "pip": "Se tromper ici ne coûte rien. C'est fait pour ça.",
+          "terms": []
+        }
+      ]
+    },
+    {
+      "id": "ch6.l2",
+      "type": "simulate",
+      "title": "Simuler",
+      "xp": 60,
+      "instruction": "10 000 € sont placés dans l'ETF S&P 500 le 19 février 2020. Avancez jour par jour.",
+      "simulator": "dailyReplay",
+      "settings": {
+        "asset": "spy_daily_2020",
+        "start": "2020-02-19",
+        "capital": 10000,
+        "highlightedDays": [
+          { "date": "2020-02-24", "label": "Les marchés prennent peur." },
+          { "date": "2020-03-09", "label": "Les échanges sont suspendus pour la première fois." },
+          { "date": "2020-03-12", "label": "La pire séance depuis 1987." },
+          { "date": "2020-03-16", "label": "Une nouvelle chute, encore plus forte." },
+          { "date": "2020-03-23", "label": "Le creux. Personne ne le savait ce jour-là." }
+        ],
+        "jumps": [
+          { "label": "Aller au 23 mars", "date": "2020-03-23" },
+          { "label": "Aller au 12 mars 2021", "date": "2021-03-12" }
+        ]
+      },
+      "readingQuestion": {
+        "id": "ch6.l2.q1",
+        "question": "Combien de séances s'écoulent entre le sommet et le creux ?",
+        "choices": ["8", "23", "60"],
+        "answerIndex": 1,
+        "explanation": "23 séances, à peine plus d'un mois. La chute a été très rapide, et on ne sait jamais à l'avance si on est au creux."
+      },
+      "notes": [
+        "Cours quotidiens de clôture, en dollars.",
+        "Les performances passées ne préjugent pas de l'avenir."
+      ]
+    },
+    {
+      "id": "ch6.l3",
+      "type": "challenge",
+      "title": "Défi",
+      "xp": 60,
+      "challenge": {
+        "kind": "decision",
+        "situation": "12 mars 2020. Hier, votre portefeuille valait 10 000 €. Ce soir, il vaut environ 9 040 €. Que faites-vous ?",
+        "plans": [
+          { "id": "long", "label": "Je garde cet argent 10 ans" },
+          { "id": "short", "label": "J'aurai besoin de cet argent dans 1 an" }
+        ],
+        "planFromLevel": null,
+        "timerSeconds": 15,
+        "timeoutChoice": "doNothing",
+        "choices": [
+          {
+            "id": "sellAll",
+            "label": "Tout vendre",
+            "scores": {
+              "long": { "coherence": 10, "prudence": 100, "composure": 15 },
+              "short": { "coherence": 85, "prudence": 100, "composure": 70 }
+            }
+          },
+          {
+            "id": "doNothing",
+            "label": "Ne rien faire",
+            "scores": {
+              "long": { "coherence": 90, "prudence": 60, "composure": 85 },
+              "short": { "coherence": 35, "prudence": 60, "composure": 60 }
+            }
+          },
+          {
+            "id": "addMore",
+            "label": "Renforcer de 500 € virtuels",
+            "scores": {
+              "long": { "coherence": 75, "prudence": 25, "composure": 80 },
+              "short": { "coherence": 10, "prudence": 25, "composure": 40 }
+            }
+          }
+        ],
+        "afterwards": "Le marché a encore perdu environ 10 % dans les 7 séances suivantes, avant de remonter. Un an plus tard, il valait environ 59 % de plus que le soir du 12 mars. Rien de cela n'était connu ce jour-là.",
+        "keyMessage": "La bonne réponse dépend de votre plan, pas de la peur du moment."
+      }
+    }
+  ]
+}
