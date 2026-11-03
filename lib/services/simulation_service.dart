@@ -102,13 +102,7 @@ class SimulationService {
     if (series.isEmpty) {
       throw const InvalidInputException('Choisissez au moins un actif.');
     }
-    return {
-      for (final id in series.keys)
-        id: series[id]!.between(
-          series[id]!.points.lastWhere((p) => !p.date.isAfter(start)).date,
-          end,
-        ),
-    };
+    return {for (final id in series.keys) id: series[id]!.between(start, end)};
   }
 
   SimulationResult _lumpSum(
