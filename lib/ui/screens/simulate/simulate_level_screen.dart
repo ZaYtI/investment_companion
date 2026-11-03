@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/chapters_data.dart';
-import '../../../models/level_type.dart';
 import '../../../models/simulate_level.dart';
 import '../../widgets/states/empty_view.dart';
 import '../../widgets/states/error_view.dart';
+import 'daily_replay_screen.dart';
 import 'dca_simulator_screen.dart';
+import 'drawdown_timeline_screen.dart';
+import 'goal_scenarios_screen.dart';
+import 'portfolio_replay_screen.dart';
+import 'risk_comparison_screen.dart';
+import 'single_asset_simulator_screen.dart';
 
 class SimulateLevelScreen extends StatefulWidget {
   final int chapterNumber;
@@ -40,18 +45,38 @@ class _SimulateLevelScreenState extends State<SimulateLevelScreen> {
           );
         }
         final level = snapshot.data!;
+        final chapterNumber = widget.chapterNumber;
         return switch (level.simulator) {
+          'singleAsset' => SingleAssetSimulatorScreen(
+            chapterNumber: chapterNumber,
+            level: level,
+          ),
+          'riskComparison' => RiskComparisonScreen(
+            chapterNumber: chapterNumber,
+            level: level,
+          ),
+          'drawdownTimeline' => DrawdownTimelineScreen(
+            chapterNumber: chapterNumber,
+            level: level,
+          ),
           'dca' => DcaSimulatorScreen(
-            chapterNumber: widget.chapterNumber,
+            chapterNumber: chapterNumber,
+            level: level,
+          ),
+          'portfolioReplay' => PortfolioReplayScreen(
+            chapterNumber: chapterNumber,
+            level: level,
+          ),
+          'dailyReplay' => DailyReplayScreen(
+            chapterNumber: chapterNumber,
+            level: level,
+          ),
+          'goalScenarios' => GoalScenariosScreen(
+            chapterNumber: chapterNumber,
             level: level,
           ),
           _ => Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Chapitre ${widget.chapterNumber} · '
-                '${LevelType.simulate.title}',
-              ),
-            ),
+            appBar: AppBar(),
             body: const Center(
               child: EmptyView(
                 message: 'Ce simulateur arrive bientôt.',
