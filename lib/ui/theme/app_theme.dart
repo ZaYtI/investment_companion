@@ -7,6 +7,8 @@ abstract final class AppTheme {
   static const eyebrowLetterSpacing = 1.2;
   static const segmentRadius = 12.0;
   static const appBarTitleSize = 22.0;
+  static const sliderTrackHeight = 10.0;
+  static const sliderThumbRadius = 14.0;
 
   static const colorScheme = ColorScheme(
     brightness: Brightness.light,
@@ -159,6 +161,16 @@ abstract final class AppTheme {
         color: AppColors.mint,
         linearTrackColor: AppColors.border,
         circularTrackColor: AppColors.border,
+      ),
+      sliderTheme: const SliderThemeData(
+        activeTrackColor: AppColors.mint,
+        inactiveTrackColor: AppColors.border,
+        thumbColor: AppColors.gold,
+        overlayColor: AppColors.mintPale,
+        trackHeight: sliderTrackHeight,
+        thumbShape: RoundSliderThumbShape(
+          enabledThumbRadius: sliderThumbRadius,
+        ),
       ),
     );
   }
