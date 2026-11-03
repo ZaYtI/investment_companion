@@ -4,12 +4,14 @@ enum SeriesFrequency { daily, weekly, monthly }
 
 class PriceSeries {
   final String id;
+  final String symbol;
   final String name;
   final SeriesFrequency frequency;
   final List<PricePoint> points;
 
   const PriceSeries({
     required this.id,
+    required this.symbol,
     required this.name,
     required this.frequency,
     required this.points,
@@ -22,6 +24,7 @@ class PriceSeries {
     points.sort((a, b) => a.date.compareTo(b.date));
     return PriceSeries(
       id: json['id'] as String,
+      symbol: json['symbol'] as String,
       name: json['name'] as String,
       frequency: switch (json['frequency'] as String) {
         'daily' => SeriesFrequency.daily,
@@ -41,12 +44,19 @@ class PriceSeries {
     SeriesFrequency.monthly => 12,
   };
 
-  PriceSeries between(DateTime? from, DateTime? to) {
+  PriceSeries withPoints(List<PricePoint> newPoints) {
     return PriceSeries(
       id: id,
+      symbol: symbol,
       name: name,
       frequency: frequency,
-      points: points
+      points: newPoints,
+    );
+  }
+
+  PriceSeries between(DateTime? from, DateTime? to) {
+    return withPoints(
+      points
           .where(
             (point) =>
                 (from == null || !point.date.isBefore(from)) &&
