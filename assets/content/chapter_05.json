@@ -1,0 +1,140 @@
+{
+  "id": "ch5",
+  "number": 5,
+  "title": "Diversifier",
+  "period": { "label": "2000 à 2002", "start": "1999-03-08", "end": "2002-10-31" },
+  "idea": "Diversifier, c'est répartir son argent sur des actifs qui ne réagissent pas tous de la même façon. La pondération est la part de chaque actif.",
+  "typicalMistake": "Croire que posséder beaucoup de lignes suffit : cinq entreprises du même secteur ne diversifient presque rien.",
+  "series": ["qqq_weekly", "spy_weekly", "bonds_weekly", "gold_weekly"],
+  "levels": [
+    {
+      "id": "ch5.l1",
+      "type": "understand",
+      "title": "Comprendre",
+      "xp": 20,
+      "screens": [
+        {
+          "id": "ch5.l1.s1",
+          "kind": "hook",
+          "title": "Cinq paniers ou un seul ?",
+          "text": "Vous possédez cinq entreprises technologiques. Avez-vous mis vos œufs dans cinq paniers, ou dans un seul ?",
+          "options": ["Cinq paniers", "Un seul panier", "Ça dépend"],
+          "pip": "Un panier qui tombe casse tous les œufs qu'il contient.",
+          "terms": []
+        },
+        {
+          "id": "ch5.l1.s2",
+          "kind": "explanation",
+          "title": "Diversifier",
+          "text": "Diversifier, c'est répartir son argent sur des actifs qui ne bougent pas tous ensemble. La pondération est la part de chaque actif dans le total, en pourcentage.",
+          "pip": null,
+          "terms": ["diversification", "ponderation"]
+        },
+        {
+          "id": "ch5.l1.s3",
+          "kind": "example",
+          "title": "Un exemple chiffré",
+          "text": "10 000 € placés à 60 % dans l'actif A et à 40 % dans l'actif B. A perd 20 %, B gagne 10 %.",
+          "steps": [
+            { "label": "Part de A", "value": "6 000 € deviennent 4 800 €" },
+            { "label": "Part de B", "value": "4 000 € deviennent 4 400 €" },
+            { "label": "Total", "value": "9 200 €, soit −8 % au lieu de −20 %" }
+          ],
+          "pip": null,
+          "terms": ["ponderation"]
+        },
+        {
+          "id": "ch5.l1.s4",
+          "kind": "quiz",
+          "title": "À vous de jouer",
+          "passingScore": 2,
+          "questions": [
+            {
+              "id": "ch5.l1.q1",
+              "question": "10 000 € placés à 70 % et 30 %. L'actif à 70 % perd 10 %, l'autre gagne 10 %. Valeur finale ?",
+              "choices": ["10 000 €", "9 600 €", "9 000 €"],
+              "answerIndex": 1,
+              "explanation": "7 000 × 0,9 = 6 300 et 3 000 × 1,1 = 3 300 : total 9 600 €, soit −4 %."
+            },
+            {
+              "id": "ch5.l1.q2",
+              "question": "Diversifier signifie…",
+              "choices": [
+                "Posséder le plus de lignes possible",
+                "Choisir des actifs qui ne réagissent pas tous de la même manière",
+                "Tout placer sur l'actif le plus sûr"
+              ],
+              "answerIndex": 1,
+              "explanation": "Le nombre de lignes compte moins que la différence entre elles."
+            },
+            {
+              "id": "ch5.l1.q3",
+              "question": "Cinq grandes entreprises technologiques forment-elles un portefeuille diversifié ?",
+              "choices": ["Oui", "Pas vraiment"],
+              "answerIndex": 1,
+              "explanation": "Elles réagissent souvent aux mêmes nouvelles."
+            }
+          ],
+          "pip": "On apprend autant d'une erreur que d'une bonne réponse.",
+          "terms": []
+        }
+      ]
+    },
+    {
+      "id": "ch5.l2",
+      "type": "simulate",
+      "title": "Simuler",
+      "xp": 60,
+      "instruction": "Comparez trois portefeuilles face à l'éclatement de la bulle internet, puis composez le vôtre.",
+      "simulator": "portfolioReplay",
+      "settings": {
+        "entryDates": [
+          { "date": "1999-03-08", "label": "Mars 1999, avant l'euphorie" },
+          { "date": "2000-03-06", "label": "Mars 2000, au sommet" }
+        ],
+        "end": "2002-10-31",
+        "capital": 10000,
+        "assets": [
+          { "id": "qqq_weekly", "label": "Technologie" },
+          { "id": "spy_weekly", "label": "Grandes entreprises" },
+          { "id": "bonds_weekly", "label": "Obligations d'État" },
+          { "id": "gold_weekly", "label": "Or" }
+        ],
+        "presets": [
+          { "id": "tech", "label": "A · 100 % technologie", "weights": { "qqq_weekly": 1.0 } },
+          { "id": "large", "label": "B · 100 % grandes entreprises", "weights": { "spy_weekly": 1.0 } },
+          { "id": "mixed", "label": "C · Diversifié", "weights": { "spy_weekly": 0.4, "bonds_weekly": 0.4, "gold_weekly": 0.2 } }
+        ]
+      },
+      "readingQuestion": {
+        "id": "ch5.l2.q1",
+        "question": "Entré en mars 2000, quel portefeuille a le moins baissé ?",
+        "choices": ["A · Technologie", "B · Grandes entreprises", "C · Diversifié"],
+        "answerIndex": 2,
+        "explanation": "C perd au pire environ 8 %, contre 47 % pour B et 83 % pour A. Mais en 1999, c'est A qui faisait envie."
+      },
+      "notes": [
+        "Le portefeuille est acheté une fois au départ, sans rééquilibrage : les pondérations changent avec les prix.",
+        "Diversifier réduit les mauvaises surprises, pas le résultat moyen à coup sûr.",
+        "Les obligations sont reconstituées à partir des taux d'État américains à 10 ans."
+      ]
+    },
+    {
+      "id": "ch5.l3",
+      "type": "challenge",
+      "title": "Défi",
+      "xp": 60,
+      "challenge": {
+        "kind": "portfolioConstraint",
+        "situation": "Construisez un portefeuille dont la pire baisse reste sous 20 % entre mars 2000 et octobre 2002, avec au moins 30 % en actions.",
+        "period": { "start": "2000-03-06", "end": "2002-10-31" },
+        "maxDrawdown": -0.20,
+        "minEquityWeight": 0.30,
+        "equityAssets": ["qqq_weekly", "spy_weekly"],
+        "attempts": 3,
+        "starsByAttempt": [3, 2, 1],
+        "keyMessage": "On ne cherche pas le meilleur portefeuille, on cherche celui qui tient quand on s'est trompé."
+      }
+    }
+  ]
+}
