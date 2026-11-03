@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../providers/progress_provider.dart';
+import '../../../providers/settings_provider.dart';
 import '../../../services/badges.dart';
 import '../../../services/day_keys.dart';
 import '../../../services/progression.dart';
@@ -18,6 +19,7 @@ class TrophiesScreen extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final progress = ref.watch(currentProgressProvider);
     final badges = ref.watch(badgesProvider);
+    final settings = ref.watch(appSettingsProvider).value;
     final earnedCount = badges.where((badge) => badge.isEarned).length;
     final streak = progress.currentStreak(
       today: todayKey(),
@@ -60,6 +62,16 @@ class TrophiesScreen extends ConsumerWidget {
             crossAxisSpacing: 10,
             childAspectRatio: 0.72,
             children: [for (final badge in badges) _BadgeCard(badge: badge)],
+          ),
+          const SizedBox(height: 16),
+          SwitchListTile.adaptive(
+            contentPadding: EdgeInsets.zero,
+            activeTrackColor: AppColors.mint,
+            title: const Text('Animation des nouveaux badges'),
+            value: settings?.isBadgeAnimationEnabled ?? true,
+            onChanged: (isEnabled) => ref
+                .read(appSettingsProvider.notifier)
+                .setBadgeAnimationEnabled(isEnabled),
           ),
         ],
       ),
