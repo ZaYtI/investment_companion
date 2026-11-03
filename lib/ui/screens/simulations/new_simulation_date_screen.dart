@@ -130,27 +130,13 @@ class _Timeline extends StatelessWidget {
 
   static const firstYear = 1998;
   static const dotSize = 18.0;
-  static const minimumGap = 0.1;
-
-  List<KeyMoment> get _sortedMoments =>
-      [...KeyMoment.all]..sort((a, b) => a.date.compareTo(b.date));
-
-  bool _isTooCloseToPrevious(int index) {
-    if (index == 0) return false;
-    final moments = _sortedMoments;
-    return _position(moments[index].date) - _position(moments[index - 1].date) <
-        minimumGap;
-  }
-
-  double _position(DateTime date) {
-    final lastYear = DateTime.now().year + 1;
-    final years = date.year + date.month / 12 - firstYear;
-    return years / (lastYear - firstYear);
-  }
+  static const lineHeight = 4.0;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final moments = [...KeyMoment.all]
+      ..sort((a, b) => a.date.compareTo(b.date));
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,32 +148,25 @@ class _Timeline extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            height: 58,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final width = constraints.maxWidth - dotSize;
-                return Stack(
-                  children: [
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      top: dotSize / 2 - 2,
-                      child: Container(height: 4, color: AppColors.border),
+          Stack(
+            children: [
+              Positioned(
+                left: 0,
+                right: 0,
+                top: (dotSize - lineHeight) / 2,
+                child: Container(height: lineHeight, color: AppColors.border),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  for (final moment in moments)
+                    _TimelineDot(
+                      year: moment.date.year,
+                      isSelected: moment.date == selected,
                     ),
-                    for (final (index, moment) in _sortedMoments.indexed)
-                      Positioned(
-                        left: width * _position(moment.date),
-                        child: _TimelineDot(
-                          year: moment.date.year,
-                          isSelected: moment.date == selected,
-                          isLabelLowered: _isTooCloseToPrevious(index),
-                        ),
-                      ),
-                  ],
-                );
-              },
-            ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
@@ -198,13 +177,8 @@ class _Timeline extends StatelessWidget {
 class _TimelineDot extends StatelessWidget {
   final int year;
   final bool isSelected;
-  final bool isLabelLowered;
 
-  const _TimelineDot({
-    required this.year,
-    required this.isSelected,
-    required this.isLabelLowered,
-  });
+  const _TimelineDot({required this.year, required this.isSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +196,7 @@ class _TimelineDot extends StatelessWidget {
             ),
           ),
         ),
-        if (isLabelLowered) const SizedBox(height: 14),
+        const SizedBox(height: 4),
         Text(
           '$year',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
