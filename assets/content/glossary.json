@@ -19,8 +19,10 @@
     { "id": "inflation", "term": "Inflation", "definition": "La hausse générale des prix, qui réduit ce qu'on peut acheter avec la même somme.", "chapter": 4 },
     { "id": "diversification", "term": "Diversification", "definition": "Répartir son argent sur des actifs qui ne bougent pas tous ensemble.", "chapter": 5 },
     { "id": "ponderation", "term": "Pondération", "definition": "La part de chaque actif dans le portefeuille, en pourcentage.", "chapter": 5 },
+    { "id": "variation", "term": "Variation", "definition": "Le changement de prix d'un jour à l'autre, en pourcentage.", "chapter": 6 },
     { "id": "aversion-a-la-perte", "term": "Aversion à la perte", "definition": "Le fait qu'une perte pèse plus qu'un gain de même taille.", "chapter": 6 },
     { "id": "interets-composes", "term": "Intérêts composés", "definition": "Des gains qui rapportent à leur tour des gains.", "chapter": 7 },
+    { "id": "regle-des-72", "term": "Règle des 72", "definition": "72 divisé par le taux annuel donne à peu près le nombre d'années pour doubler.", "chapter": 7 },
     { "id": "rendement", "term": "Rendement", "definition": "Ce qu'un placement rapporte, en pourcentage, sur une période.", "chapter": 7 }
   ]
 }
