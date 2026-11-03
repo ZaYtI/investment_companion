@@ -8,6 +8,9 @@ abstract final class AppRoutes {
 
   static String chapter(int number) => '$map/chapitre/$number';
 
+  static String chapterContext(int chapterNumber) =>
+      '${chapter(chapterNumber)}/contexte';
+
   static String level(int chapterNumber, int levelIndex) =>
       '${chapter(chapterNumber)}/niveau/$levelIndex';
 }

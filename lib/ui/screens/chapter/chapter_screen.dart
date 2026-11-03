@@ -9,6 +9,7 @@ import '../../../models/progress_status.dart';
 import '../../router/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/badges/app_badge.dart';
+import '../../widgets/buttons/dashed_button.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/cards/selectable_card.dart';
 import '../../widgets/mascot/pip_island.dart';
@@ -118,6 +119,16 @@ class _ChapterContent extends StatelessWidget {
                     color: AppColors.textSecondary,
                   ),
                 ),
+                if (chapter.context != null) ...[
+                  const SizedBox(height: 16),
+                  DashedActionButton(
+                    label: "Contexte de l'époque",
+                    icon: Icons.history_edu,
+                    alignment: Alignment.centerLeft,
+                    onPressed: () =>
+                        context.push(AppRoutes.chapterContext(chapter.number)),
+                  ),
+                ],
                 const SizedBox(height: 20),
                 for (final (index, level) in LevelType.values.indexed) ...[
                   _LevelCard(

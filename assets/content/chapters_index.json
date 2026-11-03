@@ -5,49 +5,194 @@
       "title": "Les bases",
       "period": "Sans date",
       "intro": "Vous avez 10 000 € virtuels. Que peut-on en faire, et comment mesurer ce qu'on gagne ?",
-      "challenge": "Plus 50 % puis moins 50 %"
+      "challenge": "Plus 50 % puis moins 50 %",
+      "context": null
     },
     {
       "number": 2,
       "title": "Le risque",
       "period": "2018 à aujourd'hui",
       "intro": "Deux actifs peuvent rapporter autant, et l'un faire bien plus peur que l'autre en chemin.",
-      "challenge": "Placer 10 000 € selon votre tolérance au risque"
+      "challenge": "Placer 10 000 € selon votre tolérance au risque",
+      "context": {
+        "question": "Que s'est-il passé depuis 2018 ?",
+        "facts": [
+          {
+            "icon": "trending_down",
+            "text": "Le bitcoin perd environ 80 % en 2018, après une année de folle hausse."
+          },
+          {
+            "icon": "coronavirus",
+            "text": "En mars 2020, la pandémie fait chuter presque tous les marchés en même temps."
+          },
+          {
+            "icon": "arrow_upward",
+            "text": "En 2022, la hausse des taux fait baisser les actions, et encore plus le bitcoin."
+          }
+        ],
+        "figures": "Depuis 2018, la volatilité annuelle du bitcoin dépasse 60 %, contre environ 18 % pour l'ETF S&P 500 et 16 % pour l'or.",
+        "keywords": [
+          "Volatilité",
+          "Bitcoin",
+          "Or"
+        ],
+        "afterwards": "Placés en 2018, 1 000 € deviennent environ 5 075 € en bitcoin, 2 791 € en ETF S&P 500 et 3 155 € en or. Mais le bitcoin a perdu jusqu'à 80 % en chemin."
+      }
     },
     {
       "number": 3,
       "title": "Les baisses",
       "period": "2007 à 2009",
       "intro": "Une perte de 50 % demande un gain de 100 % pour être effacée. Revivez la crise de 2008.",
-      "challenge": "Mars 2009, la perte atteint 50 %"
+      "challenge": "Mars 2009, la perte atteint 50 %",
+      "context": {
+        "question": "Que s'est-il passé de 2007 à 2009 ?",
+        "facts": [
+          {
+            "icon": "show_chart",
+            "text": "Le S&P 500 atteint un sommet le 9 octobre 2007."
+          },
+          {
+            "icon": "account_balance",
+            "text": "La banque Lehman Brothers fait faillite le 15 septembre 2008 : la crise devient mondiale."
+          },
+          {
+            "icon": "trending_down",
+            "text": "Les marchés touchent leur creux le 9 mars 2009."
+          }
+        ],
+        "figures": "L'ETF S&P 500 perd environ 56 % entre octobre 2007 et mars 2009. Pour revenir au sommet, il faut alors gagner plus de 120 %.",
+        "keywords": [
+          "Subprimes",
+          "Lehman Brothers",
+          "Crise bancaire"
+        ],
+        "afterwards": "Trois ans plus tard, en mars 2012, le prix est deux fois plus haut qu'au creux. Le sommet de 2007 n'est retrouvé qu'en mars 2013. Ce n'était pas garanti."
+      }
     },
     {
       "number": 4,
       "title": "Investir chaque mois",
       "period": "2022",
       "intro": "Et si vous aviez placé 100 € chaque mois depuis janvier 2022, malgré les baisses ?",
-      "challenge": "Tenir son plan pendant la baisse"
+      "challenge": "Tenir son plan pendant la baisse",
+      "context": {
+        "question": "Que s'est-il passé en 2022 ?",
+        "facts": [
+          {
+            "icon": "trending_up",
+            "text": "L'inflation grimpe après la guerre en Ukraine et la hausse des prix de l'énergie."
+          },
+          {
+            "icon": "arrow_upward",
+            "text": "Les banques centrales relèvent leurs taux pour la freiner : environ 0,25 % en mars, 4,5 % en décembre aux États-Unis."
+          },
+          {
+            "icon": "trending_down",
+            "text": "Les actions baissent, et les obligations aussi, ce qui est rare."
+          }
+        ],
+        "figures": "L'ETF S&P 500 perd environ 19,5 % sur l'année 2022. Le DCA lisse l'entrée, mais ne supprime pas la baisse.",
+        "keywords": [
+          "Inflation",
+          "Taux directeurs",
+          "Guerre en Ukraine"
+        ],
+        "afterwards": "Avec 100 € par mois depuis janvier 2022, 5 800 € versés valent environ 8 657 € en octobre 2026, soit +49 %."
+      }
     },
     {
       "number": 5,
       "title": "Diversifier",
       "period": "2000 à 2002",
       "intro": "Tout sur la technologie, ou un panier d'actifs différents ? La bulle internet répond.",
-      "challenge": "Construire un portefeuille qui résiste"
+      "challenge": "Construire un portefeuille qui résiste",
+      "context": {
+        "question": "Que s'est-il passé de 2000 à 2002 ?",
+        "facts": [
+          {
+            "icon": "memory",
+            "text": "En mars 2000, les actions technologiques atteignent des prix records : c'est la bulle internet."
+          },
+          {
+            "icon": "trending_down",
+            "text": "La bulle éclate : de nombreuses entreprises du web font faillite jusqu'en 2002."
+          },
+          {
+            "icon": "savings",
+            "text": "Pendant ce temps, les obligations d'État et l'or montent."
+          }
+        ],
+        "figures": "De mars 2000 à octobre 2002, le Nasdaq-100 perd jusqu'à 83 % et le S&P 500 47 %. Un portefeuille diversifié ne perd qu'environ 8 %.",
+        "keywords": [
+          "Bulle internet",
+          "Nasdaq",
+          "Diversification"
+        ],
+        "afterwards": "Le Nasdaq-100 ne retrouve son sommet de mars 2000 qu'en septembre 2016, plus de seize ans plus tard."
+      }
     },
     {
       "number": 6,
       "title": "Gérer une crise",
       "period": "12 mars 2020",
       "intro": "La bourse chute de 9,6 % en une journée. Votre décision dépend-elle de votre plan ou de la peur ?",
-      "challenge": "L'alerte du 12 mars 2020"
+      "challenge": "L'alerte du 12 mars 2020",
+      "context": {
+        "question": "Que s'est-il passé en mars 2020 ?",
+        "facts": [
+          {
+            "icon": "show_chart",
+            "text": "Le 19 février 2020, le S&P 500 est au plus haut."
+          },
+          {
+            "icon": "coronavirus",
+            "text": "Le 11 mars, l'Organisation mondiale de la santé déclare la pandémie de Covid-19."
+          },
+          {
+            "icon": "trending_down",
+            "text": "Le 12 mars, le S&P 500 perd environ 9,6 % en une seule séance."
+          }
+        ],
+        "figures": "Du 19 février au 23 mars 2020, l'ETF S&P 500 perd 34 % en seulement 23 séances.",
+        "keywords": [
+          "Covid-19",
+          "Pandémie",
+          "Krach"
+        ],
+        "afterwards": "Le marché perd encore 10 % dans les 7 séances suivantes, puis remonte : un an plus tard, il vaut environ 59 % de plus. Rien de cela n'était connu le 12 mars."
+      }
     },
     {
       "number": 7,
       "title": "Viser un objectif",
       "period": "Aujourd'hui",
       "intro": "Combien mettre de côté chaque mois pour avoir 20 000 € dans 8 ans ?",
-      "challenge": "Bâtir un plan tenable"
+      "challenge": "Bâtir un plan tenable",
+      "context": {
+        "question": "Pourquoi viser un objectif ?",
+        "facts": [
+          {
+            "icon": "savings",
+            "text": "Les intérêts composés : chaque année, les gains rapportent à leur tour des gains."
+          },
+          {
+            "icon": "calculate",
+            "text": "La règle de 72 : à 6 % par an, un capital double en environ 12 ans."
+          },
+          {
+            "icon": "show_chart",
+            "text": "Un rendement moyen n'est pas un rendement régulier : certaines années baissent."
+          }
+        ],
+        "figures": "150 € par mois pendant 8 ans, pour 14 400 € versés, donnent environ 15 600 € à 2 %, 17 700 € à 5 % et 20 100 € à 8 %.",
+        "keywords": [
+          "Intérêts composés",
+          "Objectif",
+          "Régularité"
+        ],
+        "afterwards": "Rejoué à partir de janvier 2008, 129 € par mois pendant 10 ans atteignent environ 28 400 €, malgré une perte de 36 % au pire moment, en mars 2009."
+      }
     }
   ]
 }
