@@ -60,7 +60,6 @@ class PriceChart extends StatelessWidget {
   static const dashPattern = [6, 4];
   static const verticalPaddingRatio = 0.08;
   static const millisecondsPerDay = 86400000;
-  static const dateLabelCount = 3;
   static const dateAxisHeight = 28.0;
   static const emptyMessage = 'Aucune donnée sur cette période.';
 
@@ -127,11 +126,10 @@ class PriceChart extends StatelessWidget {
               sideTitles: SideTitles(
                 showTitles: true,
                 reservedSize: dateAxisHeight,
-                interval: maxX > minX
-                    ? (maxX - minX) / (dateLabelCount - 1)
-                    : 1,
+                interval: maxX > minX ? maxX - minX : 1,
                 getTitlesWidget: (value, meta) => SideTitleWidget(
                   meta: meta,
+                  fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
                   child: Text(
                     AppFormat.monthYear(_date(value)),
                     style: dateStyle,
