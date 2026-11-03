@@ -44,10 +44,11 @@ double sampleStdDev(
 }
 
 double annualizedVolatility(
-  List<double> weeklyReturns, {
+  List<double> returns, {
   int minPoints = minVolatilityPoints,
+  int periodsPerYear = weeksPerYear,
 }) {
-  return sampleStdDev(weeklyReturns, minPoints: minPoints) * sqrt(weeksPerYear);
+  return sampleStdDev(returns, minPoints: minPoints) * sqrt(periodsPerYear);
 }
 
 Drawdown maxDrawdown(List<double> values) {
