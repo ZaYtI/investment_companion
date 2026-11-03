@@ -8,6 +8,7 @@ import '../../config/env.dart';
 import '../../models/price_point.dart';
 import '../../models/symbol_match.dart';
 import 'api_exceptions.dart';
+import 'api_rate_limiter.dart';
 
 class TwelveDataClient {
   static const _host = 'api.twelvedata.com';
@@ -16,10 +17,17 @@ class TwelveDataClient {
   static const _maxPoints = 5000;
 
   final http.Client _httpClient;
+  final ApiRateLimiter rateLimiter;
   final String apiKey;
 
-  TwelveDataClient({http.Client? httpClient, this.apiKey = Env.twelveDataKey})
-    : _httpClient = httpClient ?? http.Client();
+  TwelveDataClient({
+    http.Client? httpClient,
+    ApiRateLimiter? rateLimiter,
+    this.apiKey = Env.twelveDataKey,
+  }) : _httpClient = httpClient ?? http.Client(),
+       rateLimiter = rateLimiter ?? ApiRateLimiter();
+
+  bool get canCallNow => rateLimiter.canCallNow;
 
   Future<List<PricePoint>> timeSeries({
     required String symbol,
@@ -62,6 +70,15 @@ class TwelveDataClient {
   ) async {
     final uri = Uri.https(_host, path, {...parameters, 'apikey': apiKey});
     try {
+      return await rateLimiter.schedule(() => _send(uri));
+    } on QuotaExceededException {
+      rateLimiter.markQuotaReached();
+      return rateLimiter.schedule(() => _send(uri));
+    }
+  }
+
+  Future<Map<String, dynamic>> _send(Uri uri) async {
+    try {
       final response = await _httpClient.get(uri).timeout(_timeout);
       if (response.statusCode == _quotaExceededCode) {
         throw const QuotaExceededException();
@@ -69,6 +86,9 @@ class TwelveDataClient {
       final json = jsonDecode(response.body);
       if (json is! Map<String, dynamic>) {
         throw const InvalidResponseException();
+      }
+      if (json['code'] == _quotaExceededCode) {
+        throw const QuotaExceededException();
       }
       return json;
     } on TimeoutException {
