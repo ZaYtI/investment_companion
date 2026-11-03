@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../gallery/gallery_page.dart';
 import '../screens/chapter/chapter_screen.dart';
 import '../screens/explore/explore_screen.dart';
+import '../screens/lesson/lesson_screen.dart';
 import '../screens/level/level_screen.dart';
 import '../screens/map/map_screen.dart';
 import '../screens/simulations/simulations_screen.dart';
@@ -36,12 +37,21 @@ GoRouter createAppRouter({required bool showWelcome}) => GoRouter(
                   routes: [
                     GoRoute(
                       path: 'niveau/:level',
-                      builder: (context, state) => LevelScreen(
-                        chapterNumber: int.parse(
+                      builder: (context, state) {
+                        final chapterNumber = int.parse(
                           state.pathParameters['number']!,
-                        ),
-                        levelIndex: int.parse(state.pathParameters['level']!),
-                      ),
+                        );
+                        final levelIndex = int.parse(
+                          state.pathParameters['level']!,
+                        );
+                        if (levelIndex == 0) {
+                          return LessonScreen(chapterNumber: chapterNumber);
+                        }
+                        return LevelScreen(
+                          chapterNumber: chapterNumber,
+                          levelIndex: levelIndex,
+                        );
+                      },
                     ),
                   ],
                 ),
