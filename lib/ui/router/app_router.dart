@@ -4,7 +4,10 @@ import '../gallery/gallery_page.dart';
 import '../screens/challenge/challenge_level_screen.dart';
 import '../screens/chapter/chapter_screen.dart';
 import '../screens/context/context_screen.dart';
+import '../screens/explore/asset_detail_screen.dart';
 import '../screens/explore/explore_screen.dart';
+import '../screens/explore/favorites_screen.dart';
+import '../screens/explore/glossary_screen.dart';
 import '../screens/lesson/lesson_screen.dart';
 import '../screens/map/map_screen.dart';
 import '../screens/simulate/simulate_level_screen.dart';
@@ -81,6 +84,21 @@ GoRouter createAppRouter({required bool showWelcome}) => GoRouter(
             GoRoute(
               path: AppRoutes.explore,
               builder: (context, state) => const ExploreScreen(),
+              routes: [
+                GoRoute(
+                  path: 'actif/:id',
+                  builder: (context, state) =>
+                      AssetDetailScreen(assetId: state.pathParameters['id']!),
+                ),
+                GoRoute(
+                  path: 'favoris',
+                  builder: (context, state) => const FavoritesScreen(),
+                ),
+                GoRoute(
+                  path: 'glossaire',
+                  builder: (context, state) => const GlossaryScreen(),
+                ),
+              ],
             ),
           ],
         ),
