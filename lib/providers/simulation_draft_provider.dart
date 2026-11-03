@@ -64,6 +64,14 @@ class SimulationDraftNotifier extends Notifier<SimulationDraft> {
     state = _emptyDraft();
   }
 
+  void startWithAsset(String assetId) {
+    state = SimulationDraft(
+      start: KeyMoment.all.first.date,
+      mode: SimulationMode.lumpSum,
+      percents: {assetId: 100},
+    );
+  }
+
   void open(SavedSimulation simulation) {
     state = SimulationDraft(
       start: simulation.start,
