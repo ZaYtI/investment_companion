@@ -34,6 +34,26 @@ abstract final class AppFormat {
   static String signedPercent(double fraction) =>
       '${_sign(fraction)}${percent(fraction.abs())}';
 
+  static const _monthNames = [
+    'janv.',
+    'févr.',
+    'mars',
+    'avr.',
+    'mai',
+    'juin',
+    'juil.',
+    'août',
+    'sept.',
+    'oct.',
+    'nov.',
+    'déc.',
+  ];
+
+  static String monthYear(DateTime date) =>
+      '${_monthNames[date.month - 1]} ${date.year}';
+
+  static String day(DateTime date) => DateFormat('dd/MM/yyyy').format(date);
+
   static String _sign(double value) => switch (value) {
     > 0 => plus,
     < 0 => minus,

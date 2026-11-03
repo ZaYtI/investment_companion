@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' show DateFormat;
 
 import '../../format/app_format.dart';
 import '../../theme/app_colors.dart';
@@ -16,22 +15,25 @@ class ChartPoint {
 class ChartLine {
   const ChartLine({
     required this.points,
+    this.label,
     this.color = AppColors.mintChart,
     this.isFilled = false,
     this.isDashed = false,
   });
 
   final List<ChartPoint> points;
+  final String? label;
   final Color color;
   final bool isFilled;
   final bool isDashed;
 }
 
 class ChartMarker {
-  const ChartMarker(this.date, this.number);
+  const ChartMarker(this.date, this.number, {this.label = ''});
 
   final DateTime date;
   final int number;
+  final String label;
 }
 
 class PriceChart extends StatelessWidget {
@@ -39,6 +41,7 @@ class PriceChart extends StatelessWidget {
   final List<ChartMarker> markers;
   final double? target;
   final double height;
+  final bool showDates;
   final String Function(double value) formatValue;
 
   const PriceChart({
@@ -47,6 +50,7 @@ class PriceChart extends StatelessWidget {
     this.markers = const [],
     this.target,
     this.height = defaultHeight,
+    this.showDates = true,
     this.formatValue = _formatEuro,
   });
 
@@ -56,6 +60,9 @@ class PriceChart extends StatelessWidget {
   static const dashPattern = [6, 4];
   static const verticalPaddingRatio = 0.08;
   static const millisecondsPerDay = 86400000;
+  static const dateLabelCount = 3;
+  static const dateAxisHeight = 28.0;
+  static const emptyMessage = 'Aucune donnée sur cette période.';
 
   static String _formatEuro(double value) => AppFormat.euro(value);
 
@@ -67,6 +74,27 @@ class PriceChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasPoints = lines.any((line) => line.points.isNotEmpty);
+    if (!hasPoints) {
+      return SizedBox(
+        height: height,
+        child: Center(
+          child: Text(
+            emptyMessage,
+            style: Theme.of(context).textTheme.bodyMedium
+                ?.copyWith(color: AppColors.textSecondary),
+          ),
+        ),
+      );
+    }
+    final dates = [
+      for (final line in lines)
+        for (final point in line.points) _x(point.date),
+    ];
+    final dateStyle = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textSecondary);
+    final minX = dates.reduce((a, b) => a < b ? a : b);
+    final maxX = dates.reduce((a, b) => a > b ? a : b);
     final values = [
       for (final line in lines)
         for (final point in line.points) point.value,
@@ -86,9 +114,32 @@ class PriceChart extends StatelessWidget {
       height: height,
       child: LineChart(
         LineChartData(
+          minX: minX,
+          maxX: maxX,
           minY: minValue - padding,
           maxY: maxValue + padding,
-          titlesData: const FlTitlesData(show: false),
+          titlesData: FlTitlesData(
+            show: showDates,
+            leftTitles: const AxisTitles(),
+            rightTitles: const AxisTitles(),
+            topTitles: const AxisTitles(),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: dateAxisHeight,
+                interval: maxX > minX
+                    ? (maxX - minX) / (dateLabelCount - 1)
+                    : 1,
+                getTitlesWidget: (value, meta) => SideTitleWidget(
+                  meta: meta,
+                  child: Text(
+                    AppFormat.monthYear(_date(value)),
+                    style: dateStyle,
+                  ),
+                ),
+              ),
+            ),
+          ),
           borderData: FlBorderData(show: false),
           gridData: FlGridData(
             drawVerticalLine: false,
@@ -111,7 +162,7 @@ class PriceChart extends StatelessWidget {
               getTooltipItems: (spots) => [
                 for (final spot in spots)
                   LineTooltipItem(
-                    '${DateFormat('dd/MM/yyyy').format(_date(spot.x))}\n'
+                    '${AppFormat.day(_date(spot.x))}\n'
                     '${formatValue(spot.y)}',
                     const TextStyle(
                       color: AppColors.surface,
