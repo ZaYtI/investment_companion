@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ui/gallery/gallery_page.dart';
+import 'ui/router/app_router.dart';
 import 'ui/theme/app_theme.dart';
 
 class InvestmentCompanionApp extends StatelessWidget {
@@ -10,11 +10,11 @@ class InvestmentCompanionApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: title,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const GalleryPage(),
+      routerConfig: appRouter,
     );
   }
 }
