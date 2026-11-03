@@ -1,0 +1,129 @@
+{
+  "id": "ch7",
+  "number": 7,
+  "title": "Viser un objectif",
+  "period": { "label": "Aujourd'hui", "start": null, "end": null },
+  "idea": "Les gains rapportent à leur tour des gains. Plus on commence tôt et plus on tient, plus l'effet est fort.",
+  "typicalMistake": "Croire qu'un rendement moyen de 5 % signifie 5 % chaque année.",
+  "series": ["spy_monthly"],
+  "levels": [
+    {
+      "id": "ch7.l1",
+      "type": "understand",
+      "title": "Comprendre",
+      "xp": 20,
+      "screens": [
+        {
+          "id": "ch7.l1.s1",
+          "kind": "hook",
+          "title": "20 000 € dans 8 ans",
+          "text": "Combien faut-il mettre de côté chaque mois pour avoir 20 000 € dans 8 ans ?",
+          "options": ["Environ 100 €", "Environ 170 €", "Environ 210 €"],
+          "pip": "Devinez d'abord, on calcule ensuite.",
+          "terms": []
+        },
+        {
+          "id": "ch7.l1.s2",
+          "kind": "explanation",
+          "title": "Les intérêts composés",
+          "text": "Chaque année, le gain s'ajoute au capital et rapporte à son tour. La règle des 72 donne un ordre de grandeur : à 6 % par an, un capital double en environ 72 ÷ 6 = 12 ans.",
+          "pip": null,
+          "terms": ["interets-composes", "regle-des-72", "rendement"]
+        },
+        {
+          "id": "ch7.l1.s3",
+          "kind": "example",
+          "title": "Un exemple chiffré",
+          "text": "1 000 € placés à 5 % par an, gains réinvestis.",
+          "steps": [
+            { "label": "Après 1 an", "value": "1 050 €" },
+            { "label": "Après 3 ans", "value": "1 157,63 €, contre 1 150 € sans réinvestir" },
+            { "label": "Après 30 ans", "value": "environ 4 322 €, contre 2 500 €" }
+          ],
+          "pip": null,
+          "terms": ["interets-composes"]
+        },
+        {
+          "id": "ch7.l1.s4",
+          "kind": "quiz",
+          "title": "À vous de jouer",
+          "passingScore": 2,
+          "questions": [
+            {
+              "id": "ch7.l1.q1",
+              "question": "1 000 € à 10 % par an pendant 2 ans, gains réinvestis. Combien obtenez-vous ?",
+              "choices": ["1 200 €", "1 210 €", "1 100 €"],
+              "answerIndex": 1,
+              "explanation": "1 000 × 1,1 × 1,1. La deuxième année, les 100 € gagnés rapportent aussi."
+            },
+            {
+              "id": "ch7.l1.q2",
+              "question": "À 4 % par an, en combien d'années un capital double-t-il environ ?",
+              "choices": ["8 ans", "18 ans", "25 ans"],
+              "answerIndex": 1,
+              "explanation": "72 divisé par 4."
+            },
+            {
+              "id": "ch7.l1.q3",
+              "question": "À 5 % par an, Marie verse 100 € par mois pendant 20 ans, Paul 50 € pendant 30 ans. Qui a le plus à la fin ?",
+              "choices": ["Marie", "Paul", "Ils ont pareil"],
+              "answerIndex": 1,
+              "explanation": "Paul a environ 41 600 €, Marie 41 100 €. Il a versé 18 000 € contre 24 000 € : dix ans de plus pèsent plus lourd."
+            }
+          ],
+          "pip": "Le temps travaille pour vous, même pendant le quiz.",
+          "terms": []
+        }
+      ]
+    },
+    {
+      "id": "ch7.l2",
+      "type": "simulate",
+      "title": "Simuler",
+      "xp": 60,
+      "instruction": "Choisissez un objectif, un versement et une durée. Comparez trois scénarios de rendement.",
+      "simulator": "goalScenarios",
+      "settings": {
+        "rates": [0.02, 0.05, 0.08],
+        "target": { "min": 1000, "max": 100000, "default": 20000 },
+        "monthly": { "min": 20, "max": 1000, "default": 150 },
+        "years": { "min": 1, "max": 40, "default": 8 }
+      },
+      "readingQuestion": {
+        "id": "ch7.l2.q1",
+        "question": "À 5 % sur 8 ans, quelle part du capital final vient des gains ?",
+        "choices": ["Environ 5 %", "Environ 18 %", "Environ 50 %"],
+        "answerIndex": 1,
+        "explanation": "Environ 18 %. Passez la durée à 30 ans : les gains dépassent alors la moitié du capital."
+      },
+      "notes": [
+        "Ce sont des scénarios, pas des prévisions. Un marché réel ne rapporte jamais la même chose chaque année.",
+        "L'inflation n'est pas simulée.",
+        "Calcul avec un taux mensuel égal au taux annuel divisé par 12, versement en fin de mois."
+      ]
+    },
+    {
+      "id": "ch7.l3",
+      "type": "challenge",
+      "title": "Défi",
+      "xp": 60,
+      "challenge": {
+        "kind": "goalPlan",
+        "situation": "Atteignez 20 000 €. Vous pouvez mettre au plus 200 € par mois. Choisissez votre versement et votre durée.",
+        "target": 20000,
+        "monthly": { "min": 20, "max": 200 },
+        "years": { "min": 5, "max": 15 },
+        "rate": 0.05,
+        "stressTestAsset": "spy_monthly",
+        "stressTestStart": "2008-01",
+        "stars": [
+          { "stars": 1, "condition": "goalReachedAtRate" },
+          { "stars": 2, "condition": "goalReachedInStressTest" },
+          { "stars": 3, "condition": "goalReachedInStressTest", "maxMonthly": 140 }
+        ],
+        "afterwards": "Le test de résistance rejoue votre plan sur l'ETF S&P 500 à partir de janvier 2008. En mars 2009, vos versements valaient environ 36 % de moins que ce que vous aviez versé.",
+        "keyMessage": "Le meilleur plan est celui qu'on peut tenir longtemps, pas celui qui paraît le plus rapide."
+      }
+    }
+  ]
+}
