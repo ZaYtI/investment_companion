@@ -10,6 +10,8 @@ import 'api/twelve_data_client.dart';
 import 'price_cache.dart';
 
 abstract class PriceRepository {
+  bool get canCallApiNow;
+
   Future<PriceSeries> getSeries(String id, {DateTime? from, DateTime? to});
 
   Future<PriceSeries> getOnlineSeries({
@@ -39,6 +41,9 @@ class CachedPriceRepository implements PriceRepository {
   CachedPriceRepository({required this.cache, this.client});
 
   @override
+  bool get canCallApiNow => client?.canCallNow ?? true;
+
+  @override
   Future<PriceSeries> getSeries(
     String id, {
     DateTime? from,
@@ -60,7 +65,9 @@ class CachedPriceRepository implements PriceRepository {
         lastUpdate != null &&
         DateTime.now().difference(lastUpdate) < refreshInterval;
     final client = this.client;
-    if (!isRecent && client != null) {
+    final mustWaitForQueue =
+        points.isNotEmpty && client != null && !client.canCallNow;
+    if (!isRecent && client != null && !mustWaitForQueue) {
       try {
         final now = DateTime.now();
         final start = points.isEmpty
