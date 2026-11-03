@@ -8,6 +8,9 @@ import '../screens/explore/explore_screen.dart';
 import '../screens/lesson/lesson_screen.dart';
 import '../screens/map/map_screen.dart';
 import '../screens/simulate/simulate_level_screen.dart';
+import '../screens/simulations/compose_portfolio_screen.dart';
+import '../screens/simulations/new_simulation_date_screen.dart';
+import '../screens/simulations/simulation_result_screen.dart';
 import '../screens/simulations/simulations_screen.dart';
 import '../screens/trophies/trophies_screen.dart';
 import '../screens/welcome/welcome_screen.dart';
@@ -86,6 +89,20 @@ GoRouter createAppRouter({required bool showWelcome}) => GoRouter(
             GoRoute(
               path: AppRoutes.simulations,
               builder: (context, state) => const SimulationsScreen(),
+              routes: [
+                GoRoute(
+                  path: 'nouvelle',
+                  builder: (context, state) => const NewSimulationDateScreen(),
+                ),
+                GoRoute(
+                  path: 'portefeuille',
+                  builder: (context, state) => const ComposePortfolioScreen(),
+                ),
+                GoRoute(
+                  path: 'resultat',
+                  builder: (context, state) => const SimulationResultScreen(),
+                ),
+              ],
             ),
           ],
         ),
