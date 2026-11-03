@@ -1,14 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/challenge_level.dart';
 import '../../../models/progress.dart';
 import '../../../providers/progress_provider.dart';
+import '../../../providers/settings_provider.dart';
 import '../../../services/calc/scoring.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/cards/selectable_card.dart';
+import '../../widgets/progress/countdown_ring.dart';
 import 'challenge_scaffold.dart';
 
 class DecisionChallengeScreen extends ConsumerStatefulWidget {
@@ -36,11 +36,10 @@ class _DecisionChallengeScreenState
       .cast<Map<String, dynamic>>();
   late final List<Map<String, dynamic>> _choices = (_data['choices'] as List)
       .cast<Map<String, dynamic>>();
-  late final int? _timerSeconds = _data['timerSeconds'] as int?;
+  late final int? _contentTimerSeconds = _data['timerSeconds'] as int?;
   late final bool _planComesFromSimulation = _data['planFromLevel'] != null;
 
-  final _stopwatch = Stopwatch();
-  Timer? _timer;
+  final _countdownKey = GlobalKey<CountdownRingState>();
   String? _planId;
   ChallengeResult? _result;
 
@@ -54,30 +53,23 @@ class _DecisionChallengeScreenState
     }
   }
 
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+  int? get _timerSeconds {
+    final isTimerEnabled =
+        ref.read(appSettingsProvider).value?.isTimerEnabled ?? true;
+    return isTimerEnabled ? _contentTimerSeconds : null;
   }
-
-  double get _secondsElapsed => _stopwatch.elapsedMilliseconds / 1000;
 
   void _choosePlan(String planId) {
     setState(() => _planId = planId);
-    if (_timerSeconds == null) return;
-    _stopwatch.start();
-    _timer = Timer.periodic(const Duration(milliseconds: 200), (_) {
-      if (_secondsElapsed >= _timerSeconds) {
-        _decide(_data['timeoutChoice'] as String, timedOut: true);
-      } else {
-        setState(() {});
-      }
-    });
+  }
+
+  void _onTimeout() {
+    _decide(_data['timeoutChoice'] as String, timedOut: true);
   }
 
   void _decide(String choiceId, {bool timedOut = false}) {
-    _timer?.cancel();
-    _stopwatch.stop();
+    final countdown = _countdownKey.currentState;
+    countdown?.stop();
     final choice = _choices.firstWhere((choice) => choice['id'] == choiceId);
     final scores =
         (choice['scores'] as Map<String, dynamic>)[_planId]
@@ -111,7 +103,9 @@ class _DecisionChallengeScreenState
       return;
     }
 
-    final seconds = _timerSeconds == null || timedOut ? null : _secondsElapsed;
+    final seconds = countdown == null || timedOut
+        ? null
+        : countdown.elapsedSeconds;
     final composure = composureWithTime(baseComposure, seconds);
     ref
         .read(progressProvider.notifier)
@@ -145,6 +139,7 @@ class _DecisionChallengeScreenState
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final planId = _planId;
+    final timerSeconds = _timerSeconds;
     return ChallengeScaffold(
       chapterNumber: widget.chapterNumber,
       situation: widget.challenge.situation,
@@ -168,12 +163,14 @@ class _DecisionChallengeScreenState
               color: AppColors.textSecondary,
             ),
           ),
-          if (_timerSeconds != null) ...[
+          if (timerSeconds != null) ...[
             const SizedBox(height: 12),
-            Text(
-              '${(_timerSeconds - _secondsElapsed).ceil()} s',
-              textAlign: TextAlign.center,
-              style: textTheme.displaySmall?.copyWith(color: AppColors.redText),
+            Center(
+              child: CountdownRing(
+                key: _countdownKey,
+                seconds: timerSeconds,
+                onTimeout: _onTimeout,
+              ),
             ),
           ],
           const SizedBox(height: 16),
