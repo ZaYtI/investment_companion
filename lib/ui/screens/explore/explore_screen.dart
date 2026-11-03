@@ -41,7 +41,12 @@ class ExploreScreen extends ConsumerWidget {
           child: ErrorView(message: 'Impossible de charger les actifs.'),
         ),
         data: (catalog) => ListView(
-          padding: const EdgeInsets.all(22),
+          padding: EdgeInsets.fromLTRB(
+            22,
+            22,
+            22,
+            22 + MediaQuery.paddingOf(context).bottom,
+          ),
           children: [
             const _SearchField(),
             const SizedBox(height: 12),

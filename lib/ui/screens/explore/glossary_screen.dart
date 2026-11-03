@@ -34,7 +34,12 @@ class _GlossaryScreenState extends State<GlossaryScreen> {
           final terms = snapshot.data!.values.toList()
             ..sort((a, b) => a.term.compareTo(b.term));
           return ListView(
-            padding: const EdgeInsets.all(22),
+            padding: EdgeInsets.fromLTRB(
+              22,
+              22,
+              22,
+              22 + MediaQuery.paddingOf(context).bottom,
+            ),
             children: [
               for (final term in terms) ...[
                 AppCard(
