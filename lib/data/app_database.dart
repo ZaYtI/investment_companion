@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 class AppDatabase {
   static const _fileName = 'investment_companion.db';
-  static const _version = 2;
+  static const _version = 3;
 
   static Future<Database>? _database;
 
@@ -17,10 +17,14 @@ class AppDatabase {
       onCreate: (database, version) async {
         await _createSimulationsTable(database);
         await _createPriceTables(database);
+        await _createFavoritesTable(database);
       },
       onUpgrade: (database, oldVersion, newVersion) async {
         if (oldVersion < 2) {
           await _createPriceTables(database);
+        }
+        if (oldVersion < 3) {
+          await _createFavoritesTable(database);
         }
       },
     );
@@ -38,6 +42,15 @@ class AppDatabase {
         invested REAL NOT NULL,
         final_value REAL NOT NULL,
         created_at TEXT NOT NULL
+      )
+    ''');
+  }
+
+  static Future<void> _createFavoritesTable(Database database) async {
+    await database.execute('''
+      CREATE TABLE favorites (
+        asset_id TEXT PRIMARY KEY,
+        added_at TEXT NOT NULL
       )
     ''');
   }
