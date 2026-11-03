@@ -7,6 +7,7 @@ import '../screens/explore/explore_screen.dart';
 import '../screens/lesson/lesson_screen.dart';
 import '../screens/level/level_screen.dart';
 import '../screens/map/map_screen.dart';
+import '../screens/simulate/simulate_level_screen.dart';
 import '../screens/simulations/simulations_screen.dart';
 import '../screens/trophies/trophies_screen.dart';
 import '../screens/welcome/welcome_screen.dart';
@@ -55,6 +56,11 @@ GoRouter createAppRouter({required bool showWelcome}) => GoRouter(
                         );
                         if (levelIndex == 0) {
                           return LessonScreen(chapterNumber: chapterNumber);
+                        }
+                        if (levelIndex == 1) {
+                          return SimulateLevelScreen(
+                            chapterNumber: chapterNumber,
+                          );
                         }
                         return LevelScreen(
                           chapterNumber: chapterNumber,
