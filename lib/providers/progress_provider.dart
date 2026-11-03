@@ -65,7 +65,8 @@ class ProgressNotifier extends AsyncNotifier<Progress> {
   );
 
   Future<void> _update(Progress Function(Progress progress) change) async {
-    final updated = change(await future);
+    final current = state.value ?? await future;
+    final updated = change(current);
     state = AsyncData(updated);
     await _repository.save(updated);
   }
