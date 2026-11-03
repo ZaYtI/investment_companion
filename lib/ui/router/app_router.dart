@@ -1,11 +1,11 @@
 import 'package:go_router/go_router.dart';
 
 import '../gallery/gallery_page.dart';
+import '../screens/challenge/challenge_level_screen.dart';
 import '../screens/chapter/chapter_screen.dart';
 import '../screens/context/context_screen.dart';
 import '../screens/explore/explore_screen.dart';
 import '../screens/lesson/lesson_screen.dart';
-import '../screens/level/level_screen.dart';
 import '../screens/map/map_screen.dart';
 import '../screens/simulate/simulate_level_screen.dart';
 import '../screens/simulations/simulations_screen.dart';
@@ -62,9 +62,8 @@ GoRouter createAppRouter({required bool showWelcome}) => GoRouter(
                             chapterNumber: chapterNumber,
                           );
                         }
-                        return LevelScreen(
+                        return ChallengeLevelScreen(
                           chapterNumber: chapterNumber,
-                          levelIndex: levelIndex,
                         );
                       },
                     ),
