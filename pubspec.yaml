@@ -45,6 +45,7 @@ dependencies:
   path: ^1.9.1
   flutter_localizations:
     sdk: flutter
+  lottie: ^3.8.2
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +73,7 @@ flutter:
   assets:
     - assets/data/
     - assets/data/series/
+    - assets/animations/
     - assets/content/
     - assets/images/
 
