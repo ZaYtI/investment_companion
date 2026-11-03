@@ -127,14 +127,18 @@ class PriceChart extends StatelessWidget {
                 showTitles: true,
                 reservedSize: dateAxisHeight,
                 interval: maxX > minX ? maxX - minX : 1,
-                getTitlesWidget: (value, meta) => SideTitleWidget(
-                  meta: meta,
-                  fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
-                  child: Text(
-                    AppFormat.monthYear(_date(value)),
-                    style: dateStyle,
-                  ),
-                ),
+                getTitlesWidget: (value, meta) {
+                  final isFirstOrLast = value == meta.min || value == meta.max;
+                  if (!isFirstOrLast) return const SizedBox.shrink();
+                  return SideTitleWidget(
+                    meta: meta,
+                    fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
+                    child: Text(
+                      AppFormat.monthYear(_date(value)),
+                      style: dateStyle,
+                    ),
+                  );
+                },
               ),
             ),
           ),
