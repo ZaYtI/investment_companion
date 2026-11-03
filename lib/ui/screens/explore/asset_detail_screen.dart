@@ -7,6 +7,7 @@ import '../../../models/explorer_asset.dart';
 import '../../../models/price_series.dart';
 import '../../../providers/explorer_providers.dart';
 import '../../../providers/simulation_draft_provider.dart';
+import '../../../providers/simulation_providers.dart';
 import '../../../services/calc/risk.dart';
 import '../../format/app_format.dart';
 import '../../router/app_routes.dart';
@@ -18,6 +19,7 @@ import '../../widgets/states/error_view.dart';
 import '../../widgets/states/skeleton_box.dart';
 import '../../widgets/text/change_text.dart';
 import 'favorite_star.dart';
+import 'queued_notice.dart';
 import 'risk_dots.dart';
 
 enum ChartPeriod {
@@ -72,7 +74,9 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
           padding: const EdgeInsets.all(22),
           children: [
             series.when(
-              loading: () => const SkeletonBox(height: 360),
+              loading: () => ref.read(priceRepositoryProvider).canCallApiNow
+                  ? const SkeletonBox(height: 360)
+                  : const QueuedNotice(),
               error: (error, _) => ErrorView(
                 message: '$error',
                 onRetry: () => ref.invalidate(assetSeriesProvider(asset)),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../models/explorer_asset.dart';
 import '../../../providers/explorer_providers.dart';
+import '../../../providers/simulation_providers.dart';
 import '../../format/app_format.dart';
 import '../../router/app_routes.dart';
 import '../../theme/app_colors.dart';
@@ -13,6 +14,7 @@ import '../../widgets/charts/price_chart.dart';
 import '../../widgets/states/empty_view.dart';
 import '../../widgets/states/skeleton_box.dart';
 import '../../widgets/text/change_text.dart';
+import 'queued_notice.dart';
 
 class FavoritesScreen extends ConsumerWidget {
   const FavoritesScreen({super.key});
@@ -112,7 +114,9 @@ class _FavoriteCard extends ConsumerWidget {
           ),
           const Spacer(),
           if (lastYear == null || performance == null)
-            const SkeletonBox(height: chartHeight)
+            ref.read(priceRepositoryProvider).canCallApiNow
+                ? const SkeletonBox(height: chartHeight)
+                : const QueuedNotice(isCompact: true)
           else
             PriceChart(
               height: chartHeight,
