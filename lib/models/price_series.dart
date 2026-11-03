@@ -54,6 +54,15 @@ class PriceSeries {
     );
   }
 
+  PriceSeries lastMonths(int months) {
+    final start = DateTime(
+      lastDate.year,
+      lastDate.month - months,
+      lastDate.day,
+    );
+    return between(start, null);
+  }
+
   PriceSeries between(DateTime? from, DateTime? to) {
     return withPoints(
       points

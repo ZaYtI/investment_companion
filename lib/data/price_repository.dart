@@ -12,6 +12,11 @@ import 'price_cache.dart';
 abstract class PriceRepository {
   Future<PriceSeries> getSeries(String id, {DateTime? from, DateTime? to});
 
+  Future<PriceSeries> getOnlineSeries({
+    required String symbol,
+    required String name,
+  });
+
   Future<void> refreshFromApi();
 }
 
@@ -25,6 +30,7 @@ class CachedPriceRepository implements PriceRepository {
     'btc_weekly',
   ];
   static const refreshInterval = Duration(days: 1);
+  static const onlineHistoryYears = 5;
 
   final PriceCache cache;
   final TwelveDataClient? client;
@@ -40,6 +46,47 @@ class CachedPriceRepository implements PriceRepository {
   }) async {
     final series = _loadedSeries[id] ??= await _load(id);
     return series.between(from, to);
+  }
+
+  @override
+  Future<PriceSeries> getOnlineSeries({
+    required String symbol,
+    required String name,
+  }) async {
+    final cacheId = 'api:$symbol';
+    var points = await cache.pointsOf(cacheId);
+    final lastUpdate = await cache.lastUpdateOf(cacheId);
+    final isRecent =
+        lastUpdate != null &&
+        DateTime.now().difference(lastUpdate) < refreshInterval;
+    final client = this.client;
+    if (!isRecent && client != null) {
+      try {
+        final now = DateTime.now();
+        final start = points.isEmpty
+            ? DateTime(now.year - onlineHistoryYears, now.month, now.day)
+            : points.last.date;
+        final newPoints = await client.timeSeries(
+          symbol: symbol,
+          interval: '1week',
+          start: start,
+        );
+        await cache.save(cacheId, newPoints);
+        points = _merge(points, newPoints);
+      } on ApiException {
+        if (points.isEmpty) rethrow;
+      }
+    }
+    if (points.isEmpty) {
+      throw const NoNetworkException();
+    }
+    return PriceSeries(
+      id: cacheId,
+      symbol: symbol,
+      name: name,
+      frequency: SeriesFrequency.weekly,
+      points: points,
+    );
   }
 
   @override
