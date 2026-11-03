@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
+import '../models/challenge_level.dart';
 import '../models/chapter_summary.dart';
 import '../models/glossary_term.dart';
 import '../models/lesson_page.dart';
@@ -46,6 +47,11 @@ Future<List<LessonPage>> loadLessonPages(int chapterNumber) async {
 Future<SimulateLevel> loadSimulateLevel(int chapterNumber) async {
   final levels = await _loadLevels(chapterNumber);
   return SimulateLevel.fromJson(levels[1] as Map<String, dynamic>);
+}
+
+Future<ChallengeLevel> loadChallengeLevel(int chapterNumber) async {
+  final levels = await _loadLevels(chapterNumber);
+  return ChallengeLevel.fromJson(levels[2] as Map<String, dynamic>);
 }
 
 Future<Map<String, GlossaryTerm>> loadGlossary() async {
