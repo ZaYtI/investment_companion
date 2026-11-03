@@ -166,6 +166,11 @@ class Progress {
 
   bool hasPlayedDailyOn(String day) => lastDailyDay == day;
 
+  int currentStreak({required String today, required String yesterday}) {
+    final isStillRunning = lastDailyDay == today || lastDailyDay == yesterday;
+    return isStillRunning ? streakDays : 0;
+  }
+
   Progress withDailyPlayed(String challengeId, String today, String yesterday) {
     final newStreak = lastDailyDay == yesterday ? streakDays + 1 : 1;
     return copyWith(
