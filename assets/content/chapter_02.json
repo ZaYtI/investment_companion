@@ -1,0 +1,163 @@
+{
+  "id": "ch2",
+  "number": 2,
+  "title": "Le risque",
+  "period": { "label": "2018 à aujourd'hui", "start": "2018-01-01", "end": null },
+  "idea": "Plus le prix d'un actif varie, plus il est risqué. Un risque élevé n'est pas un gain garanti, et un risque faible n'est pas un risque nul.",
+  "typicalMistake": "Choisir un actif uniquement parce qu'il a beaucoup monté dans le passé.",
+  "series": ["gold_weekly", "spy_weekly", "btc_weekly"],
+  "levels": [
+    {
+      "id": "ch2.l1",
+      "type": "understand",
+      "title": "Comprendre",
+      "xp": 20,
+      "screens": [
+        {
+          "id": "ch2.l1.s1",
+          "kind": "hook",
+          "title": "Deux chemins, une même arrivée",
+          "text": "Deux actifs finissent l'année au même prix. L'un monte presque en ligne droite, l'autre fait des montagnes russes. Lequel auriez-vous gardé les yeux ouverts ?",
+          "options": [
+            "Celui qui monte doucement",
+            "Celui des montagnes russes",
+            "Peu importe, ils arrivent au même endroit"
+          ],
+          "pip": "Le chemin compte autant que l'arrivée.",
+          "terms": []
+        },
+        {
+          "id": "ch2.l1.s2",
+          "kind": "explanation",
+          "title": "Qu'est-ce que le risque ?",
+          "text": "Le risque, c'est l'écart possible entre ce qu'on attend et ce qui arrive. La volatilité mesure à quel point le prix bouge d'une semaine à l'autre. Plus elle est forte, plus le résultat est incertain.",
+          "pip": null,
+          "terms": ["risque", "volatilite"]
+        },
+        {
+          "id": "ch2.l1.s3",
+          "kind": "example",
+          "title": "Un exemple chiffré",
+          "text": "Deux actifs pendant 5 semaines. A varie de +1, −1, +2, −2 et 0 %. B varie de +5, −5, +8, −8 et 0 %.",
+          "steps": [
+            { "label": "Volatilité de A", "value": "environ 1,6 % par semaine" },
+            { "label": "Volatilité de B", "value": "environ 6,7 % par semaine" },
+            { "label": "Conclusion", "value": "B est environ quatre fois plus volatil" }
+          ],
+          "pip": null,
+          "terms": ["volatilite"]
+        },
+        {
+          "id": "ch2.l1.s4",
+          "kind": "quiz",
+          "title": "À vous de jouer",
+          "passingScore": 2,
+          "questions": [
+            {
+              "id": "ch2.l1.q1",
+              "question": "Une volatilité élevée signifie…",
+              "choices": [
+                "Que le prix va monter",
+                "Que le prix bouge beaucoup, à la hausse comme à la baisse",
+                "Que le prix va baisser"
+              ],
+              "answerIndex": 1,
+              "explanation": "La volatilité ne dit pas dans quel sens le prix ira, seulement l'amplitude."
+            },
+            {
+              "id": "ch2.l1.q2",
+              "question": "A varie d'environ 1 % par semaine, B d'environ 5 %. Lequel est le plus risqué ?",
+              "choices": ["A", "B", "Aucun des deux"],
+              "answerIndex": 1,
+              "explanation": "Ses variations sont plus grandes, donc le résultat est plus incertain."
+            },
+            {
+              "id": "ch2.l1.q3",
+              "question": "Un actif peu volatil peut-il perdre de l'argent ?",
+              "choices": ["Oui", "Non"],
+              "answerIndex": 0,
+              "explanation": "Peu de risque ne veut pas dire pas de risque : le prix peut baisser doucement mais longtemps."
+            }
+          ],
+          "pip": "Une erreur ici, c'est une leçon gratuite.",
+          "terms": []
+        }
+      ]
+    },
+    {
+      "id": "ch2.l2",
+      "type": "simulate",
+      "title": "Simuler",
+      "xp": 60,
+      "instruction": "Comparez l'or, l'ETF S&P 500 et le bitcoin depuis la même date.",
+      "simulator": "riskComparison",
+      "settings": {
+        "assets": ["gold_weekly", "spy_weekly", "btc_weekly"],
+        "startYears": [2018, 2019, 2020, 2022],
+        "amountPerAsset": 1000
+      },
+      "readingQuestion": {
+        "id": "ch2.l2.q1",
+        "question": "Regardez l'actif qui a le plus rapporté. Pouviez-vous le savoir au départ ?",
+        "choices": [
+          "Oui, il montait déjà avant",
+          "Non, on ne connaît le gagnant qu'après coup"
+        ],
+        "answerIndex": 1,
+        "explanation": "On ne connaît le gagnant qu'après coup. Un fort gain passé ne garantit rien pour la suite."
+      },
+      "notes": [
+        "Chaque actif a sa propre échelle verticale, sinon le bitcoin écraserait les autres courbes.",
+        "Les prix sont bruts et en dollars : aucun frais, aucun dividende réinvesti.",
+        "Le bitcoin est un exemple de variations extrêmes, pas une recommandation."
+      ]
+    },
+    {
+      "id": "ch2.l3",
+      "type": "challenge",
+      "title": "Défi",
+      "xp": 60,
+      "challenge": {
+        "kind": "riskProfile",
+        "situation": "Vous placez 10 000 € virtuels. Répondez d'abord à trois questions sur vous, puis répartissez votre argent.",
+        "profileQuestions": [
+          {
+            "id": "ch2.l3.p1",
+            "question": "Sur une année, quelle perte pourriez-vous supporter au maximum ?",
+            "choices": [
+              { "label": "10 %", "points": 0, "maxLoss": -0.10 },
+              { "label": "20 %", "points": 1, "maxLoss": -0.20 },
+              { "label": "35 %", "points": 2, "maxLoss": -0.35 }
+            ]
+          },
+          {
+            "id": "ch2.l3.p2",
+            "question": "Votre placement chute de 20 %. Votre réaction ?",
+            "choices": [
+              { "label": "Je vends", "points": 0 },
+              { "label": "J'attends", "points": 1 },
+              { "label": "Je renforce", "points": 2 }
+            ]
+          },
+          {
+            "id": "ch2.l3.p3",
+            "question": "Dans combien de temps aurez-vous besoin de cet argent ?",
+            "choices": [
+              { "label": "Moins de 3 ans", "points": 0 },
+              { "label": "3 à 8 ans", "points": 1 },
+              { "label": "Plus de 8 ans", "points": 2 }
+            ]
+          }
+        ],
+        "assets": ["gold_weekly", "spy_weekly", "btc_weekly", "cash"],
+        "windowYears": 3,
+        "bands": [
+          { "id": "careful", "label": "Prudent", "maxPoints": 1, "maxVolatility": 0.08 },
+          { "id": "balanced", "label": "Équilibré", "maxPoints": 4, "maxVolatility": 0.16 },
+          { "id": "dynamic", "label": "Dynamique", "maxPoints": 6, "maxVolatility": null }
+        ],
+        "keyMessage": "Il n'y a pas de bonne répartition en soi : il y a celle qui correspond à ce que vous pouvez supporter."
+      }
+    }
+  ]
+}
