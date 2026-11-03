@@ -14,6 +14,7 @@ import '../../widgets/badges/app_badge.dart';
 import '../../widgets/buttons/dashed_button.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/cards/selectable_card.dart';
+import '../../widgets/dialogs/confirm_dialog.dart';
 import '../../widgets/mascot/pip_island.dart';
 import '../../widgets/states/error_view.dart';
 
@@ -74,12 +75,6 @@ class _ChapterContent extends ConsumerWidget {
     final progress = ref.watch(currentProgressProvider);
     final completedLevels = progress.completedLevelsIn(chapter.number);
     final isChapterCompleted = completedLevels == Progress.levelsPerChapter;
-    final buttonText = isChapterCompleted
-        ? 'Rejouer le chapitre'
-        : completedLevels == 0
-        ? 'Commencer'
-        : 'Continuer';
-    final nextLevelIndex = isChapterCompleted ? 0 : completedLevels;
     final textTheme = Theme.of(context).textTheme;
     return SafeArea(
       top: false,
@@ -143,14 +138,71 @@ class _ChapterContent extends ConsumerWidget {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(22, 0, 22, 16),
-            child: PrimaryButton(
-              text: buttonText,
-              onPressed: () => onOpenLevel(nextLevelIndex),
-            ),
+            child: isChapterCompleted
+                ? _buildCompletedButtons(context)
+                : _buildInProgressButtons(context, ref, completedLevels),
           ),
         ],
       ),
     );
+  }
+
+  bool get _hasNextChapter => chapter.number < Progress.chapterCount;
+
+  Widget _buildCompletedButtons(BuildContext context) {
+    if (!_hasNextChapter) {
+      return PrimaryButton(
+        text: 'Rejouer le chapitre',
+        onPressed: () => onOpenLevel(0),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PrimaryButton(
+          text: 'Chapitre suivant',
+          onPressed: () =>
+              context.pushReplacement(AppRoutes.chapter(chapter.number + 1)),
+        ),
+        TextButton(
+          onPressed: () => onOpenLevel(0),
+          child: const Text('Rejouer le chapitre'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInProgressButtons(
+    BuildContext context,
+    WidgetRef ref,
+    int completedLevels,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PrimaryButton(
+          text: completedLevels == 0 ? 'Commencer' : 'Continuer',
+          onPressed: () => onOpenLevel(completedLevels),
+        ),
+        TextButton(
+          onPressed: () => _skipChapter(context, ref),
+          child: const Text('Passer ce chapitre'),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _skipChapter(BuildContext context, WidgetRef ref) async {
+    final isConfirmed = await showConfirmDialog(
+      context,
+      title: 'Passer ce chapitre ?',
+      message:
+          'Le chapitre sera marqué comme terminé, sans XP ni étoiles. '
+          'Vous pourrez y revenir quand vous voulez.',
+      confirmLabel: 'Passer',
+    );
+    if (!isConfirmed) return;
+    await ref.read(progressProvider.notifier).skipChapter(chapter.number);
   }
 
   String _subtitleOf(LevelType level) {
