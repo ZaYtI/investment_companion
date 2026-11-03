@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import '../models/chapter_summary.dart';
 import '../models/glossary_term.dart';
 import '../models/lesson_page.dart';
+import '../models/simulate_level.dart';
 
 Future<List<ChapterSummary>> loadChapterSummaries() async {
   final text = await rootBundle.loadString(
@@ -24,18 +25,27 @@ Future<ChapterSummary> loadChapterSummary(int number) async {
   return chapters.firstWhere((chapter) => chapter.number == number);
 }
 
-Future<List<LessonPage>> loadLessonPages(int chapterNumber) async {
+Future<List<dynamic>> _loadLevels(int chapterNumber) async {
   final fileNumber = chapterNumber.toString().padLeft(2, '0');
   final text = await rootBundle.loadString(
     'assets/content/chapter_$fileNumber.json',
   );
   final json = jsonDecode(text) as Map<String, dynamic>;
-  final levels = json['levels'] as List<dynamic>;
+  return json['levels'] as List<dynamic>;
+}
+
+Future<List<LessonPage>> loadLessonPages(int chapterNumber) async {
+  final levels = await _loadLevels(chapterNumber);
   final understandLevel = levels.first as Map<String, dynamic>;
   final screens = understandLevel['screens'] as List<dynamic>;
   return screens
       .map((screen) => LessonPage.fromJson(screen as Map<String, dynamic>))
       .toList();
+}
+
+Future<SimulateLevel> loadSimulateLevel(int chapterNumber) async {
+  final levels = await _loadLevels(chapterNumber);
+  return SimulateLevel.fromJson(levels[1] as Map<String, dynamic>);
 }
 
 Future<Map<String, GlossaryTerm>> loadGlossary() async {
