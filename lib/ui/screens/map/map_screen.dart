@@ -8,10 +8,12 @@ import '../../../models/chapter_summary.dart';
 import '../../../models/progress.dart';
 import '../../../models/progress_status.dart';
 import '../../../providers/progress_provider.dart';
+import '../../../services/day_keys.dart';
 import '../../router/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/decor/night_sky.dart';
 import '../../widgets/dialogs/confirm_dialog.dart';
+import '../../widgets/progress/xp_bar.dart';
 import '../../widgets/states/error_view.dart';
 import 'chapter_tile.dart';
 
@@ -141,6 +143,10 @@ class _MapHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final progress = ref.watch(currentProgressProvider);
+    final streak = progress.currentStreak(
+      today: todayKey(),
+      yesterday: yesterdayKey(),
+    );
     final textTheme = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +159,8 @@ class _MapHeader extends ConsumerWidget {
                 style: textTheme.titleLarge?.copyWith(color: AppColors.surface),
               ),
             ),
-            _Pill(text: '${progress.xp} XP', color: AppColors.mint),
+            if (streak > 0)
+              _Pill(text: '$streak j de suite', color: AppColors.gold),
             PopupMenuButton<_MapMenuAction>(
               icon: const Icon(Icons.more_vert, color: AppColors.border),
               tooltip: 'Menu',
@@ -176,6 +183,8 @@ class _MapHeader extends ConsumerWidget {
           '${progress.currentChapter} sur ${Progress.chapterCount}',
           style: textTheme.bodyMedium?.copyWith(color: AppColors.border),
         ),
+        const SizedBox(height: 12),
+        XpBar(xp: progress.xp),
       ],
     );
   }
