@@ -9,8 +9,10 @@ import '../../../models/progress.dart';
 import '../../../models/progress_status.dart';
 import '../../../providers/progress_provider.dart';
 import '../../../services/day_keys.dart';
+import '../../../services/progression.dart';
 import '../../router/app_routes.dart';
 import '../../theme/app_colors.dart';
+import '../../widgets/cards/app_card.dart';
 import '../../widgets/decor/night_sky.dart';
 import '../../widgets/dialogs/confirm_dialog.dart';
 import '../../widgets/progress/xp_bar.dart';
@@ -88,6 +90,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       children: [
                         const _MapHeader(),
                         const SizedBox(height: 16),
+                        const _GamesSection(),
+                        const SizedBox(height: 24),
                         for (final chapter in chapters) ...[
                           ChapterTile(
                             chapter: chapter,
@@ -186,6 +190,97 @@ class _MapHeader extends ConsumerWidget {
         const SizedBox(height: 12),
         XpBar(xp: progress.xp),
       ],
+    );
+  }
+}
+
+class _GamesSection extends ConsumerWidget {
+  const _GamesSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progress = ref.watch(currentProgressProvider);
+    final hasPlayedToday = progress.hasPlayedDailyOn(todayKey());
+    final isQuizUnlocked = progress.isLevelCompleted(2, 0);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: _GameCard(
+            icon: Icons.bolt,
+            title: 'Défi du jour',
+            subtitle: hasPlayedToday
+                ? 'Fait · revenez demain'
+                : '+$dailyChallengeXp XP · 15 s pour décider',
+            onTap: () => context.push(AppRoutes.dailyChallenge),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _GameCard(
+            icon: Icons.compare_arrows,
+            title: 'Plus ou moins ?',
+            subtitle: isQuizUnlocked
+                ? '+$quizAnswerXp XP par bonne réponse'
+                : 'Après la leçon du chapitre 2',
+            isLocked: !isQuizUnlocked,
+            onTap: isQuizUnlocked
+                ? () => context.push(AppRoutes.quiz)
+                : () => ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Terminez la leçon du chapitre 2 pour débloquer '
+                        'ce quiz.',
+                      ),
+                    ),
+                  ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _GameCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final bool isLocked;
+  final VoidCallback onTap;
+
+  const _GameCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+    this.isLocked = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return AppCard(
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            isLocked ? Icons.lock_outline : icon,
+            color: isLocked ? AppColors.textSecondary : AppColors.goldText,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+          ),
+          Text(
+            subtitle,
+            style: textTheme.bodySmall?.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
