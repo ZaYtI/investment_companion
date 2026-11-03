@@ -6,6 +6,7 @@ import '../../../models/asset.dart';
 import '../../../models/explorer_asset.dart';
 import '../../../models/price_series.dart';
 import '../../../providers/explorer_providers.dart';
+import '../../../providers/progress_provider.dart';
 import '../../../providers/simulation_draft_provider.dart';
 import '../../../providers/simulation_providers.dart';
 import '../../../services/calc/risk.dart';
@@ -46,6 +47,12 @@ class AssetDetailScreen extends ConsumerStatefulWidget {
 
 class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
   var _period = ChartPeriod.oneYear;
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(progressProvider.notifier).recordOpenedAsset(widget.assetId);
+  }
 
   @override
   Widget build(BuildContext context) {

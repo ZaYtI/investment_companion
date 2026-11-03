@@ -12,19 +12,27 @@ import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/states/error_view.dart';
 
-class ContextScreen extends StatefulWidget {
+class ContextScreen extends ConsumerStatefulWidget {
   final int chapterNumber;
 
   const ContextScreen({super.key, required this.chapterNumber});
 
   @override
-  State<ContextScreen> createState() => _ContextScreenState();
+  ConsumerState<ContextScreen> createState() => _ContextScreenState();
 }
 
-class _ContextScreenState extends State<ContextScreen> {
+class _ContextScreenState extends ConsumerState<ContextScreen> {
   late final Future<ChapterSummary> _chapter = loadChapterSummary(
     widget.chapterNumber,
   );
+
+  @override
+  void initState() {
+    super.initState();
+    ref
+        .read(progressProvider.notifier)
+        .recordOpenedContext(widget.chapterNumber);
+  }
 
   @override
   Widget build(BuildContext context) {
