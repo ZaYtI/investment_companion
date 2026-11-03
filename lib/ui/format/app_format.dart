@@ -60,6 +60,24 @@ abstract final class AppFormat {
     'déc.',
   ];
 
+  static const _fullMonthNames = [
+    'janvier',
+    'février',
+    'mars',
+    'avril',
+    'mai',
+    'juin',
+    'juillet',
+    'août',
+    'septembre',
+    'octobre',
+    'novembre',
+    'décembre',
+  ];
+
+  static String fullDate(DateTime date) =>
+      '${date.day} ${_fullMonthNames[date.month - 1]} ${date.year}';
+
   static String monthYear(DateTime date) =>
       '${_monthNames[date.month - 1]} ${date.year}';
 
