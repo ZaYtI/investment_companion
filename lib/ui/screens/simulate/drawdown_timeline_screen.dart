@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../models/progress.dart';
 import '../../../models/simulate_level.dart';
 import '../../../models/simulation_result.dart';
 import '../../../providers/progress_provider.dart';
@@ -24,8 +25,6 @@ class DrawdownTimelineScreen extends ConsumerStatefulWidget {
     required this.level,
   });
 
-  static String horizonChoiceKey(int chapterNumber) => '$chapterNumber.horizon';
-
   @override
   ConsumerState<DrawdownTimelineScreen> createState() =>
       _DrawdownTimelineScreenState();
@@ -45,8 +44,7 @@ class _DrawdownTimelineScreenState
   late var _entry = _entries.first;
   int? _dayIndex;
 
-  String get _horizonKey =>
-      DrawdownTimelineScreen.horizonChoiceKey(widget.chapterNumber);
+  String get _horizonKey => Progress.horizonChoiceKey(widget.chapterNumber);
 
   void _selectHorizon(Map<String, dynamic> horizon) {
     ref

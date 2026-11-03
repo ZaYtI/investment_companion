@@ -16,6 +16,8 @@ class Progress {
     this.choices = const {},
   });
 
+  static String horizonChoiceKey(int chapterNumber) => '$chapterNumber.horizon';
+
   static String levelKey(int chapterNumber, int levelIndex) =>
       '$chapterNumber.$levelIndex';
 

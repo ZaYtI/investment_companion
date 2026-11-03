@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/challenge_level.dart';
+import '../../../models/progress.dart';
 import '../../../providers/progress_provider.dart';
 import '../../../services/calc/scoring.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/cards/selectable_card.dart';
-import '../simulate/drawdown_timeline_screen.dart';
 import 'challenge_scaffold.dart';
 
 class DecisionChallengeScreen extends ConsumerStatefulWidget {
@@ -47,7 +47,7 @@ class _DecisionChallengeScreenState
   void initState() {
     super.initState();
     if (_planComesFromSimulation) {
-      final key = DrawdownTimelineScreen.horizonChoiceKey(widget.chapterNumber);
+      final key = Progress.horizonChoiceKey(widget.chapterNumber);
       final savedPlan = ref.read(currentProgressProvider).choices[key];
       _planId = savedPlan ?? _plans.last['id'] as String;
     }
