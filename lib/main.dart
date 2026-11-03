@@ -12,7 +12,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final hasSeenWelcome = await AppPreferences.hasSeenWelcome();
   final router = createAppRouter(showWelcome: !hasSeenWelcome);
-  final container = ProviderContainer();
+  final container = ProviderContainer(retry: _neverRetry);
   unawaited(_refreshPrices(container));
   runApp(
     UncontrolledProviderScope(
@@ -21,6 +21,8 @@ Future<void> main() async {
     ),
   );
 }
+
+Duration? _neverRetry(int retryCount, Object error) => null;
 
 Future<void> _refreshPrices(ProviderContainer container) async {
   await container.read(priceRepositoryProvider).refreshFromApi();
