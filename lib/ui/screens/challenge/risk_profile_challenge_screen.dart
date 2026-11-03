@@ -49,8 +49,7 @@ class _RiskProfileChallengeScreenState
 
   bool get _hasAnsweredProfile => _answers.length == _questions.length;
 
-  int get _totalPercent =>
-      _percents.values.fold(0, (sum, percent) => sum + percent);
+  int get _totalPercent => totalPercent(_percents);
 
   Map<String, dynamic> get _profileBand {
     final points = _answers.fold(
@@ -68,9 +67,7 @@ class _RiskProfileChallengeScreenState
         firstWindowYear + Random().nextInt(lastWindowYear - firstWindowYear);
     final start = DateTime(startYear);
     final end = DateTime(startYear + _windowYears);
-    final weights = {
-      for (final entry in _percents.entries) entry.key: entry.value / 100,
-    };
+    final weights = weightsFromPercents(_percents);
     final isOnlyCash = weights[cashId] == 1;
     var volatility = 0.0;
     var drawdown = 0.0;

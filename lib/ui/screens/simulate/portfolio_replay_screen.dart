@@ -50,8 +50,7 @@ class _PortfolioReplayScreenState extends State<PortfolioReplayScreen> {
   late var _entry = _entries.first;
   late var _myPercents = {for (final asset in _assetLabels.keys) asset: 0};
 
-  bool get _isMyPortfolioComplete =>
-      _myPercents.values.fold(0, (sum, percent) => sum + percent) == 100;
+  bool get _isMyPortfolioComplete => totalPercent(_myPercents) == 100;
 
   SimulationRequest _requestFor(Map<String, double> weights) {
     return SimulationRequest(
@@ -76,10 +75,7 @@ class _PortfolioReplayScreenState extends State<PortfolioReplayScreen> {
                 MapEntry(asset as String, (weight as num).toDouble()),
           ),
         ),
-      if (_isMyPortfolioComplete)
-        _requestFor({
-          for (final entry in _myPercents.entries) entry.key: entry.value / 100,
-        }),
+      if (_isMyPortfolioComplete) _requestFor(weightsFromPercents(_myPercents)),
     ];
     return SimulatorScaffold(
       chapterNumber: widget.chapterNumber,

@@ -50,17 +50,14 @@ class _PortfolioConstraintChallengeScreenState
   var _isRunning = false;
   ChallengeResult? _result;
 
-  int get _totalPercent =>
-      _percents.values.fold(0, (sum, percent) => sum + percent);
+  int get _totalPercent => totalPercent(_percents);
 
   Future<void> _validate() async {
     setState(() => _isRunning = true);
     final result = await ref
         .read(simulationServiceProvider)
         .simulate(
-          weights: {
-            for (final entry in _percents.entries) entry.key: entry.value / 100,
-          },
+          weights: weightsFromPercents(_percents),
           start: DateTime.parse(_period['start'] as String),
           end: DateTime.parse(_period['end'] as String),
           amount: 10000,

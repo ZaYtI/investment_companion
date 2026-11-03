@@ -3,6 +3,14 @@ import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/cards/app_card.dart';
 
+int totalPercent(Map<String, int> percents) {
+  return percents.values.fold(0, (sum, percent) => sum + percent);
+}
+
+Map<String, double> weightsFromPercents(Map<String, int> percents) {
+  return {for (final entry in percents.entries) entry.key: entry.value / 100};
+}
+
 class WeightsEditor extends StatelessWidget {
   final Map<String, String> assetLabels;
   final Map<String, int> percents;
@@ -17,8 +25,6 @@ class WeightsEditor extends StatelessWidget {
 
   static const step = 10;
 
-  int get total => percents.values.fold(0, (sum, percent) => sum + percent);
-
   void _change(String asset, int delta) {
     final newPercent = (percents[asset]! + delta).clamp(0, 100);
     onChanged({...percents, asset: newPercent});
@@ -27,6 +33,7 @@ class WeightsEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final total = totalPercent(percents);
     final isComplete = total == 100;
     return AppCard(
       child: Column(
