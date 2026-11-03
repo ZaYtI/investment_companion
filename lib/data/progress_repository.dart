@@ -14,6 +14,11 @@ class ProgressRepository {
     return Progress.fromJson(jsonDecode(text) as Map<String, dynamic>);
   }
 
+  Future<void> clear() async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.remove(_progressKey);
+  }
+
   Future<void> save(Progress progress) async {
     final preferences = await SharedPreferences.getInstance();
     await preferences.setString(_progressKey, jsonEncode(progress.toJson()));

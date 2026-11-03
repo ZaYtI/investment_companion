@@ -30,6 +30,17 @@ class ProgressNotifier extends AsyncNotifier<Progress> {
     await _repository.save(updated);
   }
 
+  Future<void> skipChapter(int chapterNumber) async {
+    final updated = (await future).skipChapter(chapterNumber);
+    state = AsyncData(updated);
+    await _repository.save(updated);
+  }
+
+  Future<void> reset() async {
+    state = const AsyncData(Progress());
+    await _repository.clear();
+  }
+
   Future<void> saveChoice(String key, String value) async {
     final updated = (await future).withChoice(key, value);
     state = AsyncData(updated);

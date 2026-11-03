@@ -78,6 +78,19 @@ class Progress {
     );
   }
 
+  Progress skipChapter(int chapterNumber) {
+    return Progress(
+      completedLevels: {
+        ...completedLevels,
+        for (var level = 0; level < levelsPerChapter; level++)
+          levelKey(chapterNumber, level),
+      },
+      starsByChapter: starsByChapter,
+      xp: xp,
+      choices: choices,
+    );
+  }
+
   Progress withChoice(String key, String value) {
     return Progress(
       completedLevels: completedLevels,
