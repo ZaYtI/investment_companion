@@ -23,6 +23,8 @@ abstract final class AppFormat {
     return '${amount < 0 ? minus : ''}$digits$nonBreakingSpace€';
   }
 
+  static String number(num value) => _euro.format(value);
+
   static String signedEuro(double amount) =>
       '${_sign(amount)}${euro(amount.abs())}';
 

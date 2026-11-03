@@ -5,6 +5,8 @@ import '../../../services/simulation_service.dart';
 import '../../format/app_format.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/cards/app_card.dart';
+import '../../widgets/charts/chart_legend.dart';
+import '../../widgets/charts/price_chart.dart';
 import '../../widgets/text/change_text.dart';
 
 const assetLabels = {
@@ -212,4 +214,73 @@ class StatRow extends StatelessWidget {
       ),
     );
   }
+}
+
+class ChartCard extends StatelessWidget {
+  final String title;
+  final String? trailing;
+  final List<ChartLine> lines;
+  final List<ChartMarker> markers;
+  final double? target;
+  final List<Widget> footer;
+
+  const ChartCard({
+    super.key,
+    required this.title,
+    required this.lines,
+    this.trailing,
+    this.markers = const [],
+    this.target,
+    this.footer = const [],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final hasLegend = lines.where((line) => line.label != null).length > 1;
+    return AppCard(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              if (trailing != null)
+                Text(
+                  trailing!,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          PriceChart(lines: lines, markers: markers, target: target),
+          if (hasLegend) ...[
+            const SizedBox(height: 12),
+            ChartLegend(lines: lines),
+          ],
+          if (markers.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            ChartMarkerList(markers: markers),
+          ],
+          ...footer,
+        ],
+      ),
+    );
+  }
+}
+
+List<ChartPoint> chartPointsOf(List<DateTime> dates, List<double> values) {
+  return [
+    for (var i = 0; i < dates.length; i++) ChartPoint(dates[i], values[i]),
+  ];
 }

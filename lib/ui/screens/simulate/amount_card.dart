@@ -4,20 +4,25 @@ import '../../format/app_format.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/cards/app_card.dart';
 
-String? validateAmount(String? text, {required int min, required int max}) {
+String? validateAmount(
+  String? text, {
+  required int min,
+  required int max,
+  required String unit,
+}) {
   if (text == null || text.trim().isEmpty) {
-    return 'Indiquez un montant.';
+    return 'Indiquez une valeur.';
   }
   final amount = int.tryParse(text.trim());
   if (amount == null) {
-    return 'Entrez un nombre entier, sans centimes.';
+    return 'Entrez un nombre entier.';
   }
   if (amount <= 0) {
-    return 'Le montant doit être supérieur à 0 €.';
+    return 'La valeur doit être supérieure à 0.';
   }
   if (amount < min || amount > max) {
-    return 'Choisissez entre ${AppFormat.euro(min.toDouble())} '
-        'et ${AppFormat.euro(max.toDouble())}.';
+    return 'Choisissez entre ${AppFormat.number(min)} $unit '
+        'et ${AppFormat.number(max)} $unit.';
   }
   return null;
 }
@@ -56,7 +61,7 @@ class _AmountCardState extends State<AmountCard> {
   }
 
   String? _validate(String? text) =>
-      validateAmount(text, min: widget.min, max: widget.max);
+      validateAmount(text, min: widget.min, max: widget.max, unit: widget.unit);
 
   void _onSliderChanged(double value) {
     final amount = value.round();
