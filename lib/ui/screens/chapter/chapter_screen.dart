@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../data/chapters_data.dart';
-import '../../../data/fake_progress.dart';
 import '../../../models/chapter_summary.dart';
 import '../../../models/level_type.dart';
+import '../../../models/progress.dart';
 import '../../../models/progress_status.dart';
+import '../../../providers/progress_provider.dart';
 import '../../router/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/badges/app_badge.dart';
@@ -61,27 +63,23 @@ class _ChapterScreenState extends State<ChapterScreen> {
   }
 }
 
-class _ChapterContent extends StatelessWidget {
+class _ChapterContent extends ConsumerWidget {
   final ChapterSummary chapter;
   final ValueChanged<int> onOpenLevel;
 
   const _ChapterContent({required this.chapter, required this.onOpenLevel});
 
-  int get _completedLevels => FakeProgress.completedLevelsIn(chapter.number);
-
-  bool get _isChapterCompleted =>
-      _completedLevels == FakeProgress.levelsPerChapter;
-
-  String get _buttonText {
-    if (_isChapterCompleted) return 'Rejouer le chapitre';
-    if (_completedLevels == 0) return 'Commencer';
-    return 'Continuer';
-  }
-
-  int get _nextLevelIndex => _isChapterCompleted ? 0 : _completedLevels;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progress = ref.watch(currentProgressProvider);
+    final completedLevels = progress.completedLevelsIn(chapter.number);
+    final isChapterCompleted = completedLevels == Progress.levelsPerChapter;
+    final buttonText = isChapterCompleted
+        ? 'Rejouer le chapitre'
+        : completedLevels == 0
+        ? 'Commencer'
+        : 'Continuer';
+    final nextLevelIndex = isChapterCompleted ? 0 : completedLevels;
     final textTheme = Theme.of(context).textTheme;
     return SafeArea(
       top: false,
@@ -102,8 +100,8 @@ class _ChapterContent extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '$_completedLevels niveau${_completedLevels > 1 ? 'x' : ''} '
-                      'sur ${FakeProgress.levelsPerChapter}',
+                      '$completedLevels niveau${completedLevels > 1 ? 'x' : ''} '
+                      'sur ${Progress.levelsPerChapter}',
                       style: textTheme.bodySmall?.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -135,7 +133,7 @@ class _ChapterContent extends StatelessWidget {
                     number: index + 1,
                     level: level,
                     subtitle: _subtitleOf(level),
-                    status: FakeProgress.levelStatusOf(chapter.number, index),
+                    status: progress.levelStatusOf(chapter.number, index),
                     onTap: () => onOpenLevel(index),
                   ),
                   const SizedBox(height: 12),
@@ -146,8 +144,8 @@ class _ChapterContent extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(22, 0, 22, 16),
             child: PrimaryButton(
-              text: _buttonText,
-              onPressed: () => onOpenLevel(_nextLevelIndex),
+              text: buttonText,
+              onPressed: () => onOpenLevel(nextLevelIndex),
             ),
           ),
         ],

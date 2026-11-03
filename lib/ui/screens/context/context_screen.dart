@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../data/chapters_data.dart';
-import '../../../data/fake_progress.dart';
 import '../../../models/chapter_summary.dart';
 import '../../../models/progress_status.dart';
+import '../../../providers/progress_provider.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/badges/app_badge.dart';
 import '../../widgets/buttons/primary_button.dart';
@@ -47,7 +48,7 @@ class _ContextScreenState extends State<ContextScreen> {
   }
 }
 
-class _ContextContent extends StatelessWidget {
+class _ContextContent extends ConsumerWidget {
   final ChapterSummary chapter;
 
   const _ContextContent({required this.chapter});
@@ -58,11 +59,11 @@ class _ContextContent extends StatelessWidget {
     (AppColors.background, AppColors.assetCurrenciesAndChallenges),
   ];
 
-  bool get _isChallengeDone =>
-      FakeProgress.levelStatusOf(chapter.number, 2) == ProgressStatus.completed;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isChallengeDone =
+        ref.watch(currentProgressProvider).levelStatusOf(chapter.number, 2) ==
+        ProgressStatus.completed;
     final textTheme = Theme.of(context).textTheme;
     final epoch = chapter.context!;
     return SafeArea(
@@ -130,7 +131,7 @@ class _ContextContent extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                _isChallengeDone
+                isChallengeDone
                     ? _Afterwards(text: epoch.afterwards)
                     : const _LockedAfterwards(),
               ],

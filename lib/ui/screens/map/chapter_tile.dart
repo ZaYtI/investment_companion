@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/fake_progress.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../models/chapter_summary.dart';
+import '../../../models/progress.dart';
 import '../../../models/progress_status.dart';
+import '../../../providers/progress_provider.dart';
 import '../../theme/app_colors.dart';
 import 'chapter_path.dart';
 import 'island_painter.dart';
@@ -170,14 +173,15 @@ class _ChapterTexts extends StatelessWidget {
   }
 }
 
-class _StatusLine extends StatelessWidget {
+class _StatusLine extends ConsumerWidget {
   final int chapterNumber;
   final ProgressStatus status;
 
   const _StatusLine({required this.chapterNumber, required this.status});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progress = ref.watch(currentProgressProvider);
     final textTheme = Theme.of(context).textTheme;
     switch (status) {
       case ProgressStatus.locked:
@@ -193,8 +197,8 @@ class _StatusLine extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
-            'Continuer · ${FakeProgress.completedLevelsInCurrentChapter}'
-            '/${FakeProgress.levelsPerChapter}',
+            'Continuer · ${progress.completedLevelsIn(chapterNumber)}'
+            '/${Progress.levelsPerChapter}',
             style: textTheme.labelMedium?.copyWith(
               color: AppColors.textPrimary,
               letterSpacing: 0,
@@ -202,7 +206,7 @@ class _StatusLine extends StatelessWidget {
           ),
         );
       case ProgressStatus.completed:
-        final stars = FakeProgress.starsByChapter[chapterNumber] ?? 0;
+        final stars = progress.starsByChapter[chapterNumber] ?? 0;
         return Text(
           '${'★' * stars}${'☆' * (3 - stars)}  3/3',
           style: textTheme.bodyMedium?.copyWith(color: AppColors.gold),

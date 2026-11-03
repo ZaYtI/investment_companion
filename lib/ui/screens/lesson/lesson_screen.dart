@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../data/chapters_data.dart';
 import '../../../models/glossary_term.dart';
 import '../../../models/lesson_page.dart';
 import '../../../models/level_type.dart';
+import '../../../providers/progress_provider.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/states/error_view.dart';
 import 'example_view.dart';
@@ -13,16 +15,16 @@ import 'hook_view.dart';
 import 'lesson_result_view.dart';
 import 'quiz_view.dart';
 
-class LessonScreen extends StatefulWidget {
+class LessonScreen extends ConsumerStatefulWidget {
   final int chapterNumber;
 
   const LessonScreen({super.key, required this.chapterNumber});
 
   @override
-  State<LessonScreen> createState() => _LessonScreenState();
+  ConsumerState<LessonScreen> createState() => _LessonScreenState();
 }
 
-class _LessonScreenState extends State<LessonScreen> {
+class _LessonScreenState extends ConsumerState<LessonScreen> {
   late final Future<List<LessonPage>> _pages = loadLessonPages(
     widget.chapterNumber,
   );
@@ -36,8 +38,17 @@ class _LessonScreenState extends State<LessonScreen> {
     setState(() => _pageIndex++);
   }
 
-  void _showResult(int score) {
+  void _showResult(int score, int passingScore) {
     setState(() => _quizScore = score);
+    if (score >= passingScore) {
+      ref
+          .read(progressProvider.notifier)
+          .completeLevel(
+            widget.chapterNumber,
+            LevelType.understand.index,
+            xpEarned: LevelType.understand.xp,
+          );
+    }
   }
 
   void _retryQuiz() {
@@ -151,7 +162,7 @@ class _LessonScreenState extends State<LessonScreen> {
         return QuizView(
           key: ValueKey(_quizAttempt),
           page: page,
-          onFinished: _showResult,
+          onFinished: (score) => _showResult(score, page.passingScore),
         );
     }
   }

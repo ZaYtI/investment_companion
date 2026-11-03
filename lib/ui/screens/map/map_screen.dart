@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../data/chapters_data.dart';
-import '../../../data/fake_progress.dart';
 import '../../../models/chapter_summary.dart';
+import '../../../models/progress.dart';
 import '../../../models/progress_status.dart';
+import '../../../providers/progress_provider.dart';
 import '../../router/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/decor/night_sky.dart';
 import '../../widgets/states/error_view.dart';
 import 'chapter_tile.dart';
 
-class MapScreen extends StatefulWidget {
+class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
 
   @override
-  State<MapScreen> createState() => _MapScreenState();
+  ConsumerState<MapScreen> createState() => _MapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
+class _MapScreenState extends ConsumerState<MapScreen> {
   late Future<List<ChapterSummary>> _chapters = loadChapterSummaries();
 
   void _openChapter(ChapterSummary chapter) {
-    if (FakeProgress.statusOf(chapter.number) == ProgressStatus.locked) {
+    final progress = ref.read(currentProgressProvider);
+    if (progress.statusOf(chapter.number) == ProgressStatus.locked) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -38,6 +41,7 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final progress = ref.watch(currentProgressProvider);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
@@ -84,7 +88,7 @@ class _MapScreenState extends State<MapScreen> {
                         for (final chapter in chapters) ...[
                           ChapterTile(
                             chapter: chapter,
-                            status: FakeProgress.statusOf(chapter.number),
+                            status: progress.statusOf(chapter.number),
                             islandOnLeft: chapter.number.isOdd,
                             hasNextChapter: chapter.number > 1,
                             onTap: () => _openChapter(chapter),
@@ -105,11 +109,12 @@ class _MapScreenState extends State<MapScreen> {
   }
 }
 
-class _MapHeader extends StatelessWidget {
+class _MapHeader extends ConsumerWidget {
   const _MapHeader();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progress = ref.watch(currentProgressProvider);
     final textTheme = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,12 +127,7 @@ class _MapHeader extends StatelessWidget {
                 style: textTheme.titleLarge?.copyWith(color: AppColors.surface),
               ),
             ),
-            const _Pill(
-              text: '${FakeProgress.streakDays} j',
-              color: AppColors.gold,
-            ),
-            const SizedBox(width: 8),
-            const _Pill(text: '${FakeProgress.xp} XP', color: AppColors.mint),
+            _Pill(text: '${progress.xp} XP', color: AppColors.mint),
             IconButton(
               onPressed: () => context.push(AppRoutes.gallery),
               icon: const Icon(Icons.palette_outlined),
@@ -138,7 +138,7 @@ class _MapHeader extends StatelessWidget {
         ),
         Text(
           'Un thème, une date réelle · vous êtes au chapitre '
-          '${FakeProgress.currentChapter} sur 7',
+          '${progress.currentChapter} sur ${Progress.chapterCount}',
           style: textTheme.bodyMedium?.copyWith(color: AppColors.border),
         ),
       ],
