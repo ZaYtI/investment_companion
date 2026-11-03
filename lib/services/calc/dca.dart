@@ -1,6 +1,5 @@
 import '../../models/price_point.dart';
 import 'invalid_input_exception.dart';
-import 'performance.dart';
 
 const minDcaDeposits = 3;
 
@@ -105,8 +104,4 @@ MonthlyPrices firstPriceOfEachMonth(
     month = DateTime(month.year, month.month + 1);
   }
   return MonthlyPrices(prices: result, skippedMonths: skipped);
-}
-
-double lumpSumValue(double amount, double startPrice, double endPrice) {
-  return amount * (1 + performance(startPrice, endPrice));
 }
