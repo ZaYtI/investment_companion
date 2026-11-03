@@ -1,0 +1,48 @@
+{
+  "capital": 10000,
+  "timerSeconds": 15,
+  "timeoutChoice": "doNothing",
+  "plans": [
+    { "id": "long", "label": "Je garde cet argent 10 ans" },
+    { "id": "short", "label": "J'aurai besoin de cet argent dans 1 an" }
+  ],
+  "choices": [
+    {
+      "id": "sellAll",
+      "label": "Tout vendre",
+      "subtitle": "Je ne veux plus perdre d'argent",
+      "scores": {
+        "long": { "coherence": 10, "prudence": 100, "composure": 15 },
+        "short": { "coherence": 85, "prudence": 100, "composure": 70 }
+      }
+    },
+    {
+      "id": "doNothing",
+      "label": "Ne rien faire",
+      "subtitle": "Je garde mon plan tel quel",
+      "scores": {
+        "long": { "coherence": 90, "prudence": 60, "composure": 85 },
+        "short": { "coherence": 35, "prudence": 60, "composure": 60 }
+      }
+    },
+    {
+      "id": "addMore",
+      "label": "Renforcer un peu",
+      "subtitle": "J'ajoute 500 € virtuels",
+      "scores": {
+        "long": { "coherence": 75, "prudence": 25, "composure": 80 },
+        "short": { "coherence": 10, "prudence": 25, "composure": 40 }
+      }
+    }
+  ],
+  "scenarios": [
+    { "id": "2008-09-15", "date": "2008-09-15", "series": "spy_daily_2008", "event": "La banque Lehman Brothers fait faillite." },
+    { "id": "2008-09-29", "date": "2008-09-29", "series": "spy_daily_2008", "event": "Le Congrès américain rejette le plan de sauvetage des banques." },
+    { "id": "2008-10-15", "date": "2008-10-15", "series": "spy_daily_2008", "event": "La crise financière touche maintenant l'économie réelle." },
+    { "id": "2008-12-01", "date": "2008-12-01", "series": "spy_daily_2008", "event": "Les États-Unis sont officiellement en récession." },
+    { "id": "2020-03-09", "date": "2020-03-09", "series": "spy_daily_2020", "event": "Les échanges sont suspendus pour la première fois." },
+    { "id": "2020-03-12", "date": "2020-03-12", "series": "spy_daily_2020", "event": "L'épidémie de Covid est déclarée pandémie." },
+    { "id": "2020-03-16", "date": "2020-03-16", "series": "spy_daily_2020", "event": "Les pays se confinent les uns après les autres." },
+    { "id": "2020-06-11", "date": "2020-06-11", "series": "spy_daily_2020", "event": "La peur d'une deuxième vague revient." }
+  ]
+}
