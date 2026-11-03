@@ -12,7 +12,6 @@ import '../../../services/day_keys.dart';
 import '../../../services/progression.dart';
 import '../../router/app_routes.dart';
 import '../../theme/app_colors.dart';
-import '../../widgets/cards/app_card.dart';
 import '../../widgets/decor/night_sky.dart';
 import '../../widgets/dialogs/confirm_dialog.dart';
 import '../../widgets/progress/xp_bar.dart';
@@ -203,27 +202,29 @@ class _GamesSection extends ConsumerWidget {
     final hasPlayedToday = progress.hasPlayedDailyOn(todayKey());
     final isQuizUnlocked = progress.isLevelCompleted(2, 0);
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: _GameCard(
-            icon: Icons.bolt,
+            icon: hasPlayedToday ? Icons.check_rounded : Icons.bolt_rounded,
+            iconColor: hasPlayedToday ? AppColors.mint : AppColors.gold,
             title: 'Défi du jour',
             subtitle: hasPlayedToday
-                ? 'Fait · revenez demain'
-                : '+$dailyChallengeXp XP · 15 s pour décider',
+                ? 'Fait aujourd\'hui'
+                : '+$dailyChallengeXp XP',
             onTap: () => context.push(AppRoutes.dailyChallenge),
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: _GameCard(
-            icon: Icons.compare_arrows,
+            icon: isQuizUnlocked
+                ? Icons.compare_arrows_rounded
+                : Icons.lock_rounded,
+            iconColor: isQuizUnlocked ? AppColors.mint : AppColors.border,
             title: 'Plus ou moins ?',
             subtitle: isQuizUnlocked
-                ? '+$quizAnswerXp XP par bonne réponse'
-                : 'Après la leçon du chapitre 2',
-            isLocked: !isQuizUnlocked,
+                ? '+$quizAnswerXp XP / réponse'
+                : 'Chapitre 2',
             onTap: isQuizUnlocked
                 ? () => context.push(AppRoutes.quiz)
                 : () => ScaffoldMessenger.of(context).showSnackBar(
@@ -243,43 +244,75 @@ class _GamesSection extends ConsumerWidget {
 
 class _GameCard extends StatelessWidget {
   final IconData icon;
+  final Color iconColor;
   final String title;
   final String subtitle;
-  final bool isLocked;
   final VoidCallback onTap;
 
   const _GameCard({
     required this.icon,
+    required this.iconColor,
     required this.title,
     required this.subtitle,
     required this.onTap,
-    this.isLocked = false,
   });
+
+  static const radius = BorderRadius.all(Radius.circular(16));
+  static const iconBoxSize = 36.0;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return AppCard(
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            isLocked ? Icons.lock_outline : icon,
-            color: isLocked ? AppColors.textSecondary : AppColors.goldText,
+    return Material(
+      color: AppColors.mapNightLight,
+      shape: RoundedRectangleBorder(
+        borderRadius: radius,
+        side: BorderSide(color: AppColors.surface.withValues(alpha: 0.12)),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: radius,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              Container(
+                width: iconBoxSize,
+                height: iconBoxSize,
+                decoration: BoxDecoration(
+                  color: AppColors.mapNight,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: iconColor, size: 22),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.titleSmall?.copyWith(
+                        color: AppColors.surface,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: AppColors.border,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          Text(
-            subtitle,
-            style: textTheme.bodySmall?.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
