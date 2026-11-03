@@ -4,12 +4,14 @@ import '../gallery/gallery_page.dart';
 import '../screens/challenge/challenge_level_screen.dart';
 import '../screens/chapter/chapter_screen.dart';
 import '../screens/context/context_screen.dart';
+import '../screens/daily/daily_challenge_screen.dart';
 import '../screens/explore/asset_detail_screen.dart';
 import '../screens/explore/explore_screen.dart';
 import '../screens/explore/favorites_screen.dart';
 import '../screens/explore/glossary_screen.dart';
 import '../screens/lesson/lesson_screen.dart';
 import '../screens/map/map_screen.dart';
+import '../screens/quiz/quiz_game_screen.dart';
 import '../screens/simulate/simulate_level_screen.dart';
 import '../screens/simulations/compose_portfolio_screen.dart';
 import '../screens/simulations/new_simulation_date_screen.dart';
@@ -37,6 +39,14 @@ GoRouter createAppRouter({required bool showWelcome}) => GoRouter(
               path: AppRoutes.map,
               builder: (context, state) => const MapScreen(),
               routes: [
+                GoRoute(
+                  path: 'defi-du-jour',
+                  builder: (context, state) => const DailyChallengeScreen(),
+                ),
+                GoRoute(
+                  path: 'plus-ou-moins',
+                  builder: (context, state) => const QuizGameScreen(),
+                ),
                 GoRoute(
                   path: 'chapitre/:number',
                   builder: (context, state) => ChapterScreen(

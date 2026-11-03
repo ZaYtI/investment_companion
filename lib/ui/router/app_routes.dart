@@ -5,6 +5,8 @@ abstract final class AppRoutes {
   static const simulations = '/simulations';
   static const trophies = '/trophees';
   static const gallery = '/galerie';
+  static const dailyChallenge = '$map/defi-du-jour';
+  static const quiz = '$map/plus-ou-moins';
   static const favorites = '$explore/favoris';
   static const glossary = '$explore/glossaire';
   static const newSimulation = '$simulations/nouvelle';
