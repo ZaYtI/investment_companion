@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../data/app_preferences.dart';
@@ -35,129 +36,133 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.mapNight, AppColors.mapNightLight],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [AppColors.mapNight, AppColors.mapNightLight],
+            ),
           ),
-        ),
-        child: Stack(
-          children: [
-            const _NightSky(),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(22),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              width: illustrationWidth,
-                              height: illustrationHeight,
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    top: islandTop,
-                                    left: 0,
-                                    child: Image(
-                                      image: AssetImage(
-                                        'assets/images/welcome_island.png',
+          child: Stack(
+            children: [
+              const _NightSky(),
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(22),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              const SizedBox(
+                                width: illustrationWidth,
+                                height: illustrationHeight,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      top: islandTop,
+                                      left: 0,
+                                      child: Image(
+                                        image: AssetImage(
+                                          'assets/images/welcome_island.png',
+                                        ),
+                                        width: illustrationWidth,
                                       ),
-                                      width: illustrationWidth,
                                     ),
-                                  ),
-                                  Positioned(
-                                    top: pipTop,
-                                    left: pipLeft,
-                                    child: FloatingPip(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Remontez le temps pour apprendre à investir',
-                              textAlign: TextAlign.center,
-                              style: textTheme.headlineMedium?.copyWith(
-                                color: AppColors.surface,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              '10 000 € virtuels, de vraies données du passé. '
-                              'Aucun compte bancaire, aucun risque.',
-                              textAlign: TextAlign.center,
-                              style: textTheme.bodyLarge?.copyWith(
-                                color: AppColors.border,
-                              ),
-                            ),
-                            const SizedBox(height: 32),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Quel investisseur êtes-vous ?',
-                                style: textTheme.titleMedium?.copyWith(
-                                  color: AppColors.surface,
-                                  fontWeight: FontWeight.w700,
+                                    Positioned(
+                                      top: pipTop,
+                                      left: pipLeft,
+                                      child: FloatingPip(),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 12),
-                            _ProfileCard(
-                              profile: InvestorProfile.curious,
-                              icon: Icons.search,
-                              iconColor: AppColors.mint,
-                              isSelected:
-                                  _selectedProfile == InvestorProfile.curious,
-                              onTap: () => setState(
-                                () =>
-                                    _selectedProfile = InvestorProfile.curious,
+                              const SizedBox(height: 8),
+                              Text(
+                                'Remontez le temps pour apprendre à investir',
+                                textAlign: TextAlign.center,
+                                style: textTheme.headlineMedium?.copyWith(
+                                  color: AppColors.surface,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 12),
-                            _ProfileCard(
-                              profile: InvestorProfile.careful,
-                              icon: Icons.shield_outlined,
-                              iconColor: AppColors.assetBonds,
-                              isSelected:
-                                  _selectedProfile == InvestorProfile.careful,
-                              onTap: () => setState(
-                                () =>
-                                    _selectedProfile = InvestorProfile.careful,
+                              const SizedBox(height: 12),
+                              Text(
+                                '10 000 € virtuels, de vraies données du passé. '
+                                'Aucun compte bancaire, aucun risque.',
+                                textAlign: TextAlign.center,
+                                style: textTheme.bodyLarge?.copyWith(
+                                  color: AppColors.border,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 12),
-                            _ProfileCard(
-                              profile: InvestorProfile.ambitious,
-                              icon: Icons.track_changes,
-                              iconColor: AppColors.gold,
-                              isSelected:
-                                  _selectedProfile == InvestorProfile.ambitious,
-                              onTap: () => setState(
-                                () => _selectedProfile =
+                              const SizedBox(height: 32),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Quel investisseur êtes-vous ?',
+                                  style: textTheme.titleMedium?.copyWith(
+                                    color: AppColors.surface,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              _ProfileCard(
+                                profile: InvestorProfile.curious,
+                                icon: Icons.search,
+                                iconColor: AppColors.mint,
+                                isSelected:
+                                    _selectedProfile == InvestorProfile.curious,
+                                onTap: () => setState(
+                                  () => _selectedProfile =
+                                      InvestorProfile.curious,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              _ProfileCard(
+                                profile: InvestorProfile.careful,
+                                icon: Icons.shield_outlined,
+                                iconColor: AppColors.assetBonds,
+                                isSelected:
+                                    _selectedProfile == InvestorProfile.careful,
+                                onTap: () => setState(
+                                  () => _selectedProfile =
+                                      InvestorProfile.careful,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              _ProfileCard(
+                                profile: InvestorProfile.ambitious,
+                                icon: Icons.track_changes,
+                                iconColor: AppColors.gold,
+                                isSelected:
+                                    _selectedProfile ==
                                     InvestorProfile.ambitious,
+                                onTap: () => setState(
+                                  () => _selectedProfile =
+                                      InvestorProfile.ambitious,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    PrimaryButton(
-                      text: "C'est parti",
-                      onPressed: _start,
-                      isLoading: _isSaving,
-                    ),
-                  ],
+                      const SizedBox(height: 16),
+                      PrimaryButton(
+                        text: "C'est parti",
+                        onPressed: _start,
+                        isLoading: _isSaving,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

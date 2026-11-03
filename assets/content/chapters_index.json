@@ -1,0 +1,11 @@
+{
+  "chapters": [
+    { "number": 1, "title": "Les bases", "period": "Sans date" },
+    { "number": 2, "title": "Le risque", "period": "2018 à aujourd'hui" },
+    { "number": 3, "title": "Les baisses", "period": "2007 à 2009" },
+    { "number": 4, "title": "Investir chaque mois", "period": "2022" },
+    { "number": 5, "title": "Diversifier", "period": "2000 à 2002" },
+    { "number": 6, "title": "Gérer une crise", "period": "12 mars 2020" },
+    { "number": 7, "title": "Viser un objectif", "period": "Aujourd'hui" }
+  ]
+}

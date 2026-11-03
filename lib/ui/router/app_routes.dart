@@ -5,4 +5,6 @@ abstract final class AppRoutes {
   static const simulations = '/simulations';
   static const trophies = '/trophees';
   static const gallery = '/galerie';
+
+  static String chapter(int number) => '$map/chapitre/$number';
 }

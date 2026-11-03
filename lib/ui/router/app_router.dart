@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import '../gallery/gallery_page.dart';
+import '../screens/chapter/chapter_screen.dart';
 import '../screens/explore/explore_screen.dart';
 import '../screens/map/map_screen.dart';
 import '../screens/simulations/simulations_screen.dart';
@@ -25,6 +26,14 @@ GoRouter createAppRouter({required bool showWelcome}) => GoRouter(
             GoRoute(
               path: AppRoutes.map,
               builder: (context, state) => const MapScreen(),
+              routes: [
+                GoRoute(
+                  path: 'chapitre/:number',
+                  builder: (context, state) => ChapterScreen(
+                    chapterNumber: int.parse(state.pathParameters['number']!),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
