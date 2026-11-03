@@ -1,0 +1,43 @@
+{
+  "categories": [
+    { "id": "stocks", "name": "Actions", "subtitle": "Parts d'entreprises", "risk": 4, "explanation": "Une action est une part d'une entreprise. Son prix suit les résultats et les espoirs placés dans cette entreprise." },
+    { "id": "etf", "name": "ETF", "subtitle": "Un panier d'actifs", "risk": 3, "explanation": "Un ETF est un panier d'actifs qu'on achète en une seule part. Il répartit le risque sur beaucoup d'entreprises." },
+    { "id": "bonds", "name": "Obligations", "subtitle": "Prêts aux États", "risk": 2, "explanation": "Une obligation est un prêt à un État ou à une entreprise, qui verse un intérêt. Son prix bouge quand les taux changent." },
+    { "id": "crypto", "name": "Cryptos", "subtitle": "Très volatils", "risk": 5, "explanation": "Une cryptomonnaie est une monnaie numérique. Son prix peut gagner ou perdre la moitié de sa valeur en quelques mois." },
+    { "id": "commodities", "name": "Or et matières", "subtitle": "Valeurs refuge", "risk": 3, "explanation": "L'or et les matières premières ne versent rien, mais résistent parfois quand les actions baissent." },
+    { "id": "currencies", "name": "Devises", "subtitle": "Euro, dollar…", "risk": 2, "explanation": "Une paire de devises montre combien vaut une monnaie dans une autre. Elle bouge avec l'économie des deux pays." }
+  ],
+  "assets": [
+    { "id": "spy", "symbol": "SPY", "name": "ETF S&P 500", "category": "etf", "risk": 3, "embeddedSeries": "spy_weekly", "description": "Les 500 plus grandes entreprises américaines." },
+    { "id": "qqq", "symbol": "QQQ", "name": "ETF Nasdaq-100", "category": "etf", "risk": 4, "embeddedSeries": "qqq_weekly", "description": "Les 100 plus grandes entreprises technologiques américaines." },
+    { "id": "urth", "symbol": "URTH", "name": "ETF MSCI World", "category": "etf", "risk": 3, "embeddedSeries": "world_weekly", "description": "Environ 1 500 entreprises des pays développés." },
+    { "id": "vti", "symbol": "VTI", "name": "ETF marché américain total", "category": "etf", "risk": 3, "description": "Presque toutes les entreprises cotées aux États-Unis." },
+    { "id": "eem", "symbol": "EEM", "name": "ETF pays émergents", "category": "etf", "risk": 4, "description": "Des entreprises de Chine, d'Inde, du Brésil et d'autres pays émergents." },
+    { "id": "vgk", "symbol": "VGK", "name": "ETF Europe", "category": "etf", "risk": 3, "description": "Les grandes entreprises européennes." },
+    { "id": "aapl", "symbol": "AAPL", "name": "Apple", "category": "stocks", "risk": 4, "description": "iPhone, Mac et services." },
+    { "id": "msft", "symbol": "MSFT", "name": "Microsoft", "category": "stocks", "risk": 4, "description": "Windows, Office et le cloud Azure." },
+    { "id": "nvda", "symbol": "NVDA", "name": "Nvidia", "category": "stocks", "risk": 5, "description": "Les puces qui font tourner les jeux vidéo et l'intelligence artificielle." },
+    { "id": "amzn", "symbol": "AMZN", "name": "Amazon", "category": "stocks", "risk": 4, "description": "Commerce en ligne et cloud." },
+    { "id": "googl", "symbol": "GOOGL", "name": "Alphabet", "category": "stocks", "risk": 4, "description": "La maison mère de Google et YouTube." },
+    { "id": "tsla", "symbol": "TSLA", "name": "Tesla", "category": "stocks", "risk": 5, "description": "Voitures électriques et batteries." },
+    { "id": "ko", "symbol": "KO", "name": "Coca-Cola", "category": "stocks", "risk": 2, "description": "Boissons vendues dans le monde entier." },
+    { "id": "jnj", "symbol": "JNJ", "name": "Johnson & Johnson", "category": "stocks", "risk": 2, "description": "Médicaments et produits de santé." },
+    { "id": "bonds10y", "symbol": "DGS10", "name": "Obligations d'État US 10 ans", "unit": "points", "category": "bonds", "risk": 2, "embeddedSeries": "bonds_weekly", "description": "Un indice qui suit un prêt de 10 ans à l'État américain." },
+    { "id": "tlt", "symbol": "TLT", "name": "ETF obligations US 20 ans et plus", "category": "bonds", "risk": 3, "description": "Des prêts très longs à l'État américain, sensibles aux taux." },
+    { "id": "ief", "symbol": "IEF", "name": "ETF obligations US 7 à 10 ans", "category": "bonds", "risk": 2, "description": "Des prêts de durée moyenne à l'État américain." },
+    { "id": "shy", "symbol": "SHY", "name": "ETF obligations US 1 à 3 ans", "category": "bonds", "risk": 1, "description": "Des prêts courts à l'État américain, très stables." },
+    { "id": "agg", "symbol": "AGG", "name": "ETF obligations US diversifiées", "category": "bonds", "risk": 2, "description": "Des milliers d'obligations d'États et d'entreprises." },
+    { "id": "btc", "symbol": "BTC/USD", "name": "Bitcoin", "category": "crypto", "risk": 5, "embeddedSeries": "btc_weekly", "description": "La première cryptomonnaie, créée en 2009." },
+    { "id": "eth", "symbol": "ETH/USD", "name": "Ethereum", "category": "crypto", "risk": 5, "description": "Une cryptomonnaie qui sert aussi à faire tourner des programmes." },
+    { "id": "sol", "symbol": "SOL/USD", "name": "Solana", "category": "crypto", "risk": 5, "description": "Une cryptomonnaie plus récente et très volatile." },
+    { "id": "gold", "symbol": "XAU/USD", "name": "Or", "category": "commodities", "risk": 3, "embeddedSeries": "gold_weekly", "description": "Le prix d'une once d'or, en dollars." },
+    { "id": "silver", "symbol": "XAG/USD", "name": "Argent", "category": "commodities", "risk": 4, "description": "Le prix d'une once d'argent, en dollars." },
+    { "id": "uso", "symbol": "USO", "name": "ETF pétrole", "category": "commodities", "risk": 5, "description": "Suit le prix du pétrole brut américain." },
+    { "id": "gld", "symbol": "GLD", "name": "ETF or", "category": "commodities", "risk": 3, "description": "Une part qui suit le prix de l'or." },
+    { "id": "eurusd", "symbol": "EUR/USD", "unit": "", "name": "Euro / dollar", "category": "currencies", "risk": 2, "description": "Combien de dollars vaut un euro." },
+    { "id": "gbpusd", "symbol": "GBP/USD", "unit": "", "name": "Livre / dollar", "category": "currencies", "risk": 2, "description": "Combien de dollars vaut une livre sterling." },
+    { "id": "usdjpy", "symbol": "USD/JPY", "unit": "", "name": "Dollar / yen", "category": "currencies", "risk": 2, "description": "Combien de yens vaut un dollar." },
+    { "id": "usdchf", "symbol": "USD/CHF", "unit": "", "name": "Dollar / franc suisse", "category": "currencies", "risk": 2, "description": "Combien de francs suisses vaut un dollar." },
+    { "id": "eurgbp", "symbol": "EUR/GBP", "unit": "", "name": "Euro / livre", "category": "currencies", "risk": 2, "description": "Combien de livres sterling vaut un euro." }
+  ]
+}
