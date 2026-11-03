@@ -11,6 +11,7 @@ import '../../../providers/progress_provider.dart';
 import '../../router/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/decor/night_sky.dart';
+import '../../widgets/dialogs/confirm_dialog.dart';
 import '../../widgets/states/error_view.dart';
 import 'chapter_tile.dart';
 
@@ -109,8 +110,33 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 }
 
+enum _MapMenuAction { gallery, resetProgress }
+
 class _MapHeader extends ConsumerWidget {
   const _MapHeader();
+
+  Future<void> _onMenuSelected(
+    BuildContext context,
+    WidgetRef ref,
+    _MapMenuAction action,
+  ) async {
+    switch (action) {
+      case _MapMenuAction.gallery:
+        await context.push(AppRoutes.gallery);
+      case _MapMenuAction.resetProgress:
+        final isConfirmed = await showConfirmDialog(
+          context,
+          title: 'Réinitialiser la progression ?',
+          message:
+              'Tous les niveaux, les étoiles et l\'XP seront effacés. '
+              'Vous repartirez du chapitre 1.',
+          confirmLabel: 'Réinitialiser',
+        );
+        if (isConfirmed) {
+          await ref.read(progressProvider.notifier).reset();
+        }
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -128,11 +154,20 @@ class _MapHeader extends ConsumerWidget {
               ),
             ),
             _Pill(text: '${progress.xp} XP', color: AppColors.mint),
-            IconButton(
-              onPressed: () => context.push(AppRoutes.gallery),
-              icon: const Icon(Icons.palette_outlined),
-              color: AppColors.border,
-              tooltip: 'Galerie',
+            PopupMenuButton<_MapMenuAction>(
+              icon: const Icon(Icons.more_vert, color: AppColors.border),
+              tooltip: 'Menu',
+              onSelected: (action) => _onMenuSelected(context, ref, action),
+              itemBuilder: (context) => const [
+                PopupMenuItem(
+                  value: _MapMenuAction.gallery,
+                  child: Text('Galerie de composants'),
+                ),
+                PopupMenuItem(
+                  value: _MapMenuAction.resetProgress,
+                  child: Text('Réinitialiser la progression'),
+                ),
+              ],
             ),
           ],
         ),
