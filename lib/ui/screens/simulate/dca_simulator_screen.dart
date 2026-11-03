@@ -7,8 +7,6 @@ import '../../../providers/dca_providers.dart';
 import '../../../services/simulation_service.dart';
 import '../../format/app_format.dart';
 import '../../theme/app_colors.dart';
-import '../../widgets/cards/app_card.dart';
-import '../../widgets/charts/chart_legend.dart';
 import '../../widgets/charts/price_chart.dart';
 import '../../widgets/states/error_view.dart';
 import '../../widgets/states/skeleton_box.dart';
@@ -157,52 +155,29 @@ class _ChartCard extends StatelessWidget {
           ],
         ),
     ];
-    return AppCard(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Capital investi et valeur',
-                  style: textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Text(
-                '${steps.length} mois',
-                style: textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ],
+    return ChartCard(
+      title: 'Capital investi et valeur',
+      trailing: '${steps.length} mois',
+      lines: lines,
+      footer: [
+        SwitchListTile.adaptive(
+          contentPadding: EdgeInsets.zero,
+          activeTrackColor: AppColors.mint,
+          title: Text(
+            'Comparer avec un placement unique',
+            style: textTheme.bodyLarge,
           ),
-          const SizedBox(height: 16),
-          PriceChart(lines: lines),
-          const SizedBox(height: 12),
-          ChartLegend(lines: lines),
-          SwitchListTile.adaptive(
-            contentPadding: EdgeInsets.zero,
-            activeTrackColor: AppColors.mint,
-            title: Text(
-              'Comparer avec un placement unique',
-              style: textTheme.bodyLarge,
-            ),
-            value: compareWithLumpSum,
-            onChanged: onCompareChanged,
+          value: compareWithLumpSum,
+          onChanged: onCompareChanged,
+        ),
+        if (compareWithLumpSum)
+          Text(
+            'Les mêmes ${AppFormat.euro(simulation.dca.invested)} placés '
+            'd\'un coup en ${AppFormat.monthYear(steps.first.date)} '
+            'vaudraient ${AppFormat.euro(simulation.lumpSumFinalValue)}.',
+            style: textTheme.bodyMedium,
           ),
-          if (compareWithLumpSum)
-            Text(
-              'Les mêmes ${AppFormat.euro(simulation.dca.invested)} placés '
-              'd\'un coup en ${AppFormat.monthYear(steps.first.date)} '
-              'vaudraient ${AppFormat.euro(simulation.lumpSumFinalValue)}.',
-              style: textTheme.bodyMedium,
-            ),
-        ],
-      ),
+      ],
     );
   }
 }
