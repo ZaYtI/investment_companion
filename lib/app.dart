@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import 'ui/router/app_router.dart';
 import 'ui/theme/app_theme.dart';
 
 class InvestmentCompanionApp extends StatelessWidget {
-  const InvestmentCompanionApp({super.key});
+  final GoRouter router;
+
+  const InvestmentCompanionApp({super.key, required this.router});
 
   static const title = 'Investment Companion';
 
@@ -14,7 +16,7 @@ class InvestmentCompanionApp extends StatelessWidget {
       title: title,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      routerConfig: appRouter,
+      routerConfig: router,
     );
   }
 }

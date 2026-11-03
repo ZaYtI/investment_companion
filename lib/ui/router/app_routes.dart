@@ -1,4 +1,5 @@
 abstract final class AppRoutes {
+  static const welcome = '/bienvenue';
   static const map = '/carte';
   static const explore = '/explorer';
   static const simulations = '/simulations';
