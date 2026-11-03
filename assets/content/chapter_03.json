@@ -1,0 +1,180 @@
+{
+  "id": "ch3",
+  "number": 3,
+  "title": "Les baisses",
+  "period": { "label": "2007 à 2009", "start": "2007-10-08", "end": "2013-03-25" },
+  "idea": "Une baisse se mesure depuis le plus haut atteint, et remonter coûte plus cher que tomber.",
+  "typicalMistake": "Penser qu'il suffit de regagner le pourcentage perdu.",
+  "series": ["spy_weekly"],
+  "levels": [
+    {
+      "id": "ch3.l1",
+      "type": "understand",
+      "title": "Comprendre",
+      "xp": 20,
+      "screens": [
+        {
+          "id": "ch3.l1.s1",
+          "kind": "hook",
+          "title": "Une perte de 50 %",
+          "text": "Un actif perd la moitié de sa valeur. Quel gain lui faut-il pour revenir à son point de départ ?",
+          "options": ["+50 %", "+75 %", "+100 %"],
+          "pip": "Souvenez-vous du défi du chapitre 1.",
+          "terms": []
+        },
+        {
+          "id": "ch3.l1.s2",
+          "kind": "explanation",
+          "title": "La baisse maximale",
+          "text": "La baisse maximale est la plus grande chute entre un sommet et le creux qui suit. On la mesure depuis le plus haut prix atteint, pas depuis son prix d'achat.",
+          "pip": null,
+          "terms": ["baisse-maximale"]
+        },
+        {
+          "id": "ch3.l1.s3",
+          "kind": "example",
+          "title": "Un exemple chiffré",
+          "text": "Un prix passe de 125 € à 90 €. Pour revenir à 125 €, il faut remonter plus que ce qu'on a perdu.",
+          "steps": [
+            { "label": "La baisse", "value": "−35 € sur 125 €, soit −28 %" },
+            { "label": "Gain pour revenir", "value": "+35 € sur 90 €, soit +38,9 %" },
+            { "label": "Après −50 %", "value": "il faut +100 %" },
+            { "label": "Après −70 %", "value": "il faut +233 %" }
+          ],
+          "pip": null,
+          "terms": ["baisse-maximale"]
+        },
+        {
+          "id": "ch3.l1.s4",
+          "kind": "quiz",
+          "title": "À vous de jouer",
+          "passingScore": 2,
+          "questions": [
+            {
+              "id": "ch3.l1.q1",
+              "question": "Un prix passe de 100 € à 60 €. Quelle est la baisse ?",
+              "choices": ["−60 %", "−40 %", "−66 %"],
+              "answerIndex": 1,
+              "explanation": "40 € de perte sur 100 € de départ."
+            },
+            {
+              "id": "ch3.l1.q2",
+              "question": "Après une baisse de 50 %, quel gain faut-il pour revenir au départ ?",
+              "choices": ["+50 %", "+100 %", "+150 %"],
+              "answerIndex": 1,
+              "explanation": "Il faut doubler le prix restant."
+            },
+            {
+              "id": "ch3.l1.q3",
+              "question": "La baisse maximale se mesure depuis…",
+              "choices": [
+                "Votre prix d'achat",
+                "Le plus haut atteint avant la chute",
+                "Le premier jour de l'année"
+              ],
+              "answerIndex": 1,
+              "explanation": "Sinon on ne mesurerait que sa propre perte, pas celle de l'actif."
+            }
+          ],
+          "pip": "Ces chiffres surprennent tout le monde la première fois.",
+          "terms": []
+        }
+      ]
+    },
+    {
+      "id": "ch3.l2",
+      "type": "simulate",
+      "title": "Simuler",
+      "xp": 60,
+      "instruction": "Vous investissez 10 000 € dans l'ETF S&P 500. Avancez dans le temps.",
+      "simulator": "drawdownTimeline",
+      "settings": {
+        "asset": "spy_weekly",
+        "capital": 10000,
+        "entryDates": [
+          { "date": "2007-10-08", "label": "Octobre 2007, au sommet" },
+          { "date": "2008-01-07", "label": "Janvier 2008" },
+          { "date": "2008-09-08", "label": "Septembre 2008, juste avant Lehman" }
+        ],
+        "end": "2013-12-31",
+        "horizons": [
+          { "id": "short", "label": "Environ 2 ans" },
+          { "id": "long", "label": "10 ans" }
+        ],
+        "markers": [
+          { "date": "2008-09-15", "label": "Lehman Brothers fait faillite. La crise devient mondiale." },
+          { "date": "2009-03-02", "label": "Le creux. Personne ne savait que c'était le plus bas." },
+          { "date": "2013-03-25", "label": "Le prix retrouve son sommet de 2007, plus de cinq ans après." }
+        ]
+      },
+      "readingQuestion": {
+        "id": "ch3.l2.q1",
+        "question": "Entré au sommet, votre portefeuille vaut environ 4 400 € au creux. Quel gain fallait-il pour revenir à 10 000 € ?",
+        "choices": ["Environ +56 %", "Environ +127 %", "Environ +200 %"],
+        "answerIndex": 1,
+        "explanation": "10 000 ÷ 4 409 donne environ 2,27 : il faut plus que doubler, soit +127 %."
+      },
+      "notes": [
+        "Prix seuls : les dividendes réinvestis auraient raccourci le retour d'environ un an.",
+        "Cours hebdomadaires : le creux tombe la semaine du 2 mars 2009.",
+        "Les performances passées ne préjugent pas de l'avenir."
+      ]
+    },
+    {
+      "id": "ch3.l3",
+      "type": "challenge",
+      "title": "Défi",
+      "xp": 60,
+      "challenge": {
+        "kind": "decision",
+        "situation": "Nous sommes en mars 2009. Votre portefeuille a perdu environ la moitié de sa valeur. Que faites-vous ?",
+        "plans": [
+          { "id": "short", "label": "Besoin de l'argent dans environ 2 ans" },
+          { "id": "long", "label": "Argent placé pour 10 ans" }
+        ],
+        "planFromLevel": "ch3.l2",
+        "timerSeconds": null,
+        "choices": [
+          {
+            "id": "sellAll",
+            "label": "Tout vendre",
+            "scores": {
+              "long": { "coherence": 10, "prudence": 100 },
+              "short": { "coherence": 85, "prudence": 100 }
+            },
+            "afterwards": "Votre perte est fixée. Vous ne profitez pas de la reprise, mais vous ne risquez plus rien."
+          },
+          {
+            "id": "sellHalf",
+            "label": "Vendre la moitié",
+            "scores": {
+              "long": { "coherence": 45, "prudence": 75 },
+              "short": { "coherence": 80, "prudence": 75 }
+            },
+            "afterwards": "La moitié gardée a doublé en trois ans. Votre portefeuille vaut environ 1,5 fois sa valeur du creux."
+          },
+          {
+            "id": "keep",
+            "label": "Garder",
+            "scores": {
+              "long": { "coherence": 100, "prudence": 50 },
+              "short": { "coherence": 40, "prudence": 50 }
+            },
+            "afterwards": "En mars 2012, votre portefeuille vaut environ deux fois sa valeur du creux."
+          },
+          {
+            "id": "addMore",
+            "label": "Renforcer de 1 000 € virtuels",
+            "scores": {
+              "long": { "coherence": 85, "prudence": 20 },
+              "short": { "coherence": 15, "prudence": 20 }
+            },
+            "afterwards": "Les 1 000 € ajoutés au creux valent environ 2 000 € en mars 2012."
+          }
+        ],
+        "afterwards": "Trois ans plus tard, en mars 2012, le prix était deux fois plus haut qu'au creux. Ce n'était pas garanti.",
+        "keyMessage": "La bonne décision dépend de votre horizon : vendre n'est pas une faute si vous avez besoin de votre argent dans deux ans."
+      }
+    }
+  ]
+}
