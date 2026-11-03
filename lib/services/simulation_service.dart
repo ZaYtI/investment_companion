@@ -1,4 +1,5 @@
 import '../data/price_repository.dart';
+import '../models/price_point.dart';
 import '../models/price_series.dart';
 import '../models/simulation_result.dart';
 import 'calc/dca.dart';
@@ -13,6 +14,20 @@ class HistoryTooShortException implements Exception {
   final DateTime earliestDate;
 
   const HistoryTooShortException(this.assetId, this.earliestDate);
+}
+
+class DcaSimulation {
+  final DcaResult dca;
+  final PricePoint lastPrice;
+  final double lumpSumShares;
+
+  const DcaSimulation({
+    required this.dca,
+    required this.lastPrice,
+    required this.lumpSumShares,
+  });
+
+  double get lumpSumFinalValue => lumpSumShares * lastPrice.close;
 }
 
 class SimulationService {
@@ -39,6 +54,35 @@ class SimulationService {
       SimulationMode.lumpSum => _lumpSum(weights, series, amount),
       SimulationMode.monthly => _monthly(weights, series, amount, start, end),
     };
+  }
+
+  Future<DcaSimulation> simulateDca({
+    required String monthlyAssetId,
+    required String lastPriceAssetId,
+    required DateTime start,
+    required double monthlyAmount,
+  }) async {
+    final monthlySeries = await repository.getSeries(monthlyAssetId);
+    final lastPriceSeries = await repository.getSeries(lastPriceAssetId);
+    if (monthlySeries.firstDate.isAfter(start)) {
+      throw HistoryTooShortException(monthlyAssetId, monthlySeries.firstDate);
+    }
+    final lastPrice = lastPriceSeries.points.last;
+    final monthlyPrices = firstPriceOfEachMonth(
+      monthlySeries.points,
+      from: start,
+      to: lastPrice.date,
+    );
+    final dca = monthlyInvestment(
+      monthlyPrices.prices,
+      amount: monthlyAmount,
+      finalPrice: lastPrice.close,
+    );
+    return DcaSimulation(
+      dca: dca,
+      lastPrice: lastPrice,
+      lumpSumShares: dca.invested / dca.steps.first.price,
+    );
   }
 
   Future<Map<String, PriceSeries>> _loadSeries(
