@@ -9,10 +9,10 @@ import '../../theme/app_colors.dart';
 import '../../widgets/badges/app_badge.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/cards/selectable_card.dart';
+import '../../widgets/decor/cube_icon.dart';
 import '../../widgets/states/empty_view.dart';
 import '../../widgets/states/error_view.dart';
 import '../../widgets/states/loading_view.dart';
-import 'cube_icon.dart';
 import 'risk_dots.dart';
 
 class ExploreScreen extends ConsumerWidget {
