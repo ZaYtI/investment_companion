@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/challenge_level.dart';
+import '../../../providers/progress_provider.dart';
 import '../../../providers/simulation_providers.dart';
 import '../../format/app_format.dart';
 import '../../theme/app_colors.dart';
@@ -75,10 +76,13 @@ class _PortfolioConstraintChallengeScreenState
             : isEquityOk
             ? 'La baisse dépasse ${AppFormat.percent(-_maxDrawdown)}.'
             : 'Il faut au moins ${AppFormat.percent(_minEquityWeight)} en actions.'}';
+    final isSuccess = isDrawdownOk && isEquityOk;
+    if (isSuccess) {
+      await ref.read(progressProvider.notifier).recordPortfolioChallengeWon();
+    }
     setState(() {
       _isRunning = false;
       _attemptMessages.add(message);
-      final isSuccess = isDrawdownOk && isEquityOk;
       if (isSuccess || attempt == _attempts) {
         _result = ChallengeResult(
           stars: isSuccess ? _starsByAttempt[attempt - 1] : 1,

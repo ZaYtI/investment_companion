@@ -29,6 +29,7 @@ class DecisionChallengeScreen extends ConsumerStatefulWidget {
 class _DecisionChallengeScreenState
     extends ConsumerState<DecisionChallengeScreen> {
   static const calmComposure = 70;
+  static const patientChoiceIds = {'keep', 'doNothing'};
 
   late final _data = widget.challenge.data;
   late final List<Map<String, dynamic>> _plans = (_data['plans'] as List)
@@ -84,12 +85,16 @@ class _DecisionChallengeScreenState
     final coherence = scores['coherence'] as int;
     final prudence = scores['prudence'] as int;
     final baseComposure = scores['composure'] as int?;
+    final wasPatient = patientChoiceIds.contains(choiceId);
     final afterwards = [
       if (choice['afterwards'] != null) choice['afterwards'] as String,
       _data['afterwards'] as String,
     ].join(' ');
 
     if (baseComposure == null) {
+      ref
+          .read(progressProvider.notifier)
+          .recordChallengeChoice(wasPatient: wasPatient);
       final score = crisisScore(coherence, prudence);
       setState(() {
         _result = ChallengeResult(
@@ -108,6 +113,9 @@ class _DecisionChallengeScreenState
 
     final seconds = _timerSeconds == null || timedOut ? null : _secondsElapsed;
     final composure = composureWithTime(baseComposure, seconds);
+    ref
+        .read(progressProvider.notifier)
+        .recordChallengeChoice(wasPatient: wasPatient, composure: composure);
     final measures = ChallengeMeasures(
       coherence: coherence,
       prudence: prudence,

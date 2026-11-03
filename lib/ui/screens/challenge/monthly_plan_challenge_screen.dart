@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/challenge_level.dart';
 import '../../../models/price_point.dart';
+import '../../../providers/progress_provider.dart';
 import '../../../providers/simulation_providers.dart';
 import '../../../services/calc/scoring.dart';
 import '../../format/app_format.dart';
@@ -90,6 +91,9 @@ class _MonthlyPlanChallengeScreenState
     }
     final changes = [for (final month in _months) _monthChange(prices, month)];
     final measures = monthlyPlanMeasures(_decisions, changes);
+    ref
+        .read(progressProvider.notifier)
+        .recordChallengeChoice(wasPatient: measures.coherence == 100);
     final mine = _planValue(prices, _multipliers);
     final perfect = _planValue(prices, List.filled(_months.length, 1));
     setState(() {
