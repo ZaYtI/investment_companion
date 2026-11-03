@@ -7,7 +7,8 @@ import '../../../models/investor_profile.dart';
 import '../../router/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/buttons/primary_button.dart';
-import '../../widgets/mascot/floating_pip.dart';
+import '../../widgets/decor/night_sky.dart';
+import '../../widgets/mascot/pip_island.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -17,12 +18,6 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  static const illustrationWidth = 215.0;
-  static const illustrationHeight = 214.0;
-  static const islandTop = 89.5;
-  static const pipTop = 5.5;
-  static const pipLeft = 77.0;
-
   var _selectedProfile = InvestorProfile.curious;
   var _isSaving = false;
 
@@ -49,7 +44,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
           child: Stack(
             children: [
-              const _NightSky(),
+              const NightSky(),
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.all(22),
@@ -59,29 +54,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
-                              const SizedBox(
-                                width: illustrationWidth,
-                                height: illustrationHeight,
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      top: islandTop,
-                                      left: 0,
-                                      child: Image(
-                                        image: AssetImage(
-                                          'assets/images/welcome_island.png',
-                                        ),
-                                        width: illustrationWidth,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: pipTop,
-                                      left: pipLeft,
-                                      child: FloatingPip(),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              const PipIsland(),
                               const SizedBox(height: 8),
                               Text(
                                 'Remontez le temps pour apprendre à investir',
@@ -164,77 +137,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _NightSky extends StatelessWidget {
-  const _NightSky();
-
-  static const starPositions = [
-    Alignment(-0.85, -0.83),
-    Alignment(0.79, -0.74),
-    Alignment(-0.54, -0.58),
-    Alignment(0.64, -0.5),
-    Alignment(-0.8, -0.29),
-    Alignment(0.84, -0.22),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        const Align(
-          alignment: Alignment(-0.64, -0.69),
-          child: _Cloud(width: 110, height: 28),
-        ),
-        const Align(
-          alignment: Alignment(0.69, -0.38),
-          child: _Cloud(width: 95, height: 25),
-        ),
-        for (final position in starPositions)
-          Align(alignment: position, child: const _Star()),
-      ],
-    );
-  }
-}
-
-class _Star extends StatelessWidget {
-  const _Star();
-
-  static const size = 3.0;
-  static const opacity = 0.5;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: AppColors.surface.withValues(alpha: opacity),
-        shape: BoxShape.circle,
-      ),
-    );
-  }
-}
-
-class _Cloud extends StatelessWidget {
-  final double width;
-  final double height;
-
-  const _Cloud({required this.width, required this.height});
-
-  static const opacity = 0.07;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: AppColors.surface.withValues(alpha: opacity),
-        borderRadius: BorderRadius.all(Radius.elliptical(width, height)),
       ),
     );
   }

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/fake_progress.dart';
-import '../../../models/chapter_status.dart';
 import '../../../models/chapter_summary.dart';
+import '../../../models/progress_status.dart';
 import '../../theme/app_colors.dart';
-import '../../widgets/mascot/floating_pip.dart';
 import 'chapter_path.dart';
+import 'island_painter.dart';
 
 class ChapterTile extends StatelessWidget {
   final ChapterSummary chapter;
-  final ChapterStatus status;
+  final ProgressStatus status;
   final bool islandOnLeft;
   final bool hasNextChapter;
   final VoidCallback onTap;
@@ -29,14 +29,14 @@ class ChapterTile extends StatelessWidget {
   static const islandCenterY = 82.0;
 
   Color get _pathColor => switch (status) {
-    ChapterStatus.completed => AppColors.mint,
-    ChapterStatus.current => AppColors.gold,
-    ChapterStatus.locked => AppColors.textSecondary,
+    ProgressStatus.completed => AppColors.mint,
+    ProgressStatus.current => AppColors.gold,
+    ProgressStatus.locked => AppColors.textSecondary,
   };
 
   @override
   Widget build(BuildContext context) {
-    final island = _Island(status: status);
+    final island = _Island(chapterNumber: chapter.number, status: status);
     final texts = Expanded(
       child: _ChapterTexts(
         chapter: chapter,
@@ -79,13 +79,13 @@ class ChapterTile extends StatelessWidget {
 }
 
 class _Island extends StatelessWidget {
-  final ChapterStatus status;
+  final int chapterNumber;
+  final ProgressStatus status;
 
-  const _Island({required this.status});
+  const _Island({required this.chapterNumber, required this.status});
 
   static const width = 130.0;
   static const height = ChapterTile.height;
-  static const islandHeight = 75.0;
   static const lockedShade = 0.7;
 
   @override
@@ -94,34 +94,32 @@ class _Island extends StatelessWidget {
       width: width,
       height: height,
       child: Stack(
+        clipBehavior: Clip.none,
         alignment: Alignment.bottomCenter,
         children: [
           ColorFiltered(
             colorFilter: ColorFilter.mode(
-              status == ChapterStatus.locked
+              status == ProgressStatus.locked
                   ? AppColors.mapNightLight.withValues(alpha: lockedShade)
                   : Colors.transparent,
               BlendMode.srcATop,
             ),
-            child: Image.asset(
-              'assets/images/welcome_island.png',
-              width: width,
-              height: islandHeight,
+            child: CustomPaint(
+              size: const Size(width, height),
+              painter: IslandPainter(chapterNumber: chapterNumber),
             ),
           ),
-          if (status == ChapterStatus.locked)
+          if (status == ProgressStatus.locked)
             const Positioned(
-              bottom: 30,
+              bottom: 32,
               child: Icon(Icons.lock, color: AppColors.surface),
             ),
-          if (status == ChapterStatus.completed)
+          if (status == ProgressStatus.completed)
             const Positioned(
               top: 20,
               right: 8,
               child: Icon(Icons.check_circle, color: AppColors.mint),
             ),
-          if (status == ChapterStatus.current)
-            const Positioned(top: 0, child: FloatingPip(width: 36)),
         ],
       ),
     );
@@ -130,7 +128,7 @@ class _Island extends StatelessWidget {
 
 class _ChapterTexts extends StatelessWidget {
   final ChapterSummary chapter;
-  final ChapterStatus status;
+  final ProgressStatus status;
   final bool alignRight;
 
   const _ChapterTexts({
@@ -142,11 +140,11 @@ class _ChapterTexts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final isLocked = status == ChapterStatus.locked;
+    final isLocked = status == ProgressStatus.locked;
     final labelColor = switch (status) {
-      ChapterStatus.current => AppColors.gold,
-      ChapterStatus.completed => AppColors.mint,
-      ChapterStatus.locked => AppColors.dashedBorder,
+      ProgressStatus.current => AppColors.gold,
+      ProgressStatus.completed => AppColors.mint,
+      ProgressStatus.locked => AppColors.dashedBorder,
     };
     return Column(
       crossAxisAlignment: alignRight
@@ -174,7 +172,7 @@ class _ChapterTexts extends StatelessWidget {
 
 class _StatusLine extends StatelessWidget {
   final int chapterNumber;
-  final ChapterStatus status;
+  final ProgressStatus status;
 
   const _StatusLine({required this.chapterNumber, required this.status});
 
@@ -182,12 +180,12 @@ class _StatusLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     switch (status) {
-      case ChapterStatus.locked:
+      case ProgressStatus.locked:
         return Text(
           'Verrouillé',
           style: textTheme.bodySmall?.copyWith(color: AppColors.dashedBorder),
         );
-      case ChapterStatus.current:
+      case ProgressStatus.current:
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
@@ -203,7 +201,7 @@ class _StatusLine extends StatelessWidget {
             ),
           ),
         );
-      case ChapterStatus.completed:
+      case ProgressStatus.completed:
         final stars = FakeProgress.starsByChapter[chapterNumber] ?? 0;
         return Text(
           '${'★' * stars}${'☆' * (3 - stars)}  3/3',

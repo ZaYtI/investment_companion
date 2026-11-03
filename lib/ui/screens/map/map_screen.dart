@@ -4,10 +4,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../../data/chapters_data.dart';
 import '../../../data/fake_progress.dart';
-import '../../../models/chapter_status.dart';
 import '../../../models/chapter_summary.dart';
+import '../../../models/progress_status.dart';
 import '../../router/app_routes.dart';
 import '../../theme/app_colors.dart';
+import '../../widgets/decor/night_sky.dart';
 import '../../widgets/states/error_view.dart';
 import 'chapter_tile.dart';
 
@@ -22,7 +23,7 @@ class _MapScreenState extends State<MapScreen> {
   late Future<List<ChapterSummary>> _chapters = loadChapterSummaries();
 
   void _openChapter(ChapterSummary chapter) {
-    if (FakeProgress.statusOf(chapter.number) == ChapterStatus.locked) {
+    if (FakeProgress.statusOf(chapter.number) == ProgressStatus.locked) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -48,49 +49,55 @@ class _MapScreenState extends State<MapScreen> {
               colors: [AppColors.mapNight, AppColors.mapNightLight],
             ),
           ),
-          child: SafeArea(
-            bottom: false,
-            child: FutureBuilder(
-              future: _chapters,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(
-                    child: ErrorView(
-                      message: 'Impossible de charger les chapitres.',
-                      onRetry: () =>
-                          setState(() => _chapters = loadChapterSummaries()),
-                    ),
-                  );
-                }
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final chapters = snapshot.data!.reversed.toList();
-                return ListView(
-                  padding: EdgeInsets.fromLTRB(
-                    22,
-                    22,
-                    22,
-                    22 + MediaQuery.paddingOf(context).bottom,
-                  ),
-                  children: [
-                    const _MapHeader(),
-                    const SizedBox(height: 16),
-                    for (final chapter in chapters) ...[
-                      ChapterTile(
-                        chapter: chapter,
-                        status: FakeProgress.statusOf(chapter.number),
-                        islandOnLeft: chapter.number.isOdd,
-                        hasNextChapter: chapter.number > 1,
-                        onTap: () => _openChapter(chapter),
+          child: Stack(
+            children: [
+              const NightSky(showClouds: false),
+              SafeArea(
+                bottom: false,
+                child: FutureBuilder(
+                  future: _chapters,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: ErrorView(
+                          message: 'Impossible de charger les chapitres.',
+                          onRetry: () => setState(
+                            () => _chapters = loadChapterSummaries(),
+                          ),
+                        ),
+                      );
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final chapters = snapshot.data!.reversed.toList();
+                    return ListView(
+                      padding: EdgeInsets.fromLTRB(
+                        22,
+                        22,
+                        22,
+                        22 + MediaQuery.paddingOf(context).bottom,
                       ),
-                      if (chapter.number > 1)
-                        const SizedBox(height: ChapterTile.spacing),
-                    ],
-                  ],
-                );
-              },
-            ),
+                      children: [
+                        const _MapHeader(),
+                        const SizedBox(height: 16),
+                        for (final chapter in chapters) ...[
+                          ChapterTile(
+                            chapter: chapter,
+                            status: FakeProgress.statusOf(chapter.number),
+                            islandOnLeft: chapter.number.isOdd,
+                            hasNextChapter: chapter.number > 1,
+                            onTap: () => _openChapter(chapter),
+                          ),
+                          if (chapter.number > 1)
+                            const SizedBox(height: ChapterTile.spacing),
+                        ],
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),

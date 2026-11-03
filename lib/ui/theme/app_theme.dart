@@ -6,6 +6,7 @@ import 'app_fonts.dart';
 abstract final class AppTheme {
   static const eyebrowLetterSpacing = 1.2;
   static const segmentRadius = 12.0;
+  static const appBarTitleSize = 22.0;
 
   static const colorScheme = ColorScheme(
     brightness: Brightness.light,
@@ -62,13 +63,18 @@ abstract final class AppTheme {
           letterSpacing: eyebrowLetterSpacing,
         ),
       ),
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.textPrimary,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
-        titleTextStyle: _title(text.titleLarge, FontWeight.w700),
+        titleTextStyle: TextStyle(
+          fontFamily: AppFonts.titles,
+          fontWeight: FontWeight.w700,
+          fontSize: appBarTitleSize,
+          color: AppColors.textPrimary,
+        ),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.surface,

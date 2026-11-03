@@ -30,4 +30,13 @@ abstract final class AppColors {
   static const assetBonds = Color(0xFF3B63D6);
   static const assetCrypto = Color(0xFFE5484D);
   static const assetCurrenciesAndChallenges = Color(0xFF6B4EE0);
+
+  static const islandTop = Color(0xFF9BE3D6);
+  static const islandLeft = Color(0xFF3DB2A0);
+  static const islandRight = Color(0xFF2E9788);
+  static const islandGlow = Color(0xFF1E565E);
+  static const islandShadow = Color(0xFF164046);
+  static const buildingTop = Color(0xFFFFE9A8);
+  static const buildingLeft = Color(0xFFF7C14F);
+  static const buildingRight = Color(0xFFE0A12E);
 }

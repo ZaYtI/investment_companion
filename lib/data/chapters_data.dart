@@ -16,3 +16,8 @@ Future<List<ChapterSummary>> loadChapterSummaries() async {
       )
       .toList();
 }
+
+Future<ChapterSummary> loadChapterSummary(int number) async {
+  final chapters = await loadChapterSummaries();
+  return chapters.firstWhere((chapter) => chapter.number == number);
+}

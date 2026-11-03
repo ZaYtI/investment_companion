@@ -7,4 +7,7 @@ abstract final class AppRoutes {
   static const gallery = '/galerie';
 
   static String chapter(int number) => '$map/chapitre/$number';
+
+  static String level(int chapterNumber, int levelIndex) =>
+      '${chapter(chapterNumber)}/niveau/$levelIndex';
 }
