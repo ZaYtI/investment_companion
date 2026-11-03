@@ -8,13 +8,65 @@ class Progress {
   final Map<int, int> starsByChapter;
   final int xp;
   final Map<String, String> choices;
+  final Set<String> openedAssetIds;
+  final Set<int> openedContextChapters;
+  final int patienceCount;
+  final int bestComposure;
+  final bool hasWonPortfolioChallenge;
+  final List<String> playedDailyIds;
+  final String? lastDailyDay;
+  final int streakDays;
+  final int bestStreakDays;
 
   const Progress({
     this.completedLevels = const {},
     this.starsByChapter = const {},
     this.xp = 0,
     this.choices = const {},
+    this.openedAssetIds = const {},
+    this.openedContextChapters = const {},
+    this.patienceCount = 0,
+    this.bestComposure = 0,
+    this.hasWonPortfolioChallenge = false,
+    this.playedDailyIds = const [],
+    this.lastDailyDay,
+    this.streakDays = 0,
+    this.bestStreakDays = 0,
   });
+
+  Progress copyWith({
+    Set<String>? completedLevels,
+    Map<int, int>? starsByChapter,
+    int? xp,
+    Map<String, String>? choices,
+    Set<String>? openedAssetIds,
+    Set<int>? openedContextChapters,
+    int? patienceCount,
+    int? bestComposure,
+    bool? hasWonPortfolioChallenge,
+    List<String>? playedDailyIds,
+    String? lastDailyDay,
+    int? streakDays,
+    int? bestStreakDays,
+  }) {
+    return Progress(
+      completedLevels: completedLevels ?? this.completedLevels,
+      starsByChapter: starsByChapter ?? this.starsByChapter,
+      xp: xp ?? this.xp,
+      choices: choices ?? this.choices,
+      openedAssetIds: openedAssetIds ?? this.openedAssetIds,
+      openedContextChapters:
+          openedContextChapters ?? this.openedContextChapters,
+      patienceCount: patienceCount ?? this.patienceCount,
+      bestComposure: bestComposure ?? this.bestComposure,
+      hasWonPortfolioChallenge:
+          hasWonPortfolioChallenge ?? this.hasWonPortfolioChallenge,
+      playedDailyIds: playedDailyIds ?? this.playedDailyIds,
+      lastDailyDay: lastDailyDay ?? this.lastDailyDay,
+      streakDays: streakDays ?? this.streakDays,
+      bestStreakDays: bestStreakDays ?? this.bestStreakDays,
+    );
+  }
 
   static String horizonChoiceKey(int chapterNumber) => '$chapterNumber.horizon';
 
@@ -70,33 +122,57 @@ class Progress {
     if (stars != null && stars > previousStars) {
       newStars[chapterNumber] = stars;
     }
-    return Progress(
+    return copyWith(
       completedLevels: {...completedLevels, key},
       starsByChapter: newStars,
       xp: isFirstTime ? xp + xpEarned : xp,
-      choices: choices,
     );
   }
 
   Progress skipChapter(int chapterNumber) {
-    return Progress(
+    return copyWith(
       completedLevels: {
         ...completedLevels,
         for (var level = 0; level < levelsPerChapter; level++)
           levelKey(chapterNumber, level),
       },
-      starsByChapter: starsByChapter,
-      xp: xp,
-      choices: choices,
     );
   }
 
   Progress withChoice(String key, String value) {
-    return Progress(
-      completedLevels: completedLevels,
-      starsByChapter: starsByChapter,
-      xp: xp,
-      choices: {...choices, key: value},
+    return copyWith(choices: {...choices, key: value});
+  }
+
+  Progress addXp(int amount) => copyWith(xp: xp + amount);
+
+  Progress withOpenedAsset(String assetId) =>
+      copyWith(openedAssetIds: {...openedAssetIds, assetId});
+
+  Progress withOpenedContext(int chapterNumber) => copyWith(
+    openedContextChapters: {...openedContextChapters, chapterNumber},
+  );
+
+  Progress withChallengeChoice({required bool wasPatient, int? composure}) {
+    return copyWith(
+      patienceCount: wasPatient ? patienceCount + 1 : patienceCount,
+      bestComposure: composure != null && composure > bestComposure
+          ? composure
+          : bestComposure,
+    );
+  }
+
+  Progress withPortfolioChallengeWon() =>
+      copyWith(hasWonPortfolioChallenge: true);
+
+  bool hasPlayedDailyOn(String day) => lastDailyDay == day;
+
+  Progress withDailyPlayed(String challengeId, String today, String yesterday) {
+    final newStreak = lastDailyDay == yesterday ? streakDays + 1 : 1;
+    return copyWith(
+      playedDailyIds: [...playedDailyIds, challengeId],
+      lastDailyDay: today,
+      streakDays: newStreak,
+      bestStreakDays: newStreak > bestStreakDays ? newStreak : bestStreakDays,
     );
   }
 
@@ -112,6 +188,22 @@ class Progress {
       },
       xp: json['xp'] as int,
       choices: (json['choices'] as Map<String, dynamic>).cast<String, String>(),
+      openedAssetIds: (json['openedAssetIds'] as List<dynamic>? ?? [])
+          .cast<String>()
+          .toSet(),
+      openedContextChapters:
+          (json['openedContextChapters'] as List<dynamic>? ?? [])
+              .cast<int>()
+              .toSet(),
+      patienceCount: json['patienceCount'] as int? ?? 0,
+      bestComposure: json['bestComposure'] as int? ?? 0,
+      hasWonPortfolioChallenge:
+          json['hasWonPortfolioChallenge'] as bool? ?? false,
+      playedDailyIds: (json['playedDailyIds'] as List<dynamic>? ?? [])
+          .cast<String>(),
+      lastDailyDay: json['lastDailyDay'] as String?,
+      streakDays: json['streakDays'] as int? ?? 0,
+      bestStreakDays: json['bestStreakDays'] as int? ?? 0,
     );
   }
 
@@ -122,5 +214,14 @@ class Progress {
     },
     'xp': xp,
     'choices': choices,
+    'openedAssetIds': openedAssetIds.toList(),
+    'openedContextChapters': openedContextChapters.toList(),
+    'patienceCount': patienceCount,
+    'bestComposure': bestComposure,
+    'hasWonPortfolioChallenge': hasWonPortfolioChallenge,
+    'playedDailyIds': playedDailyIds,
+    'lastDailyDay': lastDailyDay,
+    'streakDays': streakDays,
+    'bestStreakDays': bestStreakDays,
   };
 }
