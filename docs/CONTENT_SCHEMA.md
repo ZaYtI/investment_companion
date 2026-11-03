@@ -21,12 +21,11 @@ Règles communes : textes au vouvoiement ; identifiants hiérarchiques et stable
 | `idea` | `string` | Idée à retenir |
 | `typicalMistake` | `string` | Erreur typique corrigée |
 | `series` | `string[]` | Identifiants des séries de `assets/data/series/` utilisées |
-| `context` | `Context?` | Écran « Contexte de l'époque », `null` si pas de date |
 | `levels` | `Level[3]` | Dans l'ordre : `understand`, `simulate`, `challenge` |
 
-`Period` : `{ "label": "2007 à 2009", "start": "2007-10-01", "end": "2009-03-31" }`
+`Period` : `{ "label": "2007 à 2009", "start": "2007-10-01", "end": "2009-03-31" }` ; `end` vaut `null` quand la période va jusqu'à aujourd'hui.
 
-`Context` : `{ "facts": [{ "icon": "bank", "text": "…" }], "figures": "…", "afterwards": "…" }` ; `facts` contient 3 éléments, `afterwards` (« Et ensuite ? ») n'est affiché qu'après le défi.
+Le contexte de l'époque est dans `chapters_index.json`, pas dans le fichier du chapitre. `Context` : `{ "question", "facts": [{ "icon": "bank", "text": "…" }], "figures": "…", "keywords": string[], "afterwards": "…" }` ; `facts` contient 3 éléments, `afterwards` (« Et ensuite ? ») n'est affiché qu'après le défi.
 
 ## Niveau
 
@@ -59,7 +58,7 @@ Champs communs : `id`, `type`, `title`, `xp` (20, 60, 60).
 |---|---|---|
 | `singleAsset` | 1 | `assets`, `amount { min, step, max }`, `periodsInYears` |
 | `riskComparison` | 2 | `assets`, `startYears`, `amountPerAsset` |
-| `drawdownTimeline` | 3 | `asset`, `entryDates`, `horizons: [{ id, label }]`, `markers: [{ date, label }]` |
+| `drawdownTimeline` | 3 | `asset`, `capital`, `entryDates: [{ date, label }]`, `end`, `horizons: [{ id, label }]`, `markers: [{ date, label }]` |
 | `dca` | 4 | `asset`, `defaultStart`, `startRange { from, to }`, `monthly { min, max, step, default }` |
 | `portfolioReplay` | 5 | `entryDates`, `capital`, `presets: [{ id, label, weights }]`, `assets` |
 | `dailyReplay` | 6 | `asset`, `start`, `capital`, `highlightedDays`, `jumps: [{ label, date }]` |
@@ -72,8 +71,8 @@ Champs communs : `id`, `type`, `title`, `xp` (20, 60, 60).
 | `kind` | Chapitre | Champs |
 |---|---|---|
 | `guess` | 1 | `choices`, `answerIndex`, `starsByAttempt: [3, 2, 1]`, `explanation` |
-| `riskProfile` | 2 | `profileQuestions: Question[]` (sans `answerIndex`), `assets`, `windowYears`, `bands: [{ id, maxVolatility }]` |
-| `decision` | 3, 6 | `plans: [{ id, label }]`, `planFromLevel` (identifiant du niveau qui a fixé le plan, ou `null`), `choices: [{ id, label, scores: { <planId>: { coherence, prudence, composure } } }]`, `timerSeconds` (`null` sans chrono), `afterwards` |
+| `riskProfile` | 2 | `profileQuestions: [{ id, question, choices: [{ label, points, maxLoss? }] }]`, `assets` (`cash` = liquidités), `windowYears`, `bands: [{ id, label, maxPoints, maxVolatility }]` ; le total des points choisit la bande du profil, `maxLoss` fixe la perte acceptée |
+| `decision` | 3, 6 | `plans: [{ id, label }]`, `planFromLevel` (identifiant du niveau qui a fixé le plan, ou `null`), `choices: [{ id, label, scores: { <planId>: { coherence, prudence, composure? } }, afterwards? }]`, `timerSeconds` (`null` sans chrono), `afterwards` ; sans `composure` (chapitre 3), le score vaut 60 % cohérence + 40 % prudence |
 | `monthlyPlan` | 4 | `monthlyAmount`, `months: string[]` (`2022-04` …), `decisions: [{ id, label, multiplier }]` |
 | `portfolioConstraint` | 5 | `period { start, end }`, `maxDrawdown`, `minEquityWeight`, `equityAssets`, `attempts`, `starsByAttempt` |
 | `goalPlan` | 7 | `target`, `monthly { min, max }`, `years { min, max }`, `rate`, `stressTestStart`, `stars: [{ stars, condition }]` |

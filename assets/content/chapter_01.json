@@ -6,7 +6,6 @@
   "idea": "Un actif a un prix qui varie. Ce qu'on gagne se mesure en euros et en pourcentage.",
   "typicalMistake": "Croire qu'une baisse de 50 % annule une hausse de 50 %.",
   "series": ["spy_weekly", "gold_weekly", "world_weekly"],
-  "context": null,
   "levels": [
     {
       "id": "ch1.l1",
