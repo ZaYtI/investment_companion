@@ -25,6 +25,15 @@ abstract final class AppFormat {
 
   static String number(num value) => _euro.format(value);
 
+  static String price(double value, {required String unit}) {
+    final decimals = unit.isEmpty ? 4 : 2;
+    final digits = NumberFormat.decimalPatternDigits(
+      locale: locale,
+      decimalDigits: decimals,
+    ).format(value);
+    return unit.isEmpty ? digits : '$digits$nonBreakingSpace$unit';
+  }
+
   static String signedEuro(double amount) =>
       '${_sign(amount)}${euro(amount.abs())}';
 
