@@ -1,0 +1,131 @@
+{
+  "id": "ch4",
+  "number": 4,
+  "title": "Investir chaque mois",
+  "period": { "label": "2022", "start": "2022-01-01", "end": null },
+  "idea": "Verser la même somme chaque mois lisse le prix d'entrée. Cela ne supprime pas les baisses et ne garantit pas de gagner plus qu'un placement unique.",
+  "typicalMistake": "Arrêter ses versements quand le marché baisse, au moment où ils achètent le plus de parts.",
+  "series": ["spy_monthly", "spy_weekly"],
+  "levels": [
+    {
+      "id": "ch4.l1",
+      "type": "understand",
+      "title": "Comprendre",
+      "xp": 20,
+      "screens": [
+        {
+          "id": "ch4.l1.s1",
+          "kind": "hook",
+          "title": "100 € chaque mois",
+          "text": "Et si vous aviez placé 100 € chaque mois dans un ETF qui suit le S&P 500, depuis janvier 2022 ? Cette année-là, presque tout a baissé.",
+          "options": [
+            "J'aurais continué chaque mois",
+            "J'aurais attendu que ça remonte",
+            "Je ne sais pas"
+          ],
+          "pip": "Pas de bonne réponse ici, juste votre premier réflexe.",
+          "terms": []
+        },
+        {
+          "id": "ch4.l1.s2",
+          "kind": "explanation",
+          "title": "Investir chaque mois",
+          "text": "Chaque mois, la même somme achète des parts. Quand le prix baisse, 100 € achètent plus de parts. Quand il monte, moins. C'est l'investissement programmé, ou DCA.",
+          "pip": null,
+          "terms": ["dca", "part"]
+        },
+        {
+          "id": "ch4.l1.s3",
+          "kind": "example",
+          "title": "Un exemple chiffré",
+          "text": "Trois mois, 100 € par mois. Le prix de la part vaut 50 €, puis 40 €, puis 60 €.",
+          "steps": [
+            { "label": "Parts achetées", "value": "2, puis 2,5, puis 1,67" },
+            { "label": "Total", "value": "6,17 parts pour 300 €" },
+            { "label": "Prix de revient moyen", "value": "48,65 € la part, sous la moyenne de 50 €" }
+          ],
+          "pip": null,
+          "terms": ["prix-de-revient-moyen"]
+        },
+        {
+          "id": "ch4.l1.s4",
+          "kind": "quiz",
+          "title": "À vous de jouer",
+          "passingScore": 2,
+          "questions": [
+            {
+              "id": "ch4.l1.q1",
+              "question": "Vous versez 100 €. La part vaut 25 €. Combien de parts achetez-vous ?",
+              "choices": ["2", "4", "25"],
+              "answerIndex": 1,
+              "explanation": "100 divisé par 25."
+            },
+            {
+              "id": "ch4.l1.q2",
+              "question": "Investir chaque mois garantit-il un gain ?",
+              "choices": ["Oui", "Non"],
+              "answerIndex": 1,
+              "explanation": "Cela lisse le prix d'entrée. Si le marché baisse durablement, la valeur baisse aussi."
+            },
+            {
+              "id": "ch4.l1.q3",
+              "question": "Quand le prix baisse, un versement fixe achète…",
+              "choices": ["Moins de parts", "Autant de parts", "Plus de parts"],
+              "answerIndex": 2,
+              "explanation": "La même somme pour un prix plus bas donne plus de parts."
+            }
+          ],
+          "pip": "Chaque erreur rend la règle plus claire.",
+          "terms": []
+        }
+      ]
+    },
+    {
+      "id": "ch4.l2",
+      "type": "simulate",
+      "title": "Simuler",
+      "xp": 60,
+      "instruction": "Choisissez un versement mensuel et une date de début, puis regardez ce que deviennent vos versements.",
+      "simulator": "dca",
+      "settings": {
+        "asset": "spy_monthly",
+        "finalPriceAsset": "spy_weekly",
+        "defaultStart": "2022-01",
+        "startRange": { "from": "2015-01", "to": "lastMonth" },
+        "monthly": { "min": 20, "max": 500, "step": 10, "default": 100 },
+        "compareWithLumpSum": true
+      },
+      "readingQuestion": {
+        "id": "ch4.l2.q1",
+        "question": "Entre avril et septembre 2022, le prix baisse. Vos versements ont-ils acheté plus ou moins de parts ?",
+        "choices": ["Plus de parts", "Moins de parts", "Autant"],
+        "answerIndex": 0,
+        "explanation": "Un prix plus bas donne plus de parts pour la même somme. Votre prix de revient moyen baisse."
+      },
+      "notes": [
+        "Le prix retenu est celui du premier jour de bourse de chaque mois.",
+        "Sur un marché qui monte, placer tout d'un coup rapporte souvent plus. Le DCA réduit surtout le regret d'avoir mal choisi sa date.",
+        "Les prix sont bruts : aucun frais, aucun dividende réinvesti."
+      ]
+    },
+    {
+      "id": "ch4.l3",
+      "type": "challenge",
+      "title": "Défi",
+      "xp": 60,
+      "challenge": {
+        "kind": "monthlyPlan",
+        "situation": "Votre plan : 100 € chaque mois depuis janvier 2022. Six mois difficiles arrivent. Chaque mois, décidez quoi faire.",
+        "monthlyAmount": 100,
+        "months": ["2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09"],
+        "decisions": [
+          { "id": "keep", "label": "Continuer le versement", "multiplier": 1 },
+          { "id": "pause", "label": "Mettre en pause", "multiplier": 0 },
+          { "id": "doubleUp", "label": "Doubler pour rattraper", "multiplier": 2 }
+        ],
+        "afterwards": "Votre portefeuille est comparé à celui du plan suivi sans faute, sur la même période.",
+        "keyMessage": "Un plan sert surtout dans les mois difficiles. Ce sont eux qui achètent le plus de parts."
+      }
+    }
+  ]
+}
