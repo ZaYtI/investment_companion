@@ -35,21 +35,4 @@ class DcaOptions {
   }
 
   static DateTime _parseMonth(String text) => DateTime.parse('$text-01');
-
-  String? validateMonthly(String? text) {
-    if (text == null || text.trim().isEmpty) {
-      return 'Indiquez un montant.';
-    }
-    final amount = int.tryParse(text.trim());
-    if (amount == null) {
-      return 'Entrez un nombre entier, sans centimes.';
-    }
-    if (amount <= 0) {
-      return 'Le montant doit être supérieur à 0 €.';
-    }
-    if (amount < minMonthly || amount > maxMonthly) {
-      return 'Choisissez entre $minMonthly € et $maxMonthly €.';
-    }
-    return null;
-  }
 }

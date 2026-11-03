@@ -46,7 +46,9 @@ DcaResult monthlyInvestment(
     throw const InvalidInputException('Le versement doit être positif.');
   }
   if (monthlyPrices.isEmpty || monthlyPrices.length < minDeposits) {
-    throw const InvalidInputException('Pas assez de versements.');
+    throw const InvalidInputException(
+      'Il faut au moins 3 versements. Reculez la date de début.',
+    );
   }
   final steps = <DcaStep>[];
   var totalShares = 0.0;

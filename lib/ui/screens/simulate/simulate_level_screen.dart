@@ -41,7 +41,10 @@ class _SimulateLevelScreenState extends State<SimulateLevelScreen> {
         }
         final level = snapshot.data!;
         return switch (level.simulator) {
-          'dca' => DcaSimulatorScreen(level: level),
+          'dca' => DcaSimulatorScreen(
+            chapterNumber: widget.chapterNumber,
+            level: level,
+          ),
           _ => Scaffold(
             appBar: AppBar(
               title: Text(
