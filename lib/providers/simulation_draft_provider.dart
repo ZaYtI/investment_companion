@@ -2,17 +2,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/key_moment.dart';
 import '../models/saved_simulation.dart';
+import '../models/simulation_example.dart';
 import '../services/simulation_service.dart';
 import 'simulation_providers.dart';
 
 class SimulationDraft {
-  static const capital = 10000.0;
-  static const monthlyAmount = 100.0;
+  static const defaultCapital = 10000;
+  static const minCapital = 1000;
+  static const maxCapital = 100000;
+  static const capitalStep = 1000;
+  static const defaultMonthlyAmount = 100;
+  static const minMonthlyAmount = 20;
+  static const maxMonthlyAmount = 1000;
+  static const monthlyAmountStep = 10;
   static const percentStep = 5;
 
   final DateTime start;
   final SimulationMode mode;
   final Map<String, int> percents;
+  final int capital;
+  final int monthlyAmount;
   final int? savedId;
   final String? name;
 
@@ -20,6 +29,8 @@ class SimulationDraft {
     required this.start,
     required this.mode,
     required this.percents,
+    this.capital = defaultCapital,
+    this.monthlyAmount = defaultMonthlyAmount,
     this.savedId,
     this.name,
   });
@@ -29,7 +40,9 @@ class SimulationDraft {
 
   bool get isComplete => totalPercent == 100;
 
-  double get amount => mode == SimulationMode.lumpSum ? capital : monthlyAmount;
+  bool get isMonthly => mode == SimulationMode.monthly;
+
+  double get amount => (isMonthly ? monthlyAmount : capital).toDouble();
 
   Map<String, double> get weights => {
     for (final entry in percents.entries) entry.key: entry.value / 100,
@@ -39,11 +52,15 @@ class SimulationDraft {
     DateTime? start,
     SimulationMode? mode,
     Map<String, int>? percents,
+    int? capital,
+    int? monthlyAmount,
   }) {
     return SimulationDraft(
       start: start ?? this.start,
       mode: mode ?? this.mode,
       percents: percents ?? this.percents,
+      capital: capital ?? this.capital,
+      monthlyAmount: monthlyAmount ?? this.monthlyAmount,
     );
   }
 }
@@ -72,10 +89,23 @@ class SimulationDraftNotifier extends Notifier<SimulationDraft> {
     );
   }
 
+  void openExample(SimulationExample example) {
+    state = SimulationDraft(
+      start: example.start,
+      mode: SimulationMode.lumpSum,
+      percents: example.percents,
+      name: example.title,
+    );
+  }
+
   void open(SavedSimulation simulation) {
+    final isMonthly = simulation.mode == SimulationMode.monthly;
+    final amount = simulation.amount.round();
     state = SimulationDraft(
       start: simulation.start,
       mode: simulation.mode,
+      capital: isMonthly ? SimulationDraft.defaultCapital : amount,
+      monthlyAmount: isMonthly ? amount : SimulationDraft.defaultMonthlyAmount,
       percents: {
         for (final entry in simulation.weights.entries)
           entry.key: (entry.value * 100).round(),
@@ -91,6 +121,12 @@ class SimulationDraftNotifier extends Notifier<SimulationDraft> {
 
   void setMode(SimulationMode mode) {
     state = state.copyWith(mode: mode);
+  }
+
+  void setAmount(int amount) {
+    state = state.isMonthly
+        ? state.copyWith(monthlyAmount: amount)
+        : state.copyWith(capital: amount);
   }
 
   void addAsset(String assetId) {
