@@ -13,6 +13,7 @@ import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/cards/selectable_card.dart';
 import '../../widgets/mascot/floating_pip.dart';
+import '../../widgets/states/empty_view.dart';
 import '../../widgets/states/error_view.dart';
 
 class QuizGameScreen extends ConsumerStatefulWidget {
@@ -110,7 +111,14 @@ class _QuizGameScreenState extends ConsumerState<QuizGameScreen> {
             child: ErrorView(message: 'Impossible de préparer le quiz.'),
           ),
           data: (questions) {
-            if (round == null) return const SizedBox.shrink();
+            if (round == null || round.isEmpty) {
+              return const Center(
+                child: EmptyView(
+                  message: 'Aucune question disponible pour le moment.',
+                  icon: Icons.quiz_outlined,
+                ),
+              );
+            }
             if (_isFinished) return _buildSummary(questions, round.length);
             return _buildQuestion(round[_questionIndex], round.length);
           },

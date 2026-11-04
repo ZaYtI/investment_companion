@@ -131,10 +131,17 @@ class _DailyChallengeScreenState extends ConsumerState<DailyChallengeScreen> {
                 ),
               );
             }
-            final prices = ref
-                .watch(priceSeriesProvider(scenario.seriesId))
-                .value
-                ?.points;
+            final series = ref.watch(priceSeriesProvider(scenario.seriesId));
+            final prices = series.value?.points;
+            if (series.hasError) {
+              return Center(
+                child: ErrorView(
+                  message: 'Impossible de charger les cours de ce jour.',
+                  onRetry: () =>
+                      ref.invalidate(priceSeriesProvider(scenario.seriesId)),
+                ),
+              );
+            }
             if (prices == null) {
               return const Center(child: CircularProgressIndicator());
             }

@@ -56,7 +56,16 @@ class _AssetDetailScreenState extends ConsumerState<AssetDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final catalog = ref.watch(assetCatalogProvider).value;
+    final catalogValue = ref.watch(assetCatalogProvider);
+    final catalog = catalogValue.value;
+    if (catalogValue.hasError) {
+      return Scaffold(
+        appBar: AppBar(),
+        body: const Center(
+          child: ErrorView(message: 'Impossible de charger cet actif.'),
+        ),
+      );
+    }
     if (catalog == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }

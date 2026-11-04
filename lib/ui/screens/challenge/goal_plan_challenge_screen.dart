@@ -9,6 +9,7 @@ import '../../../services/calc/goal.dart';
 import '../../format/app_format.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/cards/app_card.dart';
+import '../../widgets/states/error_view.dart';
 import '../simulate/amount_card.dart';
 import 'challenge_scaffold.dart';
 
@@ -29,6 +30,8 @@ class GoalPlanChallengeScreen extends ConsumerStatefulWidget {
 
 class _GoalPlanChallengeScreenState
     extends ConsumerState<GoalPlanChallengeScreen> {
+  static const stressTestSeries = 'spy_monthly';
+
   late final _data = widget.challenge.data;
   late final double _target = (_data['target'] as num).toDouble();
   late final double _rate = (_data['rate'] as num).toDouble();
@@ -107,7 +110,8 @@ class _GoalPlanChallengeScreenState
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final prices = ref.watch(priceSeriesProvider('spy_monthly')).value?.points;
+    final series = ref.watch(priceSeriesProvider(stressTestSeries));
+    final prices = series.value?.points;
     return ChallengeScaffold(
       chapterNumber: widget.chapterNumber,
       situation: widget.challenge.situation,
@@ -149,6 +153,14 @@ class _GoalPlanChallengeScreenState
             ),
           ),
         const SizedBox(height: 20),
+        if (series.hasError) ...[
+          ErrorView(
+            message: 'Impossible de charger les cours du test de résistance.',
+            onRetry: () =>
+                ref.invalidate(priceSeriesProvider(stressTestSeries)),
+          ),
+          const SizedBox(height: 12),
+        ],
         PrimaryButton(
           text: 'Valider mon plan',
           onPressed: prices == null || _invalidFields.isNotEmpty

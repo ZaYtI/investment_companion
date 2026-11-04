@@ -9,6 +9,7 @@ import '../../../services/calc/scoring.dart';
 import '../../format/app_format.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/cards/selectable_card.dart';
+import '../../widgets/states/error_view.dart';
 import '../../widgets/states/skeleton_box.dart';
 import '../../widgets/text/change_text.dart';
 import 'challenge_scaffold.dart';
@@ -119,14 +120,20 @@ class _MonthlyPlanChallengeScreenState
 
   @override
   Widget build(BuildContext context) {
-    final prices = ref.watch(priceSeriesProvider(pricesId)).value?.points;
+    final series = ref.watch(priceSeriesProvider(pricesId));
+    final prices = series.value?.points;
     return ChallengeScaffold(
       chapterNumber: widget.chapterNumber,
       situation: widget.challenge.situation,
       keyMessage: widget.challenge.keyMessage,
       result: _result,
       children: [
-        if (prices == null)
+        if (series.hasError)
+          ErrorView(
+            message: 'Impossible de charger les cours.',
+            onRetry: () => ref.invalidate(priceSeriesProvider(pricesId)),
+          )
+        else if (prices == null)
           const SkeletonBox(height: 200)
         else if (_decisions.length < _months.length)
           _buildMonthCard(prices),

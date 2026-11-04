@@ -12,6 +12,7 @@ import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/charts/price_chart.dart';
 import '../../widgets/states/empty_view.dart';
+import '../../widgets/states/error_view.dart';
 import '../../widgets/states/skeleton_box.dart';
 import '../../widgets/text/change_text.dart';
 import 'queued_notice.dart';
@@ -21,8 +22,11 @@ class FavoritesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final catalog = ref.watch(assetCatalogProvider).value;
-    final favoriteIds = ref.watch(favoritesProvider).value;
+    final catalogValue = ref.watch(assetCatalogProvider);
+    final favoritesValue = ref.watch(favoritesProvider);
+    final catalog = catalogValue.value;
+    final favoriteIds = favoritesValue.value;
+    final hasError = catalogValue.hasError || favoritesValue.hasError;
     return Scaffold(
       appBar: AppBar(title: const Text('Mes favoris')),
       body: SafeArea(
@@ -30,7 +34,13 @@ class FavoritesScreen extends ConsumerWidget {
         child: Column(
           children: [
             Expanded(
-              child: catalog == null || favoriteIds == null
+              child: hasError
+                  ? const Center(
+                      child: ErrorView(
+                        message: 'Impossible de charger vos favoris.',
+                      ),
+                    )
+                  : catalog == null || favoriteIds == null
                   ? const Center(child: CircularProgressIndicator())
                   : favoriteIds.isEmpty
                   ? const Center(
@@ -90,7 +100,8 @@ class _FavoriteCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
-    final series = ref.watch(assetSeriesProvider(asset)).value;
+    final seriesValue = ref.watch(assetSeriesProvider(asset));
+    final series = seriesValue.value;
     final lastYear = series?.lastMonths(12);
     final performance = lastYear == null || lastYear.points.length < 2
         ? null
@@ -113,7 +124,12 @@ class _FavoriteCard extends ConsumerWidget {
             ),
           ),
           const Spacer(),
-          if (lastYear == null || performance == null)
+          if (seriesValue.hasError)
+            Text(
+              'Cours indisponibles',
+              style: textTheme.bodySmall?.copyWith(color: AppColors.redText),
+            )
+          else if (lastYear == null || performance == null)
             ref.read(priceRepositoryProvider).canCallApiNow
                 ? const SkeletonBox(height: chartHeight)
                 : const QueuedNotice(isCompact: true)

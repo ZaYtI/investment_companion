@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/simulate_level.dart';
 import '../../../providers/simulation_providers.dart';
 import '../../widgets/charts/price_chart.dart';
+import '../../widgets/states/error_view.dart';
 import '../../widgets/states/skeleton_box.dart';
 import 'amount_card.dart';
 import 'simulations_builder.dart';
@@ -44,7 +45,8 @@ class _SingleAssetSimulatorScreenState
 
   @override
   Widget build(BuildContext context) {
-    final lastDate = ref.watch(priceSeriesProvider(_asset)).value?.lastDate;
+    final series = ref.watch(priceSeriesProvider(_asset));
+    final lastDate = series.value?.lastDate;
     return SimulatorScaffold(
       chapterNumber: widget.chapterNumber,
       title: 'Un actif, une période',
@@ -81,6 +83,11 @@ class _SingleAssetSimulatorScreenState
           const InvalidAmountNotice(
             message:
                 'Entrez un montant valide pour voir ce qu\'il serait devenu.',
+          )
+        else if (series.hasError)
+          ErrorView(
+            message: 'Impossible de charger les cours.',
+            onRetry: () => ref.invalidate(priceSeriesProvider(_asset)),
           )
         else if (lastDate == null)
           const SkeletonBox(height: 260)
