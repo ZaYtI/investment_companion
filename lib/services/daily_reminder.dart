@@ -7,12 +7,19 @@ import 'package:timezone/timezone.dart' as tz;
 class DailyReminder {
   static const reminderHour = 12;
   static const scheduledDays = 7;
+  static const testNotificationId = 99;
+  static const testDelay = Duration(seconds: 5);
   static const _channelId = 'daily_challenge';
   static const _channelName = 'Défi du jour';
   static const _title = 'Défi du jour';
   static const _body =
       'Une vraie journée de bourse vous attend. Que feriez-vous à la place '
       'des investisseurs ?';
+
+  static const _details = NotificationDetails(
+    android: AndroidNotificationDetails(_channelId, _channelName),
+    iOS: DarwinNotificationDetails(),
+  );
 
   final _plugin = FlutterLocalNotificationsPlugin();
 
@@ -71,13 +78,21 @@ class DailyReminder {
         scheduledDate: reminderTime,
         title: _title,
         body: _body,
-        notificationDetails: const NotificationDetails(
-          android: AndroidNotificationDetails(_channelId, _channelName),
-          iOS: DarwinNotificationDetails(),
-        ),
+        notificationDetails: _details,
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       );
     }
+  }
+
+  Future<void> showTestSoon() async {
+    await _plugin.zonedSchedule(
+      id: testNotificationId,
+      scheduledDate: tz.TZDateTime.now(tz.local).add(testDelay),
+      title: _title,
+      body: _body,
+      notificationDetails: _details,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
   }
 
   Future<void> cancelAll() => _plugin.cancelAll();
