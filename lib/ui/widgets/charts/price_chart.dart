@@ -42,6 +42,7 @@ class PriceChart extends StatelessWidget {
   final double? target;
   final double height;
   final bool showDates;
+  final double visibleFraction;
   final String Function(double value) formatValue;
 
   const PriceChart({
@@ -51,6 +52,7 @@ class PriceChart extends StatelessWidget {
     this.target,
     this.height = defaultHeight,
     this.showDates = true,
+    this.visibleFraction = 1,
     this.formatValue = _formatEuro,
   });
 
@@ -62,6 +64,14 @@ class PriceChart extends StatelessWidget {
   static const millisecondsPerDay = 86400000;
   static const dateAxisHeight = 28.0;
   static const emptyMessage = 'Aucune donnée sur cette période.';
+  static const minimumVisiblePoints = 2;
+
+  List<ChartPoint> _visiblePointsOf(ChartLine line) {
+    final count = (line.points.length * visibleFraction).ceil();
+    return line.points
+        .take(count.clamp(minimumVisiblePoints, line.points.length))
+        .toList();
+  }
 
   static String _formatEuro(double value) => AppFormat.euro(value);
 
@@ -179,7 +189,7 @@ class PriceChart extends StatelessWidget {
             for (final (index, line) in lines.indexed)
               LineChartBarData(
                 spots: [
-                  for (final point in line.points)
+                  for (final point in _visiblePointsOf(line))
                     FlSpot(_x(point.date), point.value),
                 ],
                 color: line.color,
