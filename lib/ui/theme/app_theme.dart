@@ -8,6 +8,9 @@ abstract final class AppTheme {
   static const segmentRadius = 12.0;
   static const appBarTitleSize = 22.0;
   static const sliderTrackHeight = 10.0;
+  static const navigationBarHeight = 60.0;
+  static const navigationIconSize = 22.0;
+  static const navigationLabelSize = 12.0;
   static const sliderThumbRadius = 14.0;
 
   static const colorScheme = ColorScheme(
@@ -117,12 +120,14 @@ abstract final class AppTheme {
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
+        height: navigationBarHeight,
         backgroundColor: AppColors.surface,
         surfaceTintColor: Colors.transparent,
         indicatorColor: Colors.transparent,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         iconTheme: WidgetStateProperty.resolveWith(
           (states) => IconThemeData(
+            size: navigationIconSize,
             color: states.contains(WidgetState.selected)
                 ? AppColors.mintText
                 : AppColors.textSecondary,
@@ -130,6 +135,8 @@ abstract final class AppTheme {
         ),
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => text.labelMedium?.copyWith(
+            fontSize: navigationLabelSize,
+            letterSpacing: 0,
             color: states.contains(WidgetState.selected)
                 ? AppColors.mintText
                 : AppColors.textSecondary,
