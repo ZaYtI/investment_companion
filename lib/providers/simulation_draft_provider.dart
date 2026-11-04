@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/key_moment.dart';
 import '../models/saved_simulation.dart';
-import '../models/simulation_example.dart';
 import '../services/simulation_service.dart';
 import 'simulation_providers.dart';
 
@@ -89,12 +88,18 @@ class SimulationDraftNotifier extends Notifier<SimulationDraft> {
     );
   }
 
-  void openExample(SimulationExample example) {
+  void openPortfolio({
+    required String name,
+    required DateTime start,
+    required Map<String, int> percents,
+    required int capital,
+  }) {
     state = SimulationDraft(
-      start: example.start,
+      start: start,
       mode: SimulationMode.lumpSum,
-      percents: example.percents,
-      name: example.title,
+      percents: percents,
+      capital: capital,
+      name: name,
     );
   }
 
