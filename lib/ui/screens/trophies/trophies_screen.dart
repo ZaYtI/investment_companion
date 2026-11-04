@@ -9,6 +9,7 @@ import '../../../services/progression.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/decor/cube_icon.dart';
+import '../../widgets/dialogs/app_bottom_sheet.dart';
 import '../../widgets/progress/progress_ring.dart';
 
 class TrophiesScreen extends ConsumerWidget {
@@ -162,12 +163,11 @@ class _BadgeCard extends StatelessWidget {
   }
 
   void _showCondition(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      useRootNavigator: true,
+    showAppBottomSheet<void>(
+      context,
       builder: (context) => SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

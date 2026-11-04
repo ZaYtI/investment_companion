@@ -8,6 +8,7 @@ import '../../../services/simulation_service.dart';
 import '../../format/app_format.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/charts/price_chart.dart';
+import '../../widgets/dialogs/app_bottom_sheet.dart';
 import '../../widgets/states/error_view.dart';
 import '../../widgets/states/skeleton_box.dart';
 import 'amount_card.dart';
@@ -41,9 +42,8 @@ class _DcaSimulatorScreenState extends ConsumerState<DcaSimulatorScreen> {
       months.add(month);
       month = DateTime(month.year, month.month - 1);
     }
-    final picked = await showModalBottomSheet<DateTime>(
-      context: context,
-      useRootNavigator: true,
+    final picked = await showAppBottomSheet<DateTime>(
+      context,
       builder: (context) => _MonthPicker(months: months, selected: current),
     );
     if (picked != null) _settings.setStart(picked);
