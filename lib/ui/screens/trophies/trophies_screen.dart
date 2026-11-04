@@ -17,6 +17,29 @@ import 'badge_style.dart';
 class TrophiesScreen extends ConsumerWidget {
   const TrophiesScreen({super.key});
 
+  Future<void> _toggleReminder(
+    BuildContext context,
+    WidgetRef ref,
+    bool isEnabled,
+  ) async {
+    final settings = ref.read(appSettingsProvider.notifier);
+    if (!isEnabled) {
+      await settings.disableReminder();
+      return;
+    }
+    final isGranted = await settings.enableReminder();
+    if (!isGranted && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Autorisez les notifications pour Investment Companion dans les '
+            'réglages du téléphone.',
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
@@ -75,6 +98,13 @@ class TrophiesScreen extends ConsumerWidget {
             onChanged: (isEnabled) => ref
                 .read(appSettingsProvider.notifier)
                 .setBadgeAnimationEnabled(isEnabled),
+          ),
+          SwitchListTile.adaptive(
+            contentPadding: EdgeInsets.zero,
+            activeTrackColor: AppColors.mint,
+            title: const Text('Rappel du défi du jour à 12 h'),
+            value: settings?.isReminderEnabled ?? false,
+            onChanged: (isEnabled) => _toggleReminder(context, ref, isEnabled),
           ),
         ],
       ),
