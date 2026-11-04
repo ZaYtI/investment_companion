@@ -7,7 +7,9 @@ import '../../providers/progress_provider.dart';
 import '../../providers/saved_simulations_provider.dart';
 import '../../providers/settings_provider.dart';
 import '../../services/badges.dart';
+import '../../services/day_keys.dart';
 import '../widgets/dialogs/badge_celebration_dialog.dart';
+import '../widgets/dialogs/confirm_dialog.dart';
 import '../widgets/navigation/app_navigation_bar.dart';
 import '../widgets/states/offline_banner.dart';
 
@@ -29,7 +31,7 @@ class _AppShellState extends ConsumerState<AppShell> {
     widget.navigationShell.goBranch(index);
   }
 
-  void _onBadgesChanged(List<BadgeStatus> badges) {
+  Future<void> _onBadgesChanged(List<BadgeStatus> badges) async {
     final isReady =
         ref.read(progressProvider).hasValue &&
         ref.read(savedSimulationsProvider).hasValue;
@@ -40,21 +42,59 @@ class _AppShellState extends ConsumerState<AppShell> {
         if (badge.isEarned) badge.id,
     };
     if (previousIds == null) return;
-    final newBadges = badges.where(
-      (badge) => badge.isEarned && !previousIds.contains(badge.id),
-    );
+    final newBadges = badges
+        .where((badge) => badge.isEarned && !previousIds.contains(badge.id))
+        .toList();
     if (newBadges.isEmpty) return;
-    showBadgeCelebration(
+    await showBadgeCelebration(
       context,
       newBadges.first,
       isAnimationEnabled:
           ref.read(appSettingsProvider).value?.isBadgeAnimationEnabled ?? true,
     );
+    final isFirstLevelDone = newBadges.any((badge) => badge.id == 'firstStep');
+    if (isFirstLevelDone && mounted) await _askForReminder();
+  }
+
+  Future<void> _askForReminder() async {
+    final settings = ref.read(appSettingsProvider).value;
+    if (settings == null || settings.hasAskedReminder) return;
+    final wantsReminder = await showConfirmDialog(
+      context,
+      title: 'Un rappel par jour ?',
+      message:
+          'Recevez chaque jour à 12 h une notification pour le défi du jour : '
+          'une vraie journée de bourse à rejouer en 15 secondes. Vous pourrez '
+          'la désactiver dans Trophées.',
+      confirmLabel: 'Activer',
+    );
+    final settingsNotifier = ref.read(appSettingsProvider.notifier);
+    if (wantsReminder) {
+      await settingsNotifier.enableReminder();
+    } else {
+      await settingsNotifier.disableReminder();
+    }
+  }
+
+  void _syncReminder() {
+    final settings = ref.read(appSettingsProvider).value;
+    if (settings == null) return;
+    final reminder = ref.read(dailyReminderProvider);
+    if (settings.isReminderEnabled) {
+      final progress = ref.read(currentProgressProvider);
+      reminder.scheduleNextDays(
+        hasPlayedToday: progress.hasPlayedDailyOn(todayKey()),
+      );
+    } else {
+      reminder.cancelAll();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     ref.listen(badgesProvider, (_, badges) => _onBadgesChanged(badges));
+    ref.listen(appSettingsProvider, (_, _) => _syncReminder());
+    ref.listen(currentProgressProvider, (_, _) => _syncReminder());
     return Scaffold(
       extendBody: true,
       body: Builder(

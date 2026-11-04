@@ -5,14 +5,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
 import 'data/app_preferences.dart';
+import 'providers/settings_provider.dart';
 import 'providers/simulation_providers.dart';
+import 'services/daily_reminder.dart';
 import 'ui/router/app_router.dart';
+import 'ui/router/app_routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final hasSeenWelcome = await AppPreferences.hasSeenWelcome();
   final router = createAppRouter(showWelcome: !hasSeenWelcome);
-  final container = ProviderContainer(retry: _neverRetry);
+  final reminder = DailyReminder();
+  await reminder.initialize(
+    onOpened: () => router.go(AppRoutes.dailyChallenge),
+  );
+  if (await reminder.wasAppOpenedByReminder()) {
+    router.go(AppRoutes.dailyChallenge);
+  }
+  final container = ProviderContainer(
+    retry: _neverRetry,
+    overrides: [dailyReminderProvider.overrideWithValue(reminder)],
+  );
   unawaited(_refreshPrices(container));
   runApp(
     UncontrolledProviderScope(
