@@ -12,6 +12,7 @@ import '../../widgets/buttons/dashed_button.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/dialogs/app_bottom_sheet.dart';
+import '../simulate/amount_card.dart';
 import '../simulate/simulator_widgets.dart';
 import 'step_label.dart';
 
@@ -56,42 +57,51 @@ class ComposePortfolioScreen extends ConsumerWidget {
                     style: textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      Chip(
-                        avatar: const Icon(Icons.schedule, size: 18),
-                        label: Text(
-                          'Départ : ${AppFormat.monthYear(draft.start)}',
-                        ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    Chip(
+                      avatar: const Icon(Icons.schedule, size: 18),
+                      label: Text(
+                        'Départ : ${AppFormat.monthYear(draft.start)}',
                       ),
-                      Chip(
-                        avatar: const Icon(Icons.euro, size: 18),
-                        label: Text(
-                          'Capital : ${AppFormat.euro(SimulationDraft.capital)}',
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 16),
                   SegmentedButton<SimulationMode>(
-                    segments: [
-                      const ButtonSegment(
+                    segments: const [
+                      ButtonSegment(
                         value: SimulationMode.lumpSum,
                         label: Text('Tout au départ'),
                       ),
                       ButtonSegment(
                         value: SimulationMode.monthly,
-                        label: Text(
-                          '${AppFormat.euro(SimulationDraft.monthlyAmount)} par mois',
-                        ),
+                        label: Text('Chaque mois'),
                       ),
                     ],
                     selected: {draft.mode},
                     showSelectedIcon: false,
                     onSelectionChanged: (modes) =>
                         notifier.setMode(modes.first),
+                  ),
+                  const SizedBox(height: 12),
+                  AmountCard(
+                    key: ValueKey(draft.mode),
+                    label: draft.isMonthly
+                        ? 'Versement mensuel'
+                        : 'Capital de départ',
+                    value: draft.isMonthly
+                        ? draft.monthlyAmount
+                        : draft.capital,
+                    min: draft.isMonthly
+                        ? SimulationDraft.minMonthlyAmount
+                        : SimulationDraft.minCapital,
+                    max: draft.isMonthly
+                        ? SimulationDraft.maxMonthlyAmount
+                        : SimulationDraft.maxCapital,
+                    step: draft.isMonthly
+                        ? SimulationDraft.monthlyAmountStep
+                        : SimulationDraft.capitalStep,
+                    onChanged: notifier.setAmount,
                   ),
                   const SizedBox(height: 16),
                   _AllocationBar(
