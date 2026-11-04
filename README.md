@@ -43,6 +43,14 @@ L'application lit la clé de l'API Twelve Data à la compilation, depuis un fich
 
 Le même argument s'ajoute à `flutter test` et `flutter build` si besoin. Dans Android Studio : *Run → Edit Configurations → Additional run args* : `--dart-define-from-file=env.json`. Sans ce fichier, la clé est vide (`Env.hasTwelveDataKey` vaut `false`).
 
+## Tests
+
+Les tests unitaires portent sur les calculs métier (`lib/services/calc`) : performance, variation, volatilité, pire baisse, investissement mensuel, valeur d'un portefeuille, objectif d'épargne et score des défis, avec leurs cas limites (historique vide, montant nul, valeur manquante, date hors historique, division par zéro).
+
+```bash
+flutter test
+```
+
 ## Séries de prix embarquées
 
 Les séries historiques utilisées par les chapitres sont dans `assets/data/series/` (prix bruts, sans dividendes). Elles sont générées par un script, jamais modifiées à la main :
