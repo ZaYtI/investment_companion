@@ -11,7 +11,7 @@ import '../../router/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/states/skeleton_box.dart';
-import '../../widgets/text/change_text.dart';
+import '../../widgets/text/animated_gain_counter.dart';
 import '../simulate/amount_card.dart';
 import '../simulate/simulations_builder.dart';
 import '../simulate/simulator_widgets.dart';
@@ -150,11 +150,13 @@ class _ProfileResultCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
+                AnimatedGainCounter.euro(
+                  result.finalValue - result.totalInvested,
+                  style: textTheme.headlineSmall,
+                ),
                 Text(
-                  AppFormat.euro(result.finalValue),
-                  style: textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+                  'soit ${AppFormat.euro(result.finalValue)} au total',
+                  style: textTheme.bodyMedium,
                 ),
                 Text(
                   'Pire baisse en chemin : '
@@ -169,7 +171,7 @@ class _ProfileResultCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              ChangeText.percent(result.performance),
+              AnimatedGainCounter.percent(result.performance),
               const SizedBox(height: 8),
               const Icon(Icons.chevron_right, color: AppColors.textSecondary),
             ],

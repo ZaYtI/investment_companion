@@ -5,6 +5,7 @@ import '../../../models/simulation_result.dart';
 import '../../../providers/simulation_providers.dart';
 import '../../format/app_format.dart';
 import '../../widgets/cards/app_card.dart';
+import '../../widgets/charts/drawing_price_chart.dart';
 import '../../widgets/charts/price_chart.dart';
 import '../../widgets/text/change_text.dart';
 import 'simulations_builder.dart';
@@ -108,7 +109,8 @@ class _AssetResultCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          PriceChart(
+          DrawingPriceChart(
+            key: ValueKey(result.dates.first),
             height: chartHeight,
             showDates: false,
             lines: [

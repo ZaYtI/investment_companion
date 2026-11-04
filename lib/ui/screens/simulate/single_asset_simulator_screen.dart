@@ -100,6 +100,8 @@ class _SingleAssetSimulatorScreenState
                   ),
                   const SizedBox(height: 16),
                   ChartCard(
+                    key: ValueKey('$_asset$_years'),
+                    drawProgressively: true,
                     title: assetLabels[_asset]!,
                     trailing: _years == 1 ? '1 an' : '$_years ans',
                     lines: [

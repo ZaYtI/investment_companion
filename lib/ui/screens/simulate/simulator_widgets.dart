@@ -6,8 +6,9 @@ import '../../format/app_format.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/cards/app_card.dart';
 import '../../widgets/charts/chart_legend.dart';
+import '../../widgets/charts/drawing_price_chart.dart';
 import '../../widgets/charts/price_chart.dart';
-import '../../widgets/text/change_text.dart';
+import '../../widgets/text/animated_gain_counter.dart';
 
 const assetLabels = {
   'spy_weekly': 'ETF S&P 500',
@@ -67,13 +68,13 @@ class ResultHeader extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.end,
           spacing: 12,
           children: [
-            ChangeText.percent(
+            AnimatedGainCounter.percent(
               finalValue / invested - 1,
               style: textTheme.displaySmall,
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 6),
-              child: ChangeText.euro(
+              child: AnimatedGainCounter.euro(
                 finalValue - invested,
                 style: textTheme.titleLarge,
               ),
@@ -222,6 +223,7 @@ class ChartCard extends StatelessWidget {
   final List<ChartLine> lines;
   final List<ChartMarker> markers;
   final double? target;
+  final bool drawProgressively;
   final List<Widget> footer;
 
   const ChartCard({
@@ -231,6 +233,7 @@ class ChartCard extends StatelessWidget {
     this.trailing,
     this.markers = const [],
     this.target,
+    this.drawProgressively = false,
     this.footer = const [],
   });
 
@@ -263,7 +266,10 @@ class ChartCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          PriceChart(lines: lines, markers: markers, target: target),
+          if (drawProgressively)
+            DrawingPriceChart(lines: lines, markers: markers, target: target)
+          else
+            PriceChart(lines: lines, markers: markers, target: target),
           if (hasLegend) ...[
             const SizedBox(height: 12),
             ChartLegend(lines: lines),

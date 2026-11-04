@@ -183,6 +183,10 @@ class _ResultContent extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         ChartCard(
+          key: ValueKey(
+            '${draft.start}${draft.mode}${draft.amount}${draft.percents}',
+          ),
+          drawProgressively: true,
           title: 'Valeur dans le temps',
           lines: [
             ChartLine(
