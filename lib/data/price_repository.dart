@@ -19,7 +19,9 @@ abstract class PriceRepository {
     required String name,
   });
 
-  Future<void> refreshFromApi();
+  Future<void> refreshFromApi({bool force = false});
+
+  Future<DateTime?> lastUpdate();
 }
 
 class CachedPriceRepository implements PriceRepository {
@@ -38,7 +40,39 @@ class CachedPriceRepository implements PriceRepository {
   final TwelveDataClient? client;
   final _loadedSeries = <String, PriceSeries>{};
 
-  CachedPriceRepository({required this.cache, this.client});
+  final ValueChanged<bool>? onConnectionChanged;
+
+  CachedPriceRepository({
+    required this.cache,
+    this.client,
+    this.onConnectionChanged,
+  });
+
+  @override
+  Future<DateTime?> lastUpdate() => cache.lastUpdateOfAll();
+
+  Future<List<PricePoint>> _fetch(
+    TwelveDataClient client, {
+    required String symbol,
+    required String interval,
+    required DateTime start,
+  }) async {
+    try {
+      final points = await client.timeSeries(
+        symbol: symbol,
+        interval: interval,
+        start: start,
+      );
+      onConnectionChanged?.call(true);
+      return points;
+    } on NoNetworkException {
+      onConnectionChanged?.call(false);
+      rethrow;
+    } on NetworkTimeoutException {
+      onConnectionChanged?.call(false);
+      rethrow;
+    }
+  }
 
   @override
   bool get canCallApiNow => client?.canCallNow ?? true;
@@ -73,7 +107,8 @@ class CachedPriceRepository implements PriceRepository {
         final start = points.isEmpty
             ? DateTime(now.year - onlineHistoryYears, now.month, now.day)
             : points.last.date;
-        final newPoints = await client.timeSeries(
+        final newPoints = await _fetch(
+          client,
           symbol: symbol,
           interval: '1week',
           start: start,
@@ -97,28 +132,33 @@ class CachedPriceRepository implements PriceRepository {
   }
 
   @override
-  Future<void> refreshFromApi() async {
+  Future<void> refreshFromApi({bool force = false}) async {
     final client = this.client;
     if (client == null) return;
     for (final id in updatableSeriesIds) {
       try {
-        await _refresh(client, id);
+        await _refresh(client, id, force: force);
       } on ApiException {
         return;
       }
     }
   }
 
-  Future<void> _refresh(TwelveDataClient client, String id) async {
+  Future<void> _refresh(
+    TwelveDataClient client,
+    String id, {
+    required bool force,
+  }) async {
     final lastUpdate = await cache.lastUpdateOf(id);
     final isRecent =
         lastUpdate != null &&
         DateTime.now().difference(lastUpdate) < refreshInterval;
-    if (isRecent) return;
+    if (isRecent && !force) return;
 
     final series = await _load(id);
     final isMonthly = series.frequency == SeriesFrequency.monthly;
-    var newPoints = await client.timeSeries(
+    var newPoints = await _fetch(
+      client,
       symbol: series.symbol,
       interval: isMonthly ? '1day' : '1week',
       start: series.lastDate,

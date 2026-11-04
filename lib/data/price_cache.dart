@@ -41,6 +41,15 @@ class PriceCache {
     await batch.commit(noResult: true);
   }
 
+  Future<DateTime?> lastUpdateOfAll() async {
+    final database = await AppDatabase.open();
+    final rows = await database.rawQuery(
+      'SELECT MAX(updated_at) AS last_update FROM $_metaTable',
+    );
+    final lastUpdate = rows.first['last_update'] as String?;
+    return lastUpdate == null ? null : DateTime.parse(lastUpdate);
+  }
+
   Future<DateTime?> lastUpdateOf(String seriesId) async {
     final database = await AppDatabase.open();
     final rows = await database.query(
