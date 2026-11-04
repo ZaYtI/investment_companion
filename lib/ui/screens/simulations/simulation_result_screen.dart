@@ -36,7 +36,7 @@ class SimulationResultScreen extends ConsumerWidget {
   ) async {
     final name = await showNameDialog(
       context,
-      'Portefeuille ${AppFormat.monthYear(draft.start)}',
+      draft.name ?? 'Portefeuille ${AppFormat.monthYear(draft.start)}',
     );
     if (name == null) return;
     await ref
