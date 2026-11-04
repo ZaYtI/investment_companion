@@ -13,8 +13,29 @@ final priceRepositoryProvider = Provider<PriceRepository>(
   (ref) => CachedPriceRepository(
     cache: PriceCache(),
     client: Env.hasTwelveDataKey ? TwelveDataClient() : null,
+    onConnectionChanged: (isOnline) =>
+        ref.read(connectionStatusProvider.notifier).update(isOnline),
   ),
 );
+
+class ConnectionStatusNotifier extends Notifier<bool> {
+  @override
+  bool build() => true;
+
+  void update(bool isOnline) {
+    if (state != isOnline) state = isOnline;
+  }
+}
+
+final connectionStatusProvider =
+    NotifierProvider<ConnectionStatusNotifier, bool>(
+      ConnectionStatusNotifier.new,
+    );
+
+final lastPriceUpdateProvider = FutureProvider<DateTime?>((ref) {
+  ref.watch(connectionStatusProvider);
+  return ref.watch(priceRepositoryProvider).lastUpdate();
+});
 
 final simulationServiceProvider = Provider<SimulationService>(
   (ref) => SimulationService(ref.watch(priceRepositoryProvider)),
