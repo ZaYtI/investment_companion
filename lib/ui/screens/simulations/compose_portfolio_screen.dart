@@ -16,8 +16,17 @@ import '../simulate/amount_card.dart';
 import '../simulate/simulator_widgets.dart';
 import 'step_label.dart';
 
-class ComposePortfolioScreen extends ConsumerWidget {
+class ComposePortfolioScreen extends ConsumerStatefulWidget {
   const ComposePortfolioScreen({super.key});
+
+  @override
+  ConsumerState<ComposePortfolioScreen> createState() =>
+      _ComposePortfolioScreenState();
+}
+
+class _ComposePortfolioScreenState
+    extends ConsumerState<ComposePortfolioScreen> {
+  var _isAmountValid = true;
 
   Future<void> _addAsset(
     BuildContext context,
@@ -37,7 +46,7 @@ class ComposePortfolioScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final draft = ref.watch(simulationDraftProvider);
     final notifier = ref.read(simulationDraftProvider.notifier);
@@ -102,6 +111,8 @@ class ComposePortfolioScreen extends ConsumerWidget {
                         ? SimulationDraft.monthlyAmountStep
                         : SimulationDraft.capitalStep,
                     onChanged: notifier.setAmount,
+                    onValidityChanged: (isValid) =>
+                        setState(() => _isAmountValid = isValid),
                   ),
                   const SizedBox(height: 16),
                   _AllocationBar(
@@ -179,7 +190,7 @@ class ComposePortfolioScreen extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(22, 8, 22, 16),
               child: PrimaryButton(
                 text: 'Lancer la simulation',
-                onPressed: draft.isComplete
+                onPressed: draft.isComplete && _isAmountValid
                     ? () => context.push(AppRoutes.simulationResult)
                     : null,
               ),

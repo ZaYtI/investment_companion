@@ -30,6 +30,7 @@ class _QuickCalculatorState extends ConsumerState<QuickCalculator> {
 
   var _amount = SimulationDraft.defaultCapital;
   var _years = durations.last;
+  var _isAmountValid = true;
 
   void _openProfile(ProfilePortfolio profile, DateTime start) {
     ref
@@ -68,6 +69,8 @@ class _QuickCalculatorState extends ConsumerState<QuickCalculator> {
           max: SimulationDraft.maxCapital,
           step: SimulationDraft.capitalStep,
           onChanged: (amount) => setState(() => _amount = amount),
+          onValidityChanged: (isValid) =>
+              setState(() => _isAmountValid = isValid),
         ),
         const SizedBox(height: 12),
         OptionChips<int>(
@@ -78,7 +81,15 @@ class _QuickCalculatorState extends ConsumerState<QuickCalculator> {
           onSelected: (years) => setState(() => _years = years),
         ),
         const SizedBox(height: 16),
-        if (lastDate == null)
+        if (!_isAmountValid)
+          InvalidAmountNotice(
+            message:
+                'Entrez un montant entre '
+                '${AppFormat.euro(SimulationDraft.minCapital.toDouble())} et '
+                '${AppFormat.euro(SimulationDraft.maxCapital.toDouble())} '
+                'pour voir ce qu\'il serait devenu.',
+          )
+        else if (lastDate == null)
           const SkeletonBox(height: 240)
         else
           _buildProfiles(
