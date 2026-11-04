@@ -7,6 +7,8 @@ class AppPreferences {
   static const _investorProfileKey = 'investor_profile';
   static const _badgeAnimationKey = 'badge_animation';
   static const _timerEnabledKey = 'timer_enabled';
+  static const _reminderEnabledKey = 'reminder_enabled';
+  static const _reminderAskedKey = 'reminder_asked';
 
   static Future<bool> hasSeenWelcome() async {
     final preferences = await SharedPreferences.getInstance();
@@ -37,5 +39,25 @@ class AppPreferences {
   static Future<void> setTimerEnabled(bool isEnabled) async {
     final preferences = await SharedPreferences.getInstance();
     await preferences.setBool(_timerEnabledKey, isEnabled);
+  }
+
+  static Future<bool> isReminderEnabled() async {
+    final preferences = await SharedPreferences.getInstance();
+    return preferences.getBool(_reminderEnabledKey) ?? false;
+  }
+
+  static Future<void> setReminderEnabled(bool isEnabled) async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setBool(_reminderEnabledKey, isEnabled);
+  }
+
+  static Future<bool> hasAskedReminder() async {
+    final preferences = await SharedPreferences.getInstance();
+    return preferences.getBool(_reminderAskedKey) ?? false;
+  }
+
+  static Future<void> setReminderAsked() async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setBool(_reminderAskedKey, true);
   }
 }
