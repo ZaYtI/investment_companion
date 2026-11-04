@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../models/saved_simulation.dart';
-import '../../../models/simulation_example.dart';
 import '../../../providers/saved_simulations_provider.dart';
 import '../../../providers/simulation_draft_provider.dart';
 import '../../../services/simulation_service.dart';
@@ -17,6 +16,7 @@ import '../../widgets/dialogs/confirm_dialog.dart';
 import '../../widgets/states/error_view.dart';
 import '../../widgets/states/loading_view.dart';
 import '../../widgets/text/change_text.dart';
+import 'quick_calculator.dart';
 
 class SimulationsScreen extends ConsumerWidget {
   const SimulationsScreen({super.key});
@@ -28,15 +28,6 @@ class SimulationsScreen extends ConsumerWidget {
 
   void _open(BuildContext context, WidgetRef ref, SavedSimulation simulation) {
     ref.read(simulationDraftProvider.notifier).open(simulation);
-    context.push(AppRoutes.simulationResult);
-  }
-
-  void _openExample(
-    BuildContext context,
-    WidgetRef ref,
-    SimulationExample example,
-  ) {
-    ref.read(simulationDraftProvider.notifier).openExample(example);
     context.push(AppRoutes.simulationResult);
   }
 
@@ -63,30 +54,11 @@ class SimulationsScreen extends ConsumerWidget {
                 data: (simulations) => simulations.isEmpty
                     ? ListView(
                         padding: const EdgeInsets.all(22),
-                        children: [
-                          Text(
-                            'Aucune simulation enregistrée',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Ouvrez un exemple ci-dessous ou composez votre '
-                            'propre portefeuille.',
-                            style: Theme.of(context).textTheme.bodyLarge
-                                ?.copyWith(color: AppColors.textSecondary),
-                          ),
-                          const SizedBox(height: 24),
-                          _ExamplesSection(
-                            onOpen: (example) =>
-                                _openExample(context, ref, example),
-                          ),
-                        ],
+                        children: const [QuickCalculator()],
                       )
                     : _SimulationList(
                         simulations: simulations,
                         onOpen: (simulation) => _open(context, ref, simulation),
-                        onOpenExample: (example) =>
-                            _openExample(context, ref, example),
                       ),
               ),
             ),
@@ -107,13 +79,8 @@ class SimulationsScreen extends ConsumerWidget {
 class _SimulationList extends ConsumerWidget {
   final List<SavedSimulation> simulations;
   final ValueChanged<SavedSimulation> onOpen;
-  final ValueChanged<SimulationExample> onOpenExample;
 
-  const _SimulationList({
-    required this.simulations,
-    required this.onOpen,
-    required this.onOpenExample,
-  });
+  const _SimulationList({required this.simulations, required this.onOpen});
 
   Future<bool> _confirmDelete(
     BuildContext context,
@@ -199,44 +166,7 @@ class _SimulationList extends ConsumerWidget {
           style: textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
         ),
         const SizedBox(height: 28),
-        _ExamplesSection(onOpen: onOpenExample),
-      ],
-    );
-  }
-}
-
-class _ExamplesSection extends StatelessWidget {
-  final ValueChanged<SimulationExample> onOpen;
-
-  const _ExamplesSection({required this.onOpen});
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text('IDÉES DE SIMULATIONS', style: textTheme.labelMedium),
-        const SizedBox(height: 4),
-        Text(
-          '10 000 € placés à un moment clé : touchez pour voir le résultat.',
-          style: textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
-        ),
-        const SizedBox(height: 12),
-        for (final example in SimulationExample.all) ...[
-          SelectableCard(
-            leading: AppBadge.text(
-              '${example.start.year}',
-              background: AppColors.mintPale,
-              foreground: AppColors.mintText,
-            ),
-            title: example.title,
-            subtitle: example.description,
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => onOpen(example),
-          ),
-          const SizedBox(height: 10),
-        ],
+        const QuickCalculator(),
       ],
     );
   }
