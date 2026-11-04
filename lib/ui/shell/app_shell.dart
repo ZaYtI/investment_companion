@@ -9,6 +9,7 @@ import '../../providers/settings_provider.dart';
 import '../../services/badges.dart';
 import '../widgets/dialogs/badge_celebration_dialog.dart';
 import '../widgets/navigation/app_navigation_bar.dart';
+import '../widgets/states/offline_banner.dart';
 
 class AppShell extends ConsumerStatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -20,6 +21,8 @@ class AppShell extends ConsumerStatefulWidget {
 }
 
 class _AppShellState extends ConsumerState<AppShell> {
+  static const bannerSpacing = 8.0;
+
   Set<String>? _earnedBadgeIds;
 
   void _onTabSelected(int index) {
@@ -54,7 +57,19 @@ class _AppShellState extends ConsumerState<AppShell> {
     ref.listen(badgesProvider, (_, badges) => _onBadgesChanged(badges));
     return Scaffold(
       extendBody: true,
-      body: widget.navigationShell,
+      body: Builder(
+        builder: (bodyContext) => Stack(
+          children: [
+            widget.navigationShell,
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: MediaQuery.paddingOf(bodyContext).bottom + bannerSpacing,
+              child: const OfflineBanner(),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: NativeGlassNavBar(
         currentIndex: widget.navigationShell.currentIndex,
         onTap: _onTabSelected,
