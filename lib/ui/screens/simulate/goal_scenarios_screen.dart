@@ -43,6 +43,17 @@ class _GoalScenariosScreenState extends State<GoalScenariosScreen> {
   late var _monthly = _monthlyLimits['default'] as int;
   late var _years = _yearsLimits['default'] as int;
   var _showRequiredMonthly = false;
+  final _invalidFields = <String>{};
+
+  void _setFieldValidity(String field, bool isValid) {
+    setState(() {
+      if (isValid) {
+        _invalidFields.remove(field);
+      } else {
+        _invalidFields.add(field);
+      }
+    });
+  }
 
   int get _months => _years * monthsPerYear;
 
@@ -66,6 +77,7 @@ class _GoalScenariosScreenState extends State<GoalScenariosScreen> {
           max: _targetLimits['max'] as int,
           step: 1000,
           onChanged: (value) => setState(() => _target = value),
+          onValidityChanged: (isValid) => _setFieldValidity('target', isValid),
         ),
         const SizedBox(height: 12),
         AmountCard(
@@ -75,6 +87,7 @@ class _GoalScenariosScreenState extends State<GoalScenariosScreen> {
           max: _monthlyLimits['max'] as int,
           step: 10,
           onChanged: (value) => setState(() => _monthly = value),
+          onValidityChanged: (isValid) => _setFieldValidity('monthly', isValid),
         ),
         const SizedBox(height: 12),
         AmountCard(
@@ -85,79 +98,86 @@ class _GoalScenariosScreenState extends State<GoalScenariosScreen> {
           step: 1,
           unit: 'ans',
           onChanged: (value) => setState(() => _years = value),
+          onValidityChanged: (isValid) => _setFieldValidity('years', isValid),
         ),
         const SizedBox(height: 20),
-        if (isGoalTooEasy(_target.toDouble(), _monthly.toDouble()))
-          Text(
-            'Votre objectif est très facile à atteindre.',
-            style: textTheme.titleMedium,
+        if (_invalidFields.isNotEmpty)
+          const InvalidAmountNotice(
+            message: 'Corrigez les valeurs en rouge pour voir les scénarios.',
+          )
+        else ...[
+          if (isGoalTooEasy(_target.toDouble(), _monthly.toDouble()))
+            Text(
+              'Votre objectif est très facile à atteindre.',
+              style: textTheme.titleMedium,
+            ),
+          AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  '${AppFormat.euro(totalPaid)} versés en $_years ans',
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                for (final (index, rate) in _rates.indexed)
+                  _ScenarioRow(
+                    rate: rate,
+                    color: rateColors[index],
+                    finalValue: futureValue(_monthly.toDouble(), rate, _months),
+                    target: _target.toDouble(),
+                    requiredMonthly: _showRequiredMonthly
+                        ? requiredMonthly(_target.toDouble(), rate, _months)
+                        : null,
+                  ),
+                const SizedBox(height: 8),
+                OutlinedButton(
+                  onPressed: () => setState(
+                    () => _showRequiredMonthly = !_showRequiredMonthly,
+                  ),
+                  child: Text(
+                    _showRequiredMonthly
+                        ? 'Masquer le versement nécessaire'
+                        : 'Trouver le versement',
+                  ),
+                ),
+              ],
+            ),
           ),
-        AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                '${AppFormat.euro(totalPaid)} versés en $_years ans',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 8),
+          const SizedBox(height: 12),
+          Text(
+            'À ${AppFormat.percent(middleRate)} par an, '
+            '${AppFormat.percent(gainsShare(middleFinal, totalPaid))} '
+            'du capital final vient des gains.',
+            style: textTheme.bodyLarge,
+          ),
+          const SizedBox(height: 16),
+          ChartCard(
+            title: 'Capital au fil des années',
+            target: _target.toDouble(),
+            lines: [
               for (final (index, rate) in _rates.indexed)
-                _ScenarioRow(
-                  rate: rate,
+                ChartLine(
+                  label: AppFormat.percent(rate),
                   color: rateColors[index],
-                  finalValue: futureValue(_monthly.toDouble(), rate, _months),
-                  target: _target.toDouble(),
-                  requiredMonthly: _showRequiredMonthly
-                      ? requiredMonthly(_target.toDouble(), rate, _months)
-                      : null,
+                  points: [
+                    ChartPoint(today, 0),
+                    for (var year = 1; year <= _years; year++)
+                      ChartPoint(
+                        DateTime(today.year + year, today.month),
+                        futureValue(
+                          _monthly.toDouble(),
+                          rate,
+                          year * monthsPerYear,
+                        ),
+                      ),
+                  ],
                 ),
-              const SizedBox(height: 8),
-              OutlinedButton(
-                onPressed: () => setState(
-                  () => _showRequiredMonthly = !_showRequiredMonthly,
-                ),
-                child: Text(
-                  _showRequiredMonthly
-                      ? 'Masquer le versement nécessaire'
-                      : 'Trouver le versement',
-                ),
-              ),
             ],
           ),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          'À ${AppFormat.percent(middleRate)} par an, '
-          '${AppFormat.percent(gainsShare(middleFinal, totalPaid))} '
-          'du capital final vient des gains.',
-          style: textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 16),
-        ChartCard(
-          title: 'Capital au fil des années',
-          target: _target.toDouble(),
-          lines: [
-            for (final (index, rate) in _rates.indexed)
-              ChartLine(
-                label: AppFormat.percent(rate),
-                color: rateColors[index],
-                points: [
-                  ChartPoint(today, 0),
-                  for (var year = 1; year <= _years; year++)
-                    ChartPoint(
-                      DateTime(today.year + year, today.month),
-                      futureValue(
-                        _monthly.toDouble(),
-                        rate,
-                        year * monthsPerYear,
-                      ),
-                    ),
-                ],
-              ),
-          ],
-        ),
+        ],
       ],
     );
   }

@@ -31,6 +31,7 @@ class DcaSimulatorScreen extends ConsumerStatefulWidget {
 
 class _DcaSimulatorScreenState extends ConsumerState<DcaSimulatorScreen> {
   late final _options = DcaOptions.fromSettings(widget.level.settings);
+  var _isAmountValid = true;
 
   DcaSettingsNotifier get _settings =>
       ref.read(dcaSettingsProvider(_options).notifier);
@@ -61,7 +62,15 @@ class _DcaSimulatorScreenState extends ConsumerState<DcaSimulatorScreen> {
       level: widget.level,
       priceDate: result == null ? null : AppFormat.day(result.lastPrice.date),
       children: [
-        if (simulation.hasError)
+        if (!_isAmountValid)
+          InvalidAmountNotice(
+            message:
+                'Entrez un versement entre '
+                '${AppFormat.euro(_options.minMonthly.toDouble())} et '
+                '${AppFormat.euro(_options.maxMonthly.toDouble())} '
+                'pour voir le résultat.',
+          )
+        else if (simulation.hasError)
           ErrorView(message: simulationErrorMessage(simulation.error!))
         else if (result == null)
           const SkeletonBox(height: 90)
@@ -96,9 +105,13 @@ class _DcaSimulatorScreenState extends ConsumerState<DcaSimulatorScreen> {
           max: _options.maxMonthly,
           step: _options.stepMonthly,
           onChanged: _settings.setMonthlyAmount,
+          onValidityChanged: (isValid) =>
+              setState(() => _isAmountValid = isValid),
         ),
         const SizedBox(height: 16),
-        if (result == null)
+        if (!_isAmountValid)
+          const SizedBox.shrink()
+        else if (result == null)
           const SkeletonBox(height: PriceChart.defaultHeight)
         else
           _ChartCard(

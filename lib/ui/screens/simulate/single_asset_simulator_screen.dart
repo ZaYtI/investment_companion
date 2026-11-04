@@ -40,6 +40,7 @@ class _SingleAssetSimulatorScreenState
   late var _asset = _assets.first;
   late var _years = _periods.first;
   var _amount = defaultAmount;
+  var _isAmountValid = true;
 
   @override
   Widget build(BuildContext context) {
@@ -72,9 +73,16 @@ class _SingleAssetSimulatorScreenState
           max: virtualCapital,
           step: _amountSettings['step'] as int,
           onChanged: (amount) => setState(() => _amount = amount),
+          onValidityChanged: (isValid) =>
+              setState(() => _isAmountValid = isValid),
         ),
         const SizedBox(height: 20),
-        if (lastDate == null)
+        if (!_isAmountValid)
+          const InvalidAmountNotice(
+            message:
+                'Entrez un montant valide pour voir ce qu\'il serait devenu.',
+          )
+        else if (lastDate == null)
           const SkeletonBox(height: 260)
         else
           SimulationsBuilder(

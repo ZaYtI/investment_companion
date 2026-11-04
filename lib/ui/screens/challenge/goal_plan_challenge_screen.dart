@@ -44,6 +44,17 @@ class _GoalPlanChallengeScreenState
   late var _monthly = _monthlyLimits['max'] as int;
   late var _years = _yearsLimits['min'] as int;
   ChallengeResult? _result;
+  final _invalidFields = <String>{};
+
+  void _setFieldValidity(String field, bool isValid) {
+    setState(() {
+      if (isValid) {
+        _invalidFields.remove(field);
+      } else {
+        _invalidFields.add(field);
+      }
+    });
+  }
 
   double get _finalAtRate =>
       futureValue(_monthly.toDouble(), _rate, _years * monthsPerYear);
@@ -110,6 +121,7 @@ class _GoalPlanChallengeScreenState
           max: _monthlyLimits['max'] as int,
           step: 10,
           onChanged: (value) => setState(() => _monthly = value),
+          onValidityChanged: (isValid) => _setFieldValidity('monthly', isValid),
         ),
         const SizedBox(height: 12),
         AmountCard(
@@ -120,20 +132,28 @@ class _GoalPlanChallengeScreenState
           step: 1,
           unit: 'ans',
           onChanged: (value) => setState(() => _years = value),
+          onValidityChanged: (isValid) => _setFieldValidity('years', isValid),
         ),
         const SizedBox(height: 16),
-        AppCard(
-          child: Text(
-            'À ${AppFormat.percent(_rate)} par an, vous auriez '
-            '${AppFormat.euro(_finalAtRate)} pour un objectif de '
-            '${AppFormat.euro(_target)}.',
-            style: textTheme.titleMedium,
+        if (_invalidFields.isNotEmpty)
+          const InvalidAmountNotice(
+            message: 'Corrigez les valeurs en rouge pour valider votre plan.',
+          )
+        else
+          AppCard(
+            child: Text(
+              'À ${AppFormat.percent(_rate)} par an, vous auriez '
+              '${AppFormat.euro(_finalAtRate)} pour un objectif de '
+              '${AppFormat.euro(_target)}.',
+              style: textTheme.titleMedium,
+            ),
           ),
-        ),
         const SizedBox(height: 20),
         PrimaryButton(
           text: 'Valider mon plan',
-          onPressed: prices == null ? null : () => _validate(prices),
+          onPressed: prices == null || _invalidFields.isNotEmpty
+              ? null
+              : () => _validate(prices),
         ),
       ],
     );
