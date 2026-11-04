@@ -164,6 +164,7 @@ class _BadgeCard extends StatelessWidget {
   void _showCondition(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       builder: (context) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),

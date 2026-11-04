@@ -43,6 +43,7 @@ class _DcaSimulatorScreenState extends ConsumerState<DcaSimulatorScreen> {
     }
     final picked = await showModalBottomSheet<DateTime>(
       context: context,
+      useRootNavigator: true,
       builder: (context) => _MonthPicker(months: months, selected: current),
     );
     if (picked != null) _settings.setStart(picked);

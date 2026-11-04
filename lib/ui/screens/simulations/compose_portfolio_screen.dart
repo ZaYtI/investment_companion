@@ -27,6 +27,7 @@ class ComposePortfolioScreen extends ConsumerWidget {
         .toList();
     final picked = await showModalBottomSheet<Asset>(
       context: context,
+      useRootNavigator: true,
       builder: (context) => SafeArea(
         child: ListView(
           shrinkWrap: true,
