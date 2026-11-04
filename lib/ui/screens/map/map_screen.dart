@@ -8,6 +8,7 @@ import '../../../models/chapter_summary.dart';
 import '../../../models/progress.dart';
 import '../../../models/progress_status.dart';
 import '../../../providers/progress_provider.dart';
+import '../../../providers/settings_provider.dart';
 import '../../../services/day_keys.dart';
 import '../../../services/progression.dart';
 import '../../router/app_routes.dart';
@@ -115,7 +116,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 }
 
-enum _MapMenuAction { gallery, resetProgress }
+enum _MapMenuAction { gallery, resetProgress, testNotification }
 
 class _MapHeader extends ConsumerWidget {
   const _MapHeader();
@@ -140,7 +141,36 @@ class _MapHeader extends ConsumerWidget {
         if (isConfirmed) {
           await ref.read(progressProvider.notifier).reset();
         }
+      case _MapMenuAction.testNotification:
+        await _testNotification(context, ref);
     }
+  }
+
+  Future<void> _testNotification(BuildContext context, WidgetRef ref) async {
+    final reminder = ref.read(dailyReminderProvider);
+    final isGranted = await reminder.requestPermission();
+    if (!context.mounted) return;
+    if (!isGranted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Autorisez les notifications pour Investment Companion dans les '
+            'réglages du téléphone.',
+          ),
+        ),
+      );
+      return;
+    }
+    await reminder.showTestSoon();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Notification dans 5 secondes : revenez à l\'écran d\'accueil '
+          'pour la voir arriver.',
+        ),
+      ),
+    );
   }
 
   @override
@@ -176,6 +206,10 @@ class _MapHeader extends ConsumerWidget {
                 PopupMenuItem(
                   value: _MapMenuAction.resetProgress,
                   child: Text('Réinitialiser la progression'),
+                ),
+                PopupMenuItem(
+                  value: _MapMenuAction.testNotification,
+                  child: Text('Tester la notification'),
                 ),
               ],
             ),
