@@ -35,6 +35,7 @@ class AmountCard extends StatefulWidget {
   final int step;
   final String unit;
   final ValueChanged<int> onChanged;
+  final ValueChanged<bool>? onValidityChanged;
 
   const AmountCard({
     super.key,
@@ -44,6 +45,7 @@ class AmountCard extends StatefulWidget {
     required this.max,
     required this.step,
     required this.onChanged,
+    this.onValidityChanged,
     this.unit = '€',
   });
 
@@ -66,12 +68,15 @@ class _AmountCardState extends State<AmountCard> {
   void _onSliderChanged(double value) {
     final amount = value.round();
     setState(() => _controller.text = '$amount');
+    widget.onValidityChanged?.call(true);
     widget.onChanged(amount);
   }
 
   void _onTyped(String text) {
     setState(() {});
-    if (_validate(text) == null) {
+    final isValid = _validate(text) == null;
+    widget.onValidityChanged?.call(isValid);
+    if (isValid) {
       widget.onChanged(int.parse(text.trim()));
     }
   }
@@ -134,6 +139,27 @@ class _AmountCardState extends State<AmountCard> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class InvalidAmountNotice extends StatelessWidget {
+  final String message;
+
+  const InvalidAmountNotice({super.key, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Row(
+        children: [
+          const Icon(Icons.edit_note, color: AppColors.goldText),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(message, style: Theme.of(context).textTheme.bodyLarge),
+          ),
+        ],
       ),
     );
   }
