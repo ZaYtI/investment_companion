@@ -11,6 +11,8 @@ import '../../widgets/cards/app_card.dart';
 import '../../widgets/decor/cube_icon.dart';
 import '../../widgets/dialogs/app_bottom_sheet.dart';
 import '../../widgets/progress/progress_ring.dart';
+import 'badge_details_sheet.dart';
+import 'badge_style.dart';
 
 class TrophiesScreen extends ConsumerWidget {
   const TrophiesScreen({super.key});
@@ -142,52 +144,10 @@ class _BadgeCard extends StatelessWidget {
 
   const _BadgeCard({required this.badge});
 
-  Color get _cubeColor {
-    if (badge.isEarned) return AppColors.gold;
-    if (badge.isStarted) return AppColors.assetEtf;
-    return AppColors.dashedBorder;
-  }
-
-  IconData get _overlayIcon {
-    if (badge.isEarned) return Icons.check_rounded;
-    if (badge.isStarted) return Icons.circle;
-    return Icons.lock_rounded;
-  }
-
   String get _status {
     if (badge.isEarned) return 'Obtenu';
-    if (badge.target > 1 && badge.isStarted) {
-      return '${badge.current} / ${badge.target}';
-    }
-    return 'Verrouillé';
-  }
-
-  void _showCondition(BuildContext context) {
-    showAppBottomSheet<void>(
-      context,
-      builder: (context) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(badge.title, style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 8),
-              Text(
-                badge.condition,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Progression : ${badge.current} / ${badge.target}',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    if (badge.isStarted) return '${badge.current} / ${badge.target}';
+    return 'À débloquer';
   }
 
   @override
@@ -195,15 +155,18 @@ class _BadgeCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return AppCard(
       padding: const EdgeInsets.all(8),
-      onTap: () => _showCondition(context),
+      onTap: () => showAppBottomSheet<void>(
+        context,
+        builder: (context) => BadgeDetailsSheet(badge: badge),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Stack(
             alignment: Alignment.center,
             children: [
-              CubeIcon(color: _cubeColor, size: 56),
-              Icon(_overlayIcon, color: AppColors.textPrimary, size: 22),
+              CubeIcon(color: badgeColorOf(badge), size: 56),
+              Icon(badgeIconOf(badge), color: AppColors.textPrimary, size: 22),
             ],
           ),
           const SizedBox(height: 8),
@@ -218,6 +181,19 @@ class _BadgeCard extends StatelessWidget {
               color: AppColors.textSecondary,
             ),
           ),
+          if (!badge.isEarned) ...[
+            const SizedBox(height: 6),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: LinearProgressIndicator(
+                value: badge.progress,
+                minHeight: 4,
+                color: AppColors.mint,
+                backgroundColor: AppColors.border,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ],
         ],
       ),
     );
