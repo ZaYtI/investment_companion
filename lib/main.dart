@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
 import 'data/app_preferences.dart';
+import 'providers/explorer_providers.dart';
 import 'providers/settings_provider.dart';
 import 'providers/simulation_providers.dart';
 import 'services/daily_reminder.dart';
@@ -27,6 +28,7 @@ Future<void> main() async {
     overrides: [dailyReminderProvider.overrideWithValue(reminder)],
   );
   unawaited(_refreshPrices(container));
+  container.read(assetCatalogProvider);
   runApp(
     UncontrolledProviderScope(
       container: container,
