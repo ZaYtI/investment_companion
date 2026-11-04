@@ -49,3 +49,4 @@ app.*.map.json
 
 # Secrets passés via --dart-define-from-file (voir env.example.json)
 env.json
+/android/build/
