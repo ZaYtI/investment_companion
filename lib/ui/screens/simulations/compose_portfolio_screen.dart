@@ -59,7 +59,7 @@ class ComposePortfolioScreen extends ConsumerWidget {
                   const SizedBox(height: 12),
                   Align(
                     alignment: Alignment.centerLeft,
-                    Chip(
+                    child: Chip(
                       avatar: const Icon(Icons.schedule, size: 18),
                       label: Text(
                         'Départ : ${AppFormat.monthYear(draft.start)}',
