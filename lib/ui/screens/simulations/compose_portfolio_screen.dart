@@ -11,6 +11,7 @@ import '../../theme/app_colors.dart';
 import '../../widgets/buttons/dashed_button.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/cards/app_card.dart';
+import '../../widgets/dialogs/app_bottom_sheet.dart';
 import '../simulate/simulator_widgets.dart';
 import 'step_label.dart';
 
@@ -25,22 +26,9 @@ class ComposePortfolioScreen extends ConsumerWidget {
     final availableAssets = Asset.all
         .where((asset) => !draft.percents.containsKey(asset.id))
         .toList();
-    final picked = await showModalBottomSheet<Asset>(
-      context: context,
-      useRootNavigator: true,
-      builder: (context) => SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            for (final asset in availableAssets)
-              ListTile(
-                title: Text(asset.name),
-                subtitle: Text(asset.category),
-                onTap: () => Navigator.of(context).pop(asset),
-              ),
-          ],
-        ),
-      ),
+    final picked = await showAppBottomSheet<Asset>(
+      context,
+      builder: (context) => _AssetPicker(assets: availableAssets),
     );
     if (picked != null) {
       ref.read(simulationDraftProvider.notifier).addAsset(picked.id);
@@ -189,6 +177,77 @@ class ComposePortfolioScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _AssetPicker extends StatelessWidget {
+  final List<Asset> assets;
+
+  const _AssetPicker({required this.assets});
+
+  static const colorDotSize = 12.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return ListView(
+      shrinkWrap: true,
+      padding: EdgeInsets.fromLTRB(
+        22,
+        0,
+        22,
+        22 + MediaQuery.paddingOf(context).bottom,
+      ),
+      children: [
+        Text('Ajouter un actif', style: textTheme.titleLarge),
+        const SizedBox(height: 4),
+        Text(
+          'Il arrive à 0 % : réglez ensuite sa part avec + et −.',
+          style: textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
+        ),
+        const SizedBox(height: 16),
+        for (final asset in assets) ...[
+          AppCard(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            onTap: () => Navigator.of(context).pop(asset),
+            child: Row(
+              children: [
+                Container(
+                  width: colorDotSize,
+                  height: colorDotSize,
+                  decoration: BoxDecoration(
+                    color: assetColors[asset.id],
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        asset.name,
+                        style: textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        asset.category,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.add_circle, color: AppColors.mintText),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ],
     );
   }
 }
