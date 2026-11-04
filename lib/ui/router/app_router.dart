@@ -21,6 +21,7 @@ import '../screens/trophies/trophies_screen.dart';
 import '../screens/welcome/welcome_screen.dart';
 import '../shell/app_shell.dart';
 import 'app_routes.dart';
+import 'zoom_page.dart';
 
 GoRouter createAppRouter({required bool showWelcome}) => GoRouter(
   initialLocation: showWelcome ? AppRoutes.welcome : AppRoutes.map,
@@ -49,8 +50,11 @@ GoRouter createAppRouter({required bool showWelcome}) => GoRouter(
                 ),
                 GoRoute(
                   path: 'chapitre/:number',
-                  builder: (context, state) => ChapterScreen(
-                    chapterNumber: int.parse(state.pathParameters['number']!),
+                  pageBuilder: (context, state) => zoomPage(
+                    state: state,
+                    child: ChapterScreen(
+                      chapterNumber: int.parse(state.pathParameters['number']!),
+                    ),
                   ),
                   routes: [
                     GoRoute(

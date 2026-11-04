@@ -41,7 +41,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       );
       return;
     }
-    context.push(AppRoutes.chapter(chapter.number));
+    final islandSide = chapter.number.isOdd
+        ? Alignment.centerLeft
+        : Alignment.centerRight;
+    context.push(AppRoutes.chapter(chapter.number), extra: islandSide);
   }
 
   @override
