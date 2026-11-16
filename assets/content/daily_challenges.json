@@ -3,8 +3,16 @@
   "timerSeconds": 15,
   "timeoutChoice": "doNothing",
   "plans": [
-    { "id": "long", "label": "Je garde cet argent 10 ans" },
-    { "id": "short", "label": "J'aurai besoin de cet argent dans 1 an" }
+    {
+      "id": "long",
+      "label": "Je garde cet argent 10 ans",
+      "subtitle": "Une baisse passagère ne change rien à mon objectif"
+    },
+    {
+      "id": "short",
+      "label": "J'aurai besoin de cet argent dans 1 an",
+      "subtitle": "Je ne peux pas me permettre une grosse perte"
+    }
   ],
   "choices": [
     {
@@ -14,6 +22,10 @@
       "scores": {
         "long": { "coherence": 10, "prudence": 100, "composure": 15 },
         "short": { "coherence": 85, "prudence": 100, "composure": 70 }
+      },
+      "explanations": {
+        "long": "Vous aviez prévu de garder cet argent 10 ans. Vendre après une seule mauvaise journée fige la perte et vous fait rater une éventuelle reprise : c'est prudent, mais pas cohérent avec votre plan.",
+        "short": "Vous aurez besoin de cet argent dans un an. Réduire le risque après un choc est cohérent avec votre plan, même si la perte du jour devient définitive."
       }
     },
     {
@@ -23,6 +35,10 @@
       "scores": {
         "long": { "coherence": 90, "prudence": 60, "composure": 85 },
         "short": { "coherence": 35, "prudence": 60, "composure": 60 }
+      },
+      "explanations": {
+        "long": "Avec un horizon de 10 ans, une forte baisse d'un jour ne change pas le plan. Ne rien faire, c'est rester cohérent et garder son sang-froid.",
+        "short": "Vous aurez besoin de cet argent dans un an et vous gardez tout le risque. Si la baisse continue, vous pourriez devoir vendre encore plus bas."
       }
     },
     {
@@ -32,6 +48,10 @@
       "scores": {
         "long": { "coherence": 75, "prudence": 25, "composure": 80 },
         "short": { "coherence": 10, "prudence": 25, "composure": 40 }
+      },
+      "explanations": {
+        "long": "Renforcer pendant une baisse peut avoir du sens sur 10 ans, mais vous ajoutez du risque au moment où personne ne sait si la chute est finie.",
+        "short": "Ajouter de l'argent à un placement dont vous aurez besoin dans un an augmente le risque de devoir vendre en perte."
       }
     }
   ],

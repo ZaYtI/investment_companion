@@ -11,6 +11,7 @@ class DailyResult {
   final ChallengeMeasures measures;
   final String title;
   final String choiceLabel;
+  final String explanation;
   final String afterwards;
   final int xpEarned;
 
@@ -18,6 +19,7 @@ class DailyResult {
     required this.measures,
     required this.title,
     required this.choiceLabel,
+    required this.explanation,
     required this.afterwards,
     required this.xpEarned,
   });
@@ -96,6 +98,8 @@ class DailyResultView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text('Pourquoi ce score', style: textTheme.titleMedium),
+                    const SizedBox(height: 6),
+                    Text(result.explanation, style: textTheme.bodyMedium),
                     const SizedBox(height: 12),
                     LabeledProgressBar(
                       label: 'Cohérence avec votre plan',

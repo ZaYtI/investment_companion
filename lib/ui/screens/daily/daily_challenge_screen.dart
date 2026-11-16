@@ -14,6 +14,7 @@ import '../../../services/progression.dart';
 import '../../format/app_format.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/badges/app_badge.dart';
+import '../../widgets/cards/app_card.dart';
 import '../../widgets/cards/selectable_card.dart';
 import '../../widgets/progress/countdown_ring.dart';
 import '../../widgets/states/empty_view.dart';
@@ -52,6 +53,7 @@ class _DailyChallengeScreenState extends ConsumerState<DailyChallengeScreen> {
     final countdown = _countdownKey.currentState;
     countdown?.stop();
     final choice = content.choices.firstWhere((item) => item['id'] == choiceId);
+    final explanations = choice['explanations'] as Map<String, dynamic>;
     final scores =
         (choice['scores'] as Map<String, dynamic>)[_planId]
             as Map<String, dynamic>;
@@ -83,6 +85,7 @@ class _DailyChallengeScreenState extends ConsumerState<DailyChallengeScreen> {
         choiceLabel: timedOut
             ? 'Temps écoulé : ne rien faire'
             : choice['label'] as String,
+        explanation: explanations[_planId] as String,
         afterwards:
             'Un mois plus tard, le marché était à '
             '${AppFormat.signedPercent(move.changeOneMonthLater)} de son '
@@ -147,7 +150,7 @@ class _DailyChallengeScreenState extends ConsumerState<DailyChallengeScreen> {
             }
             final move = dayMoveOf(prices, scenario.date);
             return _planId == null
-                ? _buildPlanStep(scenario)
+                ? _buildPlanStep(content, scenario)
                 : _buildAlertStep(content, scenario, move);
           },
         ),
@@ -155,10 +158,9 @@ class _DailyChallengeScreenState extends ConsumerState<DailyChallengeScreen> {
     );
   }
 
-  Widget _buildPlanStep(DailyScenario scenario) {
+  Widget _buildPlanStep(DailyChallengeContent content, DailyScenario scenario) {
     final textTheme = Theme.of(context).textTheme;
     final settings = ref.watch(appSettingsProvider).value;
-    final content = ref.read(dailyChallengeContentProvider).value!;
     return ListView(
       padding: const EdgeInsets.all(22),
       children: [
@@ -167,16 +169,28 @@ class _DailyChallengeScreenState extends ConsumerState<DailyChallengeScreen> {
           style: textTheme.labelMedium,
         ),
         const SizedBox(height: 8),
+        AppCard(
+          child: Text(
+            'Nous sommes le ${AppFormat.fullDate(scenario.date)}. Vous avez '
+            '${AppFormat.euro(content.capital)} virtuels placés sur l\'ETF '
+            'S&P 500. Ce jour-là, les marchés vont bouger fortement et vous '
+            'devrez décider quoi faire.',
+            style: textTheme.bodyLarge,
+          ),
+        ),
+        const SizedBox(height: 20),
         Text("D'abord, votre plan", style: textTheme.headlineSmall),
         const SizedBox(height: 8),
         Text(
-          'Une décision se juge par rapport à un plan fixé à froid.',
+          'Choisissez-le avant de découvrir la journée : votre décision sera '
+          'jugée par rapport à ce plan, pas au résultat.',
           style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
         ),
         const SizedBox(height: 16),
         for (final plan in content.plans) ...[
           SelectableCard(
             title: plan['label'] as String,
+            subtitle: plan['subtitle'] as String,
             onTap: () => setState(() => _planId = plan['id'] as String),
           ),
           const SizedBox(height: 12),
